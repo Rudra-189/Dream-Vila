@@ -1,9 +1,11 @@
-import 'dart:io';
+
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dreamvila/core/routes/app_routes.dart';
 import 'package:dreamvila/core/themes/theme_helper.dart';
+import 'package:dreamvila/core/utils/status.dart';
 import 'package:dreamvila/core/utils/validation.dart';
+import 'package:dreamvila/models/signUpModel.dart';
 import 'package:dreamvila/viewmodels/signup_bloc/signup_event.dart';
 import 'package:dreamvila/widgets/common_widget/common_checkbox.dart';
 import 'package:dreamvila/widgets/common_widget/custom_button.dart';
@@ -41,11 +43,27 @@ class _SignUpViewState extends State<SignUpView> {
   final List<String> _hobbies = ['Reading', 'Gaming', 'Traveling', 'Cooking'];
 
   @override
+  void dispose() {
+    super.dispose();
+    firstNameController.clear();
+    lastNameController.clear();
+    emailController.clear();
+    mobileController.clear();
+    passwordController.clear();
+    confirmPasswordController.clear();
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: BlocBuilder<SignupBloc, SignupState>(
+      body: BlocConsumer<SignupBloc, SignupState>(
+        listener: (context,state){
+          if(state.signUpStatus == status.success){
+            Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.homeScreen,(Route<dynamic> route) => false);
+          }
+        },
         builder: (context, state) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -113,6 +131,7 @@ class _SignUpViewState extends State<SignUpView> {
                       controller: lastNameController,
                       hintStyle:
                           MyAppThemeHelper.lightTheme.textTheme.displayLarge,
+                      validator: (value) => Validation.validateName(value!),
                     ),
                     SizedBox(
                       height: 20.h,
@@ -129,6 +148,7 @@ class _SignUpViewState extends State<SignUpView> {
                       controller: emailController,
                       hintStyle:
                           MyAppThemeHelper.lightTheme.textTheme.displayLarge,
+                      validator: (value) => Validation.validateEmail(value!),
                     ),
                     SizedBox(
                       height: 20.h,
@@ -144,7 +164,9 @@ class _SignUpViewState extends State<SignUpView> {
                         hintLabel: '+91',
                         controller: mobileController,
                         hintStyle:
-                            MyAppThemeHelper.lightTheme.textTheme.displayLarge),
+                            MyAppThemeHelper.lightTheme.textTheme.displayLarge,
+                    validator: (value) => Validation.validateMobile(value!),
+                    ),
                     SizedBox(
                       height: 20.h,
                     ),
@@ -256,17 +278,19 @@ class _SignUpViewState extends State<SignUpView> {
                     CustomTextInputField(
                       context: context,
                       obscureText: state.isPasswordVisible,
-                      type: InputType.phoneNumber,
+                      type: InputType.text,
                       hintLabel: '* * * * * * *',
                       controller: passwordController,
                       hintStyle:
                           MyAppThemeHelper.lightTheme.textTheme.displayLarge,
+                      validator: (value) => Validation.validatePassword(value!),
                       suffixIcon: IconButton(onPressed: (){
                         context.read<SignupBloc>().add(TogglePasswordVisibilityEvent());
                       }, icon: Icon(
                         state.isPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
                         size: 20,
-                      )),
+                      ),
+                      ),
                     ),
                     SizedBox(
                       height: 20.h,
@@ -279,11 +303,12 @@ class _SignUpViewState extends State<SignUpView> {
                     CustomTextInputField(
                       context: context,
                       obscureText: state.isConfirmPasswordVisible,
-                      type: InputType.phoneNumber,
+                      type: InputType.text,
                       hintLabel: '* * * * * * *',
                       controller: confirmPasswordController,
                       hintStyle:
                           MyAppThemeHelper.lightTheme.textTheme.displayLarge,
+                      validator: (value) => Validation.validateConfirmPassword(value!,passwordController.text),
                       suffixIcon: IconButton(onPressed: (){
                         context.read<SignupBloc>().add(ToggleConfirmPasswordVisibilityEvent());
                       }, icon: Icon(
@@ -351,14 +376,14 @@ class _SignUpViewState extends State<SignUpView> {
                           height: 0.060.sh,
                           width: 0.85.sw,
                           text: 'Sign Up',
-                          buttonTextStyle:
-                              TextStyle(color: Color(0xFFFFFFFF), fontSize: 16),
+                          buttonTextStyle:TextStyle(color: Color(0xFFFFFFFF), fontSize: 16),
                           buttonStyle: ElevatedButton.styleFrom(
                             backgroundColor: Color(0XFFFF6F42),
                           ),
                           onPressed: () {
                             _submit(context, state);
                           },
+                          isLoading: state.signUpStatus == status.loading ? true : false,
                         ),
                       ],
                     ),
@@ -412,19 +437,19 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 
-  void _submit(BuildContext context, SignupState state) {
+  void _submit(BuildContext context, SignupState state) async {
     if (_formKey.currentState!.validate()) {
-      final data = {
-        'firstName': firstNameController.text,
-        'lastName': lastNameController.text,
-        'email': emailController.text,
-        'mobile': mobileController.text,
-        'gender': state.gender,
-        'hobbies': state.selectedHobbies,
-        'image': state.file,
-        'password': passwordController.text,
-      };
-      context.read<SignupBloc>().add(SignupSubmittedEvent(data));
+      final user = UserModel(
+        firstName: firstNameController.text,
+        lastName: lastNameController.text,
+        email: emailController.text,
+        mobile: mobileController.text,
+        gender: state.gender == 'Male' ? 1 : 2,
+        hobbies: state.selectedHobbies.join(","),
+        image: state.file,
+        password: passwordController.text,
+      );
+      context.read<SignupBloc>().add(SignupSubmittedEvent(user));
     }
   }
 }

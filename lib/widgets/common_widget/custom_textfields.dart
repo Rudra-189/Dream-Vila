@@ -82,7 +82,7 @@ class CustomTextInputField extends TextFormField {
          ],
          obscureText: obscureText ?? false,
          textAlignVertical: TextAlignVertical.top,
-         style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 18.sp, fontWeight: FontWeight.w500),
+         style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 15.sp, fontWeight: FontWeight.w500),
          decoration: InputDecoration(
            hintStyle:
                hintStyle ??

@@ -1,5 +1,7 @@
+import 'package:dreamvila/core/api_config/client/api_client.dart';
 import 'package:dreamvila/core/routes/app_routes.dart';
 import 'package:dreamvila/core/themes/theme_helper.dart';
+import 'package:dreamvila/repository/homeRepository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -28,6 +30,7 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    HomeRepository(ApiClient()).getPropertyData();
     print("build");
     return DefaultTabController(
       length: 4,

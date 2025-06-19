@@ -1,3 +1,8 @@
+import 'dart:io';
+
+import 'package:dreamvila/core/api_config/client/api_client.dart';
+import 'package:dreamvila/core/utils/status.dart';
+import 'package:dreamvila/repository/authRepository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../core/utils/ImagePickerUtils.dart';
@@ -7,6 +12,8 @@ import 'signup_state.dart';
 class SignupBloc extends Bloc<SignupEvent, SignupState> {
 
   final ImagePickerUtils imagePickerUtils;
+
+  final AuthRepository authRepository = AuthRepository(ApiClient());
 
 
   SignupBloc(this.imagePickerUtils)
@@ -31,22 +38,26 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
 
   void _imagePickedEvent(ImagePickedEvent event, Emitter emit) async{
     XFile? file = await imagePickerUtils.PickImageFromGallary();
-    emit(state.copyWith(file: file));
+    emit(state.copyWith(file: File(file!.path)));
   }
 
-  void _signupSubmittedEvent(SignupSubmittedEvent event, Emitter emit) {
+  void _signupSubmittedEvent(SignupSubmittedEvent event, Emitter emit)async{
     print("Signup Submitted: ${event.formData}");
+    emit(state.copyWith(signUpStatus: status.loading));
+    final result = await authRepository.userSignup(event.formData);
+    if(result){
+      emit(state.copyWith(signUpStatus: status.success));
+    }else{
+      emit(state.copyWith(signUpStatus: status.failure,errorMessage: 'some things was wrong!'));
+    }
   }
 
   void _onHobbyChangeEvent(OnHobbyChangeEvent event, Emitter emit) {
     List<String> currentHobbies = List<String>.from(state.selectedHobbies);
-
     if (currentHobbies.contains(event.hobby)) {
-      print(event.hobby);
       currentHobbies.remove(event.hobby);
     } else {
       currentHobbies.add(event.hobby);
-      print(event.hobby);
     }
     emit(state.copyWith(selectedHobbies: currentHobbies));
   }

@@ -77,4 +77,16 @@ abstract class Validation{
     return null; // Valid input
   }
 
+  static String? validateConfirmPassword(String? confirmPassword, String? originalPassword) {
+    if (confirmPassword == null || confirmPassword.isEmpty) {
+      return 'Please confirm your password';
+    }
+
+    if (confirmPassword != originalPassword) {
+      return 'Passwords do not match';
+    }
+
+    return null; // Valid
+  }
+
 }

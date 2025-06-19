@@ -1,5 +1,6 @@
+import 'package:dio/dio.dart';
+import 'package:dreamvila/models/signUpModel.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_cache_manager/file.dart';
 
 abstract class SignupEvent extends Equatable{
   @override
@@ -13,7 +14,7 @@ class ToggleConfirmPasswordVisibilityEvent extends SignupEvent {}
 class ImagePickedEvent extends SignupEvent {}
 
 class SignupSubmittedEvent extends SignupEvent {
-  final Map<String, dynamic> formData;
+  final UserModel formData;
 
   SignupSubmittedEvent(this.formData);
 

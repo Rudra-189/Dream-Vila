@@ -1,5 +1,6 @@
 // ignore_for_file: constant_identifier_names
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:toastification/toastification.dart';
 
@@ -34,12 +35,14 @@ class ApiClient {
   // --------------------------- HEADERS ---------------------------
 
   static Future<Map<String, String>> _buildHeaders() async {
+    final storage = FlutterSecureStorage();
     final header = <String, String>{'Content-Type': 'application/json'};
-    // String? deviceToken = await Prefobj.preferences.get(Prefkeys.authToken);
+    String? deviceToken = await storage.read(key: "deviceToken");
+    print("/////////////////////////////////${deviceToken}///////////////////////////////////");
 
-    // if (deviceToken != null && deviceToken.isNotEmpty) {
-    //   header['Authorization'] = 'Bearer $deviceToken';
-    // }
+    if (deviceToken != null && deviceToken.isNotEmpty) {
+      header['Authorization'] = 'Bearer $deviceToken';
+    }
     return header;
   }
 
@@ -52,6 +55,7 @@ class ApiClient {
     Map<String, dynamic>? multipartData,
   }) async {
     try {
+      _dio.options.headers = await _buildHeaders();
       final Response response = switch (type) {
         RequestType.GET => await _dio.get(path),
         RequestType.POST => await _dio.post(path, data: data),

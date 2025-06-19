@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:dreamvila/core/utils/status.dart';
 import 'package:dreamvila/viewmodels/splash_bloc/splash_event.dart';
 import 'package:dreamvila/viewmodels/splash_bloc/splash_state.dart';
-import 'package:meta/meta.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
   SplashBloc() : super(SplashState()) {

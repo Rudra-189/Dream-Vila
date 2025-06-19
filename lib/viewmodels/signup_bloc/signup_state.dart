@@ -1,18 +1,20 @@
 // lib/blocs/signup/signup_state.dart
 import 'dart:io';
+import 'package:dreamvila/core/utils/status.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:image_picker/image_picker.dart';
-
 class SignupState extends Equatable {
 
+  final status signUpStatus;
+  final String errorMessage;
   final bool isPasswordVisible;
   final bool isConfirmPasswordVisible;
-  final XFile? file;
+  final File? file;
   final String gender;
   final List<String> selectedHobbies;
 
     SignupState({
+      this.signUpStatus = status.init,
+      this.errorMessage = '',
     this.isPasswordVisible = true,
     this.isConfirmPasswordVisible = true,
     this.file,
@@ -22,13 +24,17 @@ class SignupState extends Equatable {
 
 
   SignupState copyWith({
+    status? signUpStatus,
+    String? errorMessage,
     bool? isPasswordVisible,
     bool? isConfirmPasswordVisible,
-    XFile? file,
+    File? file,
     String? gender,
     List<String>? selectedHobbies,
   }) {
     return SignupState(
+      signUpStatus: signUpStatus ?? this.signUpStatus,
+      errorMessage: errorMessage ?? this.errorMessage,
       isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
       isConfirmPasswordVisible: isConfirmPasswordVisible ?? this.isConfirmPasswordVisible,
       file: file ?? this.file,
@@ -38,5 +44,5 @@ class SignupState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [isPasswordVisible, isConfirmPasswordVisible, file,gender,selectedHobbies];
+  List<Object?> get props => [signUpStatus,errorMessage,isPasswordVisible, isConfirmPasswordVisible, file,gender,selectedHobbies];
 }
