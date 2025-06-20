@@ -15,7 +15,9 @@ class SplashView extends StatelessWidget {
       body: BlocConsumer<SplashBloc,SplashState>(
         listener: (context,state){
           if(state.splashStatus == status.success){
-            Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.signupScreen,(Route<dynamic> route) => false,);
+            Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.homeScreen,(Route<dynamic> route) => false,);
+          }else if(state.splashStatus == status.failure){
+            Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.signInScreen,(Route<dynamic> route) => false,);
           }
         },
         builder: (context,state){

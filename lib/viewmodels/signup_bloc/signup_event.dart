@@ -14,7 +14,7 @@ class ToggleConfirmPasswordVisibilityEvent extends SignupEvent {}
 class ImagePickedEvent extends SignupEvent {}
 
 class SignupSubmittedEvent extends SignupEvent {
-  final UserModel formData;
+  final SignupModel formData;
 
   SignupSubmittedEvent(this.formData);
 

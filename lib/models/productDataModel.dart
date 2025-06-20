@@ -25,12 +25,12 @@ class PropertyResponse {
     return PropertyResponse(
       status: json['status'],
       message: json['message'],
-      page: json['page'],
-      limit: json['limit'],
-      prePage: json['pre_page'],
-      nextPage: json['next_page'],
-      total: json['total'],
-      totalPages: json['total_pages'],
+      page: json['page'] ?? 0,
+      limit: json['limit'] ?? 0,
+      prePage: json['pre_page'] ?? 0,
+      nextPage: json['next_page'] ?? 0,
+      total: json['total'] ?? 0,
+      totalPages: json['total_pages'] ?? 0,
       data: List<Property>.from(json['data'].map((x) => Property.fromJson(x))),
     );
   }
@@ -88,7 +88,7 @@ class Property {
   });
 
   factory Property.fromJson(Map<String, dynamic> json) => Property(
-    id: json['_id'],
+    id: json['_id'] ?? '',
     title: json['title'],
     description: json['description'],
     address: json['address'],
@@ -102,7 +102,7 @@ class Property {
     kitchen: json['kitchen'],
     washroom: json['washroom'],
     thumbnail: json['thumbnail'],
-    images: List<String>.from(json['images']),
+    images: List<String>.from(json['images']) ?? [],
     userId: json['userId'],
     v: json['__v'],
   );

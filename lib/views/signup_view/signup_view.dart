@@ -439,7 +439,7 @@ class _SignUpViewState extends State<SignUpView> {
 
   void _submit(BuildContext context, SignupState state) async {
     if (_formKey.currentState!.validate()) {
-      final user = UserModel(
+      final user = SignupModel(
         firstName: firstNameController.text,
         lastName: lastNameController.text,
         email: emailController.text,

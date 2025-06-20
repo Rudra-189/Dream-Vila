@@ -1,0 +1,21 @@
+{
+  "@@locale": "en",
+
+  "lbl_app_name": "Dream Vila",
+  "lbl_sign_in": "Sign In",
+  "lbl_sign_up": "Sign Up",
+  "lbl_first_name": "First Name",
+  "lbl_last_name": "Last Name",
+  "lbl_email": "Email",
+  "lbl_mobil": "Mobil",
+  "lbl_gender": "Gender",
+  "lbl_upload_user_profile": "Upload User Profile",
+  "lbl_select_image": "Select Image",
+  "lbl_password": "Password",
+  "lbl_confirm_password": "Confirm Password",
+  "lbl_hobby": "Hobby",
+  "lbl_reading": "Reading",
+  "lbl_drawing": "Drawing",
+  "lbl_writing": "Writing",
+  "lbl_photography": "Photography"
+}
