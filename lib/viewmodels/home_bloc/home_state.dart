@@ -1,6 +1,5 @@
 import 'package:dreamvila/core/utils/status.dart';
 import 'package:dreamvila/models/productDataModel.dart';
-import 'package:dreamvila/models/signUpModel.dart';
 import 'package:dreamvila/models/userModel.dart';
 import 'package:equatable/equatable.dart';
 

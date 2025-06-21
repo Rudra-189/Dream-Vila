@@ -5,7 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'image_view.dart';
 
 class BuildCommonAuthDesign extends StatelessWidget {
-  const BuildCommonAuthDesign({super.key});
+  final String label;
+  const BuildCommonAuthDesign({super.key,required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class BuildCommonAuthDesign extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Sign Up",
+              label,
               style: TextStyle(
                   color: Theme.of(context).customColors.primaryColor,
                   fontSize: 30.sp),

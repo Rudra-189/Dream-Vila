@@ -15,7 +15,7 @@ class ImagePickerUtils{
   }
 
   Future<List<XFile>?>pickMultipleImageFromGallery()async{
-    final List<XFile>? file = await imagePicker.pickMultiImage();
+    final List<XFile> file = await imagePicker.pickMultiImage();
     if(file != null){
       return file;
     }else{

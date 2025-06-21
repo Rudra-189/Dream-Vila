@@ -1,19 +1,10 @@
 import 'package:dreamvila/core/utils/exports.dart';
 import 'package:flutter/material.dart';
 
-class SignInView extends StatefulWidget {
-  const SignInView({super.key});
-
-  @override
-  State<SignInView> createState() => _SignInViewState();
-}
-
-class _SignInViewState extends State<SignInView> {
+class SignInView extends StatelessWidget {
+  SignInView({super.key});
 
   final _formKey = GlobalKey<FormState>();
-
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +24,8 @@ class _SignInViewState extends State<SignInView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    BuildCommonAuthDesign(),
-                    LabeledTextField(label: 'Email', controller: emailController, inputType: InputType.email,validator: (value) => Validation.validateEmail(value!),),
+                    BuildCommonAuthDesign(label: "Sign In",),
+                    LabeledTextField(label: 'Email', controller: state.emailController!, inputType: InputType.email,validator: (value) => Validation.validateEmail(value!),),
                     Text("Password",
                         style: MyAppThemeHelper.lightTheme.textTheme.bodyLarge),
                     SizedBox(
@@ -44,7 +35,7 @@ class _SignInViewState extends State<SignInView> {
                       context: context,
                       type: InputType.text,
                       hintLabel: '* * * * * * *',
-                      controller: passwordController,
+                      controller: state.passwordController,
                       hintStyle: MyAppThemeHelper.lightTheme.textTheme.displayLarge,
                       suffixIcon: Icon(
                         Icons.visibility_off_outlined,
@@ -77,7 +68,6 @@ class _SignInViewState extends State<SignInView> {
                       },
                       isLoading: state.signInStatus == status.loading,
                     )
-
                   ],
                 ),
               ),
@@ -87,9 +77,11 @@ class _SignInViewState extends State<SignInView> {
       ),
     );
   }
+
   void _submit(BuildContext context, SignInState state) async {
     if (_formKey.currentState!.validate()) {
-      context.read<SignInBloc>().add(OnLoginButtonEvent(emailController.text, passwordController.text));
+      context.read<SignInBloc>().add(OnLoginButtonEvent(state.emailController!.text, state.passwordController!.text));
     }
+    Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.homeScreen,(Route<dynamic> route) => false,);
   }
 }

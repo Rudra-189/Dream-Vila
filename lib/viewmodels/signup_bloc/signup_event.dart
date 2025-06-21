@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:dreamvila/models/signUpModel.dart';
 import 'package:equatable/equatable.dart';
 
@@ -7,7 +6,7 @@ abstract class SignupEvent extends Equatable{
   List<Object>get props =>[];
 }
 
-class TogglePasswordVisibilityEvent extends SignupEvent {}
+class ToggleSPasswordVisibilityEvent extends SignupEvent {}
 
 class ToggleConfirmPasswordVisibilityEvent extends SignupEvent {}
 

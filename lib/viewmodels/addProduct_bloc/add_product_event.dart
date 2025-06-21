@@ -6,8 +6,6 @@ abstract class AddProductEvent extends Equatable{
   List<Object>get props => [];
 }
 
-class AddThumbnailEvent extends AddProductEvent{}
-
 class AddImagesEvent extends AddProductEvent{}
 
 class OnProductAddButtonSubmitEvent extends AddProductEvent{

@@ -1,8 +1,15 @@
-// lib/blocs/signup/signup_state.dart
 import 'dart:io';
+import 'package:dreamvila/core/utils/exports.dart';
 import 'package:dreamvila/core/utils/status.dart';
 import 'package:equatable/equatable.dart';
 class SignupState extends Equatable {
+
+  final TextEditingController? firstNameController;
+  final TextEditingController? lastNameController;
+  final TextEditingController? emailController;
+  final TextEditingController? mobileController;
+  final TextEditingController? passwordController;
+  final TextEditingController? confirmPasswordController;
 
   final status signUpStatus;
   final String errorMessage;
@@ -13,6 +20,12 @@ class SignupState extends Equatable {
   final List<String> selectedHobbies;
 
     SignupState({
+      required this.firstNameController,
+      required this.lastNameController,
+      required this.emailController,
+      required this.mobileController,
+      required this.passwordController,
+      required this.confirmPasswordController,
       this.signUpStatus = status.init,
       this.errorMessage = '',
     this.isPasswordVisible = true,
@@ -24,6 +37,12 @@ class SignupState extends Equatable {
 
 
   SignupState copyWith({
+    TextEditingController? firstNameController,
+    TextEditingController? lastNameController,
+    TextEditingController? emailController,
+    TextEditingController? mobileController,
+    TextEditingController? passwordController,
+    TextEditingController? confirmPasswordController,
     status? signUpStatus,
     String? errorMessage,
     bool? isPasswordVisible,
@@ -33,6 +52,12 @@ class SignupState extends Equatable {
     List<String>? selectedHobbies,
   }) {
     return SignupState(
+      firstNameController: firstNameController?? this.firstNameController,
+      lastNameController: lastNameController ?? this.lastNameController,
+      emailController: emailController ?? this.emailController,
+      mobileController: mobileController ?? this.mobileController,
+      passwordController: passwordController ?? this.passwordController,
+      confirmPasswordController: confirmPasswordController ?? this.confirmPasswordController,
       signUpStatus: signUpStatus ?? this.signUpStatus,
       errorMessage: errorMessage ?? this.errorMessage,
       isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
@@ -44,5 +69,5 @@ class SignupState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [signUpStatus,errorMessage,isPasswordVisible, isConfirmPasswordVisible, file,gender,selectedHobbies];
+  List<Object?> get props => [firstNameController,lastNameController,emailController,mobileController,passwordController,confirmPasswordController,signUpStatus,errorMessage,isPasswordVisible, isConfirmPasswordVisible, file,gender,selectedHobbies];
 }

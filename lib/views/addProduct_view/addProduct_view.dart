@@ -81,10 +81,38 @@ class _AddProductViewState extends State<AddProductView> {
                         radius: Radius.circular(12),
                         dashPattern: [13, 13],
                         child: GestureDetector(
-                          onTap: (){
-                            context.read<AddProductBloc>().add(AddThumbnailEvent());
+                          onTap: () {
+                            context.read<AddProductBloc>().add(AddImagesEvent());
                           },
-                          child: state.thumbnail != null ? CustomImageView(imagePath: state.thumbnail,height: 150.h,width: 250.w,radius: BorderRadius.circular(10),) : Container(
+                          child: state.images != null && state.images!.isNotEmpty
+                              ? SizedBox(
+                            height: 150.h,
+                            width: 250.w,
+                            child: PageView.builder(
+                              itemCount: state.images!.length,
+                              itemBuilder: (context, index) {
+                                return Stack(
+                                  children: [
+                                    CustomImageView(
+                                      imagePath: state.images![index],
+                                      height: 150.h,
+                                      width: 250.w,
+                                      radius: BorderRadius.circular(10),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    Positioned(
+                                      bottom: 110,
+                                      left: 210,
+                                      child: IconButton(onPressed: (){
+                                        context.read<AddProductBloc>().add(OnCancelImageEvent(index));
+                                      }, icon: Icon(Icons.cancel_rounded,color: Colors.red,)),
+                                    )
+                                  ],
+                                );
+                              },
+                            ),
+                          )
+                              : Container(
                             height: 150.h,
                             width: 250.w,
                             decoration: BoxDecoration(
@@ -95,12 +123,9 @@ class _AddProductViewState extends State<AddProductView> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 CustomImageView(
-                                  imagePath:
-                                  "assets/images/svgs/icons/ic_cloude.svg",
+                                  imagePath: "assets/images/svgs/icons/ic_cloude.svg",
                                 ),
-                                SizedBox(
-                                  height: 5.h,
-                                ),
+                                SizedBox(height: 5.h),
                                 Text(
                                   "Select Image",
                                   style: TextStyle(color: Color(0XFF2F2F2F)),
@@ -109,85 +134,6 @@ class _AddProductViewState extends State<AddProductView> {
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 50.h,
-                    ),
-                    Text("Images", style: MyAppThemeHelper.lightTheme.textTheme.bodyLarge),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    SizedBox(
-                      height: 100.h,
-                      child: state.images!.isEmpty ? Center(
-                        child: GestureDetector(
-                          onTap: (){
-                            context.read<AddProductBloc>().add(AddImagesEvent());
-                          },
-                          child: DottedBorder(
-                            color: Colors.black,
-                            strokeWidth: 1,
-                            borderType: BorderType.RRect,
-                            radius: Radius.circular(12),
-                            dashPattern: [13, 13],
-                            child: Container(
-                              height: 100.h,
-                              width: 100.h,
-                              decoration: BoxDecoration(
-                                color: Color(0XFFF8F8F8),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CustomImageView(
-                                    imagePath: "assets/images/svgs/icons/ic_cloude.svg",
-                                  ),
-                                  SizedBox(height: 5.h),
-                                  Text(
-                                    "Select Image",
-                                    style: TextStyle(color: Color(0XFF2F2F2F)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ) : ListView.builder(itemBuilder: (context,index){
-                        return Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Stack(
-                            children: [
-                              DottedBorder(
-                                color: Colors.black,
-                                strokeWidth: 1,
-                                borderType: BorderType.RRect,
-                                radius: Radius.circular(12),
-                                dashPattern: [13, 13],
-                                child: Container(
-                                  height: 100.h,
-                                  width: 100.h,
-                                  decoration: BoxDecoration(
-                                    color: Color(0XFFF8F8F8),
-                                    borderRadius: BorderRadius.circular(16.r),
-                                  ),
-                                  child: CustomImageView(imagePath: state.images?[index],radius: BorderRadius.circular(10.r),),
-                                ),
-                              ),
-                              Positioned(
-                                left: 70.w,
-                                bottom: 65.h,
-                                child: IconButton(onPressed: (){
-                                  context.read<AddProductBloc>().add(OnCancelImageEvent(index));
-                                }, icon: Icon(Icons.cancel_rounded,color: Colors.red,size: 20.sp,)),
-                              )
-                            ],
-                          ),
-                        );
-                      },
-                        scrollDirection: Axis.horizontal,
-                        itemCount: state.images?.length,
                       ),
                     ),
                     SizedBox(

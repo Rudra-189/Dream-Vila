@@ -209,7 +209,7 @@ Widget _buildPropertyList(BuildContext context,PropertyResponse data,HomeState s
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    CustomImageView(imagePath: property.images[0],height: 85.h,width: 85.h,radius: BorderRadius.circular(10),),
+                    CustomImageView(imagePath: property.thumbnail,height: 85.h,width: 85.h,radius: BorderRadius.circular(10)),
                     SizedBox(
                       width: 5.w,
                     ),
@@ -220,8 +220,10 @@ Widget _buildPropertyList(BuildContext context,PropertyResponse data,HomeState s
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(property.title,
-                                  style: Theme.of(context).textTheme.bodyLarge),
+                              Expanded(
+                                child: Text(property.title,
+                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(overflow: TextOverflow.ellipsis)),
+                              ),
                               Text(
                                 "\$ ${property.price.toString()}",
                                 style: Theme.of(context).textTheme.displayMedium,

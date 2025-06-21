@@ -15,6 +15,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     emit(state.copyWith(splashStatus: status.loading));
     bool result = prefs.getBool("isLogin") ?? false;
+    await Future.delayed(Duration(seconds: 3));
     print(result);
     if(result){
       emit(state.copyWith(splashStatus: status.success));

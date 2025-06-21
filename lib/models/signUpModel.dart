@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
 class SignupModel extends Equatable {

@@ -1,10 +1,9 @@
 import 'package:bloc/bloc.dart';
+import 'package:dreamvila/core/utils/exports.dart';
 import 'package:dreamvila/core/utils/status.dart';
 import 'package:dreamvila/repository/authRepository.dart';
 import 'package:dreamvila/viewmodels/signin_bloc/signin_event.dart';
 import 'package:dreamvila/viewmodels/signin_bloc/signin_state.dart';
-import 'package:meta/meta.dart';
-
 import '../../core/api_config/client/api_client.dart';
 
 
@@ -13,7 +12,11 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
   final AuthRepository authRepository = AuthRepository(ApiClient());
 
-  SignInBloc() : super(SignInState()) {
+
+  SignInBloc() : super(SignInState(
+    emailController: TextEditingController(),
+    passwordController: TextEditingController()
+  )) {
     on<TogglePasswordVisibilityEvent>(_togglePasswordVisibilityEvent);
     on<OnLoginButtonEvent>(_onLoginButtonEvent);
   }

@@ -2,11 +2,9 @@ import 'package:bloc/bloc.dart';
 import 'package:dreamvila/core/api_config/client/api_client.dart';
 import 'package:dreamvila/core/utils/status.dart';
 import 'package:dreamvila/models/productDataModel.dart';
-import 'package:dreamvila/models/signUpModel.dart';
 import 'package:dreamvila/models/userModel.dart';
 import 'package:dreamvila/repository/productRepository.dart';
 import 'package:dreamvila/repository/userRepository.dart';
-import 'package:meta/meta.dart';
 
 import 'home_event.dart';
 import 'home_state.dart';

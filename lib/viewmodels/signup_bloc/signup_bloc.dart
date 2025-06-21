@@ -1,13 +1,11 @@
 import 'dart:io';
-
 import 'package:dreamvila/core/api_config/client/api_client.dart';
-import 'package:dreamvila/core/utils/status.dart';
+import 'package:dreamvila/core/utils/ImagePickerUtils.dart';
 import 'package:dreamvila/repository/authRepository.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dreamvila/viewmodels/signup_bloc/signup_event.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../core/utils/ImagePickerUtils.dart';
-import 'signup_event.dart';
-import 'signup_state.dart';
+
+import '../../core/utils/exports.dart';
 
 class SignupBloc extends Bloc<SignupEvent, SignupState> {
 
@@ -17,8 +15,15 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
 
 
   SignupBloc(this.imagePickerUtils)
-      : super(SignupState()) {
-    on<TogglePasswordVisibilityEvent>(_togglePasswordVisibilityEvent);
+      : super(SignupState(
+    firstNameController:TextEditingController(),
+    lastNameController: TextEditingController(),
+    emailController: TextEditingController(),
+    mobileController: TextEditingController(),
+    passwordController: TextEditingController(),
+    confirmPasswordController: TextEditingController(),
+  )) {
+    on<ToggleSPasswordVisibilityEvent>(_togglePasswordVisibilityEvent);
     on<ToggleConfirmPasswordVisibilityEvent>(_toggleConfirmPasswordVisibilityEvent);
     on<ImagePickedEvent>(_imagePickedEvent);
     on<SignupSubmittedEvent>(_signupSubmittedEvent);
@@ -26,7 +31,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     on<OnGenderChangeEvent>(_onGenderChangeEvent);
   }
   void _togglePasswordVisibilityEvent(
-      TogglePasswordVisibilityEvent event, Emitter emit) {
+      ToggleSPasswordVisibilityEvent event, Emitter emit) {
     emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible));
   }
 

@@ -38,7 +38,6 @@ class ApiClient {
     final storage = FlutterSecureStorage();
     final header = <String, String>{'Content-Type': 'application/json'};
     String? deviceToken = await storage.read(key: "deviceToken");
-    print("/////////////////////////////////${deviceToken}///////////////////////////////////");
 
     if (deviceToken != null && deviceToken.isNotEmpty) {
       header['Authorization'] = 'Bearer $deviceToken';

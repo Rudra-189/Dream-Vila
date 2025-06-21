@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:dreamvila/core/utils/status.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,20 +13,16 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
   final ImagePickerUtils imagePickerUtils;
 
   AddProductBloc(this.imagePickerUtils) : super(AddProductState()) {
-    on<AddThumbnailEvent>(_addThumbnailEvent);
     on<AddImagesEvent>(_addImagesEvent);
     on<OnProductAddButtonSubmitEvent>(_onProductAddButtonSubmitEvent);
     on<OnCancelImageEvent>(_onCancelImageEvent);
   }
-  void _addThumbnailEvent(AddThumbnailEvent event,Emitter emit)async{
-    XFile? file = await imagePickerUtils.PickImageFromGallary();
-    emit(state.copyWith(thumbnail: file?.path.toString()));
-  }
+
   void _addImagesEvent(AddImagesEvent event,Emitter emit)async{
     List<String> images = List<String>.from(state.images ?? []);
     List<XFile>? file = await imagePickerUtils.pickMultipleImageFromGallery();
     file?.map((e)=>images.add(e.path.toString())).toList();
-    emit(state.copyWith(images: images));
+    emit(state.copyWith(images: images,thumbnail: file?[0].path));
   }
 
   void _onProductAddButtonSubmitEvent(OnProductAddButtonSubmitEvent event,Emitter emit)async{

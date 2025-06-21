@@ -1,17 +1,13 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 
-
 class CustomImageView extends StatelessWidget {
-  ///[imagePath] is required parameter for showing image
-
   final String? imagePath;
   final double? height;
   final double? width;
@@ -47,24 +43,35 @@ class CustomImageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return alignment != null ? Align(alignment: alignment!, child: _buildWidget()) : _buildWidget();
+    return alignment != null
+        ? Align(alignment: alignment!, child: _buildWidget())
+        : _buildWidget();
   }
 
   Widget _buildWidget() {
-    return Padding(padding: margin ?? EdgeInsets.zero, child: InkWell(onTap: onTap, child: _buildCircleImage()));
+    return Padding(
+      padding: margin ?? EdgeInsets.zero,
+      child: InkWell(onTap: onTap, child: _buildCircleImage()),
+    );
   }
 
-  _buildCircleImage() {
+  Widget _buildCircleImage() {
     if (radius != null) {
-      return ClipRRect(borderRadius: radius ?? BorderRadius.zero, child: _buildImageWithBorder());
+      return ClipRRect(
+        borderRadius: radius ?? BorderRadius.zero,
+        child: _buildImageWithBorder(),
+      );
     } else {
       return _buildImageWithBorder();
     }
   }
 
-  _buildImageWithBorder() {
+  Widget _buildImageWithBorder() {
     if (border != null) {
-      return Container(decoration: BoxDecoration(border: border, borderRadius: radius), child: _buildImageView());
+      return Container(
+        decoration: BoxDecoration(border: border, borderRadius: radius),
+        child: _buildImageView(),
+      );
     } else {
       return _buildImageView();
     }
@@ -82,11 +89,24 @@ class CustomImageView extends StatelessWidget {
               height: height,
               width: width,
               fit: fit ?? BoxFit.contain,
-              colorFilter: color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
+              colorFilter: color != null
+                  ? ColorFilter.mode(color!, BlendMode.srcIn)
+                  : null,
             ),
           );
         case ImageType.file:
-          return Image.file(File(imagePath!), height: height, width: width, fit: fit ?? BoxFit.cover, color: color);
+          final file = File(imagePath!);
+          if (file.existsSync()) {
+            return Image.file(
+              file,
+              height: height,
+              width: width,
+              fit: fit ?? BoxFit.cover,
+              color: color,
+            );
+          } else {
+            return _buildErrorWidget();
+          }
         case ImageType.network:
           return CachedNetworkImage(
             height: height,
@@ -101,14 +121,16 @@ class CustomImageView extends StatelessWidget {
             fadeOutDuration: fadeOutDuration,
             colorBlendMode: colorBlendMode ?? BlendMode.srcOver,
             fadeOutCurve: Curves.easeOut,
-            placeholder:
-                usePlaceholder
-                    ? (context, url) => Shimmer.fromColors(
-                      baseColor: Colors.grey.shade200,
-                      highlightColor: Colors.grey.shade50,
-                      child: Container(width: double.infinity, decoration: BoxDecoration(color: Colors.grey.shade200)),
-                    )
-                    : null,
+            placeholder: usePlaceholder
+                ? (context, url) => Shimmer.fromColors(
+              baseColor: Colors.grey.shade200,
+              highlightColor: Colors.grey.shade50,
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(color: Colors.grey.shade200),
+              ),
+            )
+                : null,
             cacheManager: CacheManager(
               Config(
                 'APP_NAME',
@@ -118,13 +140,15 @@ class CustomImageView extends StatelessWidget {
                 fileService: HttpFileService(),
               ),
             ),
-            errorWidget:
-                (context, url, error) =>
-                    Container(width: double.infinity, decoration: BoxDecoration(color: Colors.grey.shade200)),
-            // Assets.images.pngs.other.pngLogo.image(height: height, width: width, fit: fit ?? BoxFit.cover),
+            errorWidget: (context, url, error) => _buildErrorWidget(),
           );
         case ImageType.lottie:
-          return Lottie.asset(imagePath!, height: height, width: width, fit: fit ?? BoxFit.cover);
+          return Lottie.asset(
+            imagePath!,
+            height: height,
+            width: width,
+            fit: fit ?? BoxFit.cover,
+          );
         case ImageType.png:
         default:
           return Image.asset(
@@ -136,10 +160,21 @@ class CustomImageView extends StatelessWidget {
             filterQuality: FilterQuality.medium,
             gaplessPlayback: true,
             alignment: Alignment.center,
+            errorBuilder: (context, error, stackTrace) => _buildErrorWidget(),
           );
       }
     }
+
     return const SizedBox.shrink();
+  }
+
+  Widget _buildErrorWidget() {
+    return Container(
+      height: height,
+      width: width,
+      color: Colors.grey.shade200,
+      child: const Icon(Icons.broken_image, size: 30, color: Colors.grey),
+    );
   }
 }
 
