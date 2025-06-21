@@ -10,24 +10,29 @@ class HomeState extends Equatable{
   final String errorMessage;
   final PropertyResponse? data;
   final UserModel? user;
+  final int index;
 
-  const HomeState({this.homeStatus = status.init,  this.errorMessage = '',  this.data,this.user});
+  const HomeState({this.homeStatus = status.init,  this.errorMessage = '',  this.data,this.user,required this.index});
 
   HomeState copyWith({
     status? homeStatus,
     String? errorMessage,
     PropertyResponse? data,
-    UserModel? user
+
+    UserModel? user,
+    int? index
+
 }){
     return HomeState(
       homeStatus: homeStatus ?? this.homeStatus,
       errorMessage: errorMessage ?? this.errorMessage,
       data: data ?? this.data,
-      user: user ?? this.user
+      user: user ?? this.user,
+      index: index ?? this.index
     );
   }
 
   @override
-  List<Object?>get props => [homeStatus,errorMessage,data,user];
+  List<Object?>get props => [homeStatus,errorMessage,data,user,index];
 }
 

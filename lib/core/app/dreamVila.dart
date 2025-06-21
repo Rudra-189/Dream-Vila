@@ -1,4 +1,3 @@
-import 'package:dreamvila/core/api_config/client/api_client.dart';
 import 'package:dreamvila/core/routes/app_routes.dart';
 import 'package:dreamvila/core/themes/theme_helper.dart';
 import 'package:dreamvila/core/utils/ImagePickerUtils.dart';

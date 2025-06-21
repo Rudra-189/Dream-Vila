@@ -17,3 +17,8 @@ class OnProductAddButtonSubmitEvent extends AddProductEvent{
   @override
   List<Object>get props => [product];
 }
+
+class OnCancelImageEvent extends AddProductEvent{
+  final int index;
+  OnCancelImageEvent(this.index);
+}

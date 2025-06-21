@@ -1,14 +1,5 @@
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dreamvila/core/themes/theme_helper.dart';
-import 'package:dreamvila/core/utils/status.dart';
-import 'package:dreamvila/models/productDetailModel.dart';
-import 'package:dreamvila/viewmodels/propertyDetail_bloc/property_detail_bloc.dart';
-import 'package:dreamvila/viewmodels/propertyDetail_bloc/property_detail_event.dart';
-import 'package:dreamvila/viewmodels/propertyDetail_bloc/property_detail_state.dart';
-import 'package:dreamvila/widgets/common_widget/image_view.dart';
+import 'package:dreamvila/core/utils/exports.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PropertyDetailView extends StatelessWidget {
   String id;
@@ -20,17 +11,26 @@ class PropertyDetailView extends StatelessWidget {
     return Scaffold(
       body: BlocBuilder<PropertyDetailBloc, PropertyDetailState>(
         builder: (context, state) {
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                _buildPropertyImages(context, state.data!.images,state),
-                SizedBox(
-                  height: 30.h,
-                ),
-                _buildPropertyDetail(context,state.data!)
-              ],
-            ),
-          );
+          if(state.detailPageStatus == status.loading){
+            return Center(child: CircularProgressIndicator());
+          }else if(state.detailPageStatus == status.success){
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildPropertyImages(context, state.data!.images,state),
+                  SizedBox(
+                    height: 30.h,
+                  ),
+                  _buildPropertyDetail(context,state.data!),
+                  SizedBox(
+                    height: 30.h,
+                  ),
+                ],
+              ),
+            );
+          }else{
+            return Center(child: Text(state.errorMessage));
+          }
         },
       ),
     );
@@ -80,8 +80,8 @@ Widget _buildPropertyImages(BuildContext context, List images,PropertyDetailStat
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(images.length, (index) {
             return Container(
-              height: 10,
-              width: 10,
+              height: 7.h,
+              width: 7.h,
               margin: EdgeInsets.symmetric(horizontal: 4),
               decoration: BoxDecoration(
                 color:  state.currentIndex == index
@@ -96,213 +96,78 @@ Widget _buildPropertyImages(BuildContext context, List images,PropertyDetailStat
     ],
   );
 }
+Widget _buildPropertyDetail(BuildContext context, ProductModel product) {
+  final Map<String, String> details = {
+    "Location": product.address,
+    "Price": "\$ ${product.price}",
+    "Discount": "${product.discountPercentage} %",
+    "Rating": "${product.rating} / 5",
+    "Type": product.type,
+    "Plots": "Plots ${product.plot}",
+    "Bedroom": product.bedroom.toString(),
+    "Hall": product.hall.toString(),
+    "Kitchen": product.kitchen.toString(),
+    "Washroom": product.washroom.toString(),
+  };
 
-Widget _buildPropertyDetail(BuildContext context,ProductModel product) {
   return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 20),
+    padding: const EdgeInsets.symmetric(horizontal: 20),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           "Description",
-          style: MyAppThemeHelper.lightTheme.textTheme.bodyLarge,
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
-        SizedBox(
-          height: 10.h,
-        ),
+        SizedBox(height: 10.h),
         Card(
           color: Theme.of(context).customColors.secondaryColor,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          child: Container(
-            margin: EdgeInsets.all(10),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   product.description,
-                  style: MyAppThemeHelper.lightTheme.textTheme.bodyMedium,
+                  style:Theme.of(context).textTheme.bodyMedium,
                 ),
-                SizedBox(
-                  height: 25.h,
-                ),
-                Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                SizedBox(height: 20.h),
+                Table(
+                  columnWidths: const {
+                    0: IntrinsicColumnWidth(), // label column adjusts to its width
+                    1: FlexColumnWidth(),      // value column takes remaining space
+                  },
+                  defaultVerticalAlignment: TableCellVerticalAlignment.top,
+                  children: details.entries.map((entry) {
+                    return TableRow(
                       children: [
-                        Text(
-                          "Location :",
-                          style:
-                              MyAppThemeHelper.lightTheme.textTheme.bodyLarge,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Text(
+                            "${entry.key} :",
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
                         ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
-                        Text(
-                          "Price :",
-                          style:
-                              MyAppThemeHelper.lightTheme.textTheme.bodyLarge,
-                        ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
-                        Text(
-                          "Discount :",
-                          style:
-                              MyAppThemeHelper.lightTheme.textTheme.bodyLarge,
-                        ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
-                        Text(
-                          "Rating :",
-                          style:
-                              MyAppThemeHelper.lightTheme.textTheme.bodyLarge,
-                        ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
-                        Text(
-                          "Type :",
-                          style:
-                              MyAppThemeHelper.lightTheme.textTheme.bodyLarge,
-                        ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
-                        Text(
-                          "Plots :",
-                          style:
-                              MyAppThemeHelper.lightTheme.textTheme.bodyLarge,
-                        ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
-                        Text(
-                          "Bedroom :",
-                          style:
-                              MyAppThemeHelper.lightTheme.textTheme.bodyLarge,
-                        ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
-                        Text(
-                          "Hall :",
-                          style:
-                              MyAppThemeHelper.lightTheme.textTheme.bodyLarge,
-                        ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
-                        Text(
-                          "Kitchen :",
-                          style:
-                              MyAppThemeHelper.lightTheme.textTheme.bodyLarge,
-                        ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
-                        Text(
-                          "Washroom :",
-                          style:
-                              MyAppThemeHelper.lightTheme.textTheme.bodyLarge,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Text(
+                            entry.value,
+                            style: Theme.of(context).textTheme.displayMedium,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
                         ),
                       ],
-                    ),
-                    SizedBox(
-                      width: 10.w,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          product.address,
-                          style: MyAppThemeHelper
-                              .lightTheme.textTheme.displayMedium!
-                              .copyWith(overflow: TextOverflow.ellipsis),
-                          maxLines: 1,
-                        ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
-                        Text(
-                          "\$ ${product.price}",
-                          style: MyAppThemeHelper
-                              .lightTheme.textTheme.displayMedium,
-                        ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
-                        Text(
-                          "${product.discountPercentage} % Discount  ",
-                          style: MyAppThemeHelper
-                              .lightTheme.textTheme.displayMedium,
-                        ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
-                        Text(
-                          "${product.rating} / 5",
-                          style: MyAppThemeHelper
-                              .lightTheme.textTheme.displayMedium,
-                        ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
-                        Text(
-                          product.type,
-                          style: MyAppThemeHelper
-                              .lightTheme.textTheme.displayMedium,
-                        ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
-                        Text(
-                          "Plots ${product.plot}",
-                          style: MyAppThemeHelper
-                              .lightTheme.textTheme.displayMedium,
-                        ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
-                        Text(
-                          product.bedroom.toString(),
-                          style: MyAppThemeHelper
-                              .lightTheme.textTheme.displayMedium,
-                        ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
-                        Text(
-                          product.hall.toString(),
-                          style: MyAppThemeHelper
-                              .lightTheme.textTheme.displayMedium,
-                        ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
-                        Text(
-                          product.kitchen.toString(),
-                          style: MyAppThemeHelper
-                              .lightTheme.textTheme.displayMedium,
-                        ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
-                        Text(
-                          product.washroom.toString(),
-                          style: MyAppThemeHelper
-                              .lightTheme.textTheme.displayMedium,
-                        ),
-                      ],
-                    )
-                  ],
+                    );
+                  }).toList(),
                 ),
               ],
             ),
           ),
-        )
+        ),
       ],
     ),
   );
 }
+

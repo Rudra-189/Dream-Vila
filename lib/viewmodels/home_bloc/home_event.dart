@@ -7,3 +7,8 @@ abstract class HomeEvent extends Equatable{
 
 class LoadHomePageDataEvent extends HomeEvent{}
 
+class OnTabIndexChangeEvent extends HomeEvent{
+  final int index;
+
+  OnTabIndexChangeEvent(this.index);
+}

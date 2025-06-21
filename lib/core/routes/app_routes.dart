@@ -1,10 +1,4 @@
-import 'package:dreamvila/views/addProduct_view/addProduct_view.dart';
-import 'package:dreamvila/views/home_view/home_view.dart';
-import 'package:dreamvila/views/propertyDetail_view/propertyDetail_view.dart';
-import 'package:dreamvila/views/signin_view/signin_view.dart';
-import 'package:dreamvila/views/signup_view/signup_view.dart';
-import 'package:dreamvila/views/splash_view/splash_view.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:dreamvila/core/utils/exports.dart';
 
 class AppRoutes {
   static const String initialRoute = '/';

@@ -1,18 +1,5 @@
-import 'dart:io';
-
-import 'package:dreamvila/core/routes/app_routes.dart';
-import 'package:dreamvila/core/themes/theme_helper.dart';
-import 'package:dreamvila/core/utils/status.dart';
-import 'package:dreamvila/models/productDataModel.dart';
-import 'package:dreamvila/models/signUpModel.dart';
-import 'package:dreamvila/models/userModel.dart';
-import 'package:dreamvila/viewmodels/home_bloc/home_bloc.dart';
-import 'package:dreamvila/viewmodels/home_bloc/home_event.dart';
-import 'package:dreamvila/viewmodels/home_bloc/home_state.dart';
-import 'package:dreamvila/widgets/common_widget/image_view.dart';
+import 'package:dreamvila/core/utils/exports.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -40,7 +27,7 @@ class HomeView extends StatelessWidget {
                       SizedBox(
                         height: 10.h,
                       ),
-                      _buildPropertyList(context,data!)
+                      _buildPropertyList(context,data!,state)
                     ],
                   ),
                 ),
@@ -65,8 +52,8 @@ Widget _buildUserInfo(BuildContext context,UserModel user) {
           children: [
             //user Image
             Container(
-              height: 75,
-              width: 75,
+              height: 75.h,
+              width: 75.h,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.r),
                   border: Border(
@@ -96,11 +83,11 @@ Widget _buildUserInfo(BuildContext context,UserModel user) {
               children: [
                 Text(
                   "Hello!",
-                  style: MyAppThemeHelper.lightTheme.textTheme.titleLarge,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
                 Text(
-                  "Mr. Smith",
-                  style: MyAppThemeHelper.lightTheme.textTheme.titleLarge,
+                  "${user.firstName} ${user.lastName}",
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ],
             )
@@ -114,7 +101,7 @@ Widget _buildUserInfo(BuildContext context,UserModel user) {
           children: [
             Text(
               user.email,
-              style: MyAppThemeHelper.lightTheme.textTheme.titleMedium,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             Container(
               padding: EdgeInsets.all(10),
@@ -154,7 +141,7 @@ Widget _buildUserInfo(BuildContext context,UserModel user) {
                 },
                 child: Text(
                   "+Add Property",
-                  style: MyAppThemeHelper.lightTheme.textTheme.displayMedium,
+                  style: Theme.of(context).textTheme.displayMedium,
                 ),
               ),
             )
@@ -168,8 +155,9 @@ Widget _buildUserInfo(BuildContext context,UserModel user) {
 Widget _buildTabView(BuildContext context) {
   return TabBar(
     onTap: (int value) {
-      print(value);
+      context.read<HomeBloc>().add(OnTabIndexChangeEvent(value));
     },
+
     labelColor: Theme.of(context).customColors.primaryColor,
     unselectedLabelColor: Colors.black54,
     indicatorSize: TabBarIndicatorSize.tab,
@@ -186,6 +174,7 @@ Widget _buildTabView(BuildContext context) {
               offset: Offset(-1, 1),
               blurRadius: 5.r)
         ]),
+
     tabs: [
       Tab(text: 'House'),
       Tab(text: 'Apartment'),
@@ -195,129 +184,138 @@ Widget _buildTabView(BuildContext context) {
   );
 }
 
-Widget _buildPropertyList(BuildContext context,PropertyResponse data) {
+Widget _buildPropertyList(BuildContext context,PropertyResponse data,HomeState state) {
+
+  final categoryFilter = ['house', 'apartment', 'office', 'land'];
+
+  final filteredData = data.data.where((e) => e.type == categoryFilter [state.index]).toList();
+
   return Expanded(
     child: ListView.builder(
       itemBuilder: (context, index) {
-        final property = data.data[index];
-        return GestureDetector(
-          onTap: () {
-            Navigator.of(context).pushNamed(AppRoutes.propertyDetailScreen,arguments: property.id);
-          },
-          child: Card(
-            color: Colors.white,
-            shadowColor: Theme.of(context).customColors.borderColor,
-            margin: EdgeInsets.only(bottom: 20),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  CustomImageView(imagePath: property.images[0],height: 85.h,width: 85.h,radius: BorderRadius.circular(10),),
-                  SizedBox(
-                    width: 5.w,
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(property.title,
-                                style: MyAppThemeHelper
-                                    .lightTheme.textTheme.bodyLarge),
-                            Text(
-                              "\$ ${property.price.toString()}",
-                              style: MyAppThemeHelper
-                                  .lightTheme.textTheme.displayMedium,
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10.h,
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.location_pin,
-                              color: Colors.black54,
-                              size: 18.sp,
-                            ),
-                            Text(property.address,
-                                style: TextStyle(
-                                    color: Colors.black54, fontSize: 12)),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10.h,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Plots ${property.plot.toString()}",
-                              style: TextStyle(
-                                  color: Colors.black38, fontSize: 10),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              "|",
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .customColors
-                                      .primaryColor),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              "${property.discountPercentage} % Discount",
-                              style: TextStyle(
-                                  color: Colors.black38, fontSize: 10),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              "|",
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .customColors
-                                      .primaryColor),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.star,
-                                  color: Theme.of(context)
-                                      .customColors
-                                      .primaryColor,
-                                  size: 15,
-                                ),
-                                Text(
-                                  property.rating.toString(),
-                                  style: TextStyle(
-                                      color: Colors.black38, fontSize: 10),
-                                )
-                              ],
-                            )
-                          ],
-                        )
-                      ],
+        final property = filteredData[index];
+        if(filteredData.isEmpty){
+          return Text("Data Not Found!",style: Theme.of(context).textTheme.bodyLarge,);
+        }else{
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed(AppRoutes.propertyDetailScreen,arguments: property.id);
+            },
+            child: Card(
+              color: Colors.white,
+              shadowColor: Theme.of(context).customColors.borderColor,
+              margin: EdgeInsets.only(bottom: 20),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    CustomImageView(imagePath: property.images[0],height: 85.h,width: 85.h,radius: BorderRadius.circular(10),),
+                    SizedBox(
+                      width: 5.w,
                     ),
-                  )
-                ],
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(property.title,
+                                  style: Theme.of(context).textTheme.bodyLarge),
+                              Text(
+                                "\$ ${property.price.toString()}",
+                                style: Theme.of(context).textTheme.displayMedium,
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.location_pin,
+                                color: Colors.black54,
+                                size: 18.sp,
+                              ),
+                              Expanded(
+                                child: Text(property.address,
+                                    style: TextStyle(
+                                        color: Colors.black54, fontSize: 12,overflow: TextOverflow.ellipsis)),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Plots ${property.plot.toString()}",
+                                style: TextStyle(
+                                    color: Colors.black38, fontSize: 10),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "|",
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .customColors
+                                        .primaryColor),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "${property.discountPercentage} % Discount",
+                                style: TextStyle(
+                                    color: Colors.black38, fontSize: 10),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "|",
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .customColors
+                                        .primaryColor),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.star,
+                                    color: Theme.of(context)
+                                        .customColors
+                                        .primaryColor,
+                                    size: 15,
+                                  ),
+                                  Text(
+                                    property.rating.toString(),
+                                    style: TextStyle(
+                                        color: Colors.black38, fontSize: 10),
+                                  )
+                                ],
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-        );
+          );
+        }
       },
-      itemCount: data.data.length,
+      itemCount:filteredData.length,
     ),
   );
 }

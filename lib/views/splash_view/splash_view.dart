@@ -1,10 +1,5 @@
-import 'package:dreamvila/core/routes/app_routes.dart';
-import 'package:dreamvila/core/utils/status.dart';
-import 'package:dreamvila/viewmodels/splash_bloc/splash_bloc.dart';
-import 'package:dreamvila/viewmodels/splash_bloc/splash_state.dart';
-import 'package:dreamvila/widgets/common_widget/image_view.dart';
+import 'package:dreamvila/core/utils/exports.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SplashView extends StatelessWidget {
   const SplashView({super.key});

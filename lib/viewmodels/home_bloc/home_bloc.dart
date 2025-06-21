@@ -17,8 +17,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final productRepository = ProductRepository(ApiClient());
   final userRepository = UserRepository(ApiClient());
 
-  HomeBloc() : super(HomeState()) {
+  HomeBloc() : super(HomeState(index: 0)) {
     on<LoadHomePageDataEvent>(_loadHomePageDataEvent);
+    on<OnTabIndexChangeEvent>(_onTabIndexChangeEvent);
   }
 
   void _loadHomePageDataEvent(LoadHomePageDataEvent event,Emitter emit)async{
@@ -31,5 +32,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }else{
       emit(state.copyWith(homeStatus: status.failure,errorMessage: data.message));
     }
+  }
+
+  void _onTabIndexChangeEvent(OnTabIndexChangeEvent event,Emitter emit){
+    emit(state.copyWith(index: event.index));
   }
 }

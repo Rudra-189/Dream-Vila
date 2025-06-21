@@ -17,6 +17,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
     on<AddThumbnailEvent>(_addThumbnailEvent);
     on<AddImagesEvent>(_addImagesEvent);
     on<OnProductAddButtonSubmitEvent>(_onProductAddButtonSubmitEvent);
+    on<OnCancelImageEvent>(_onCancelImageEvent);
   }
   void _addThumbnailEvent(AddThumbnailEvent event,Emitter emit)async{
     XFile? file = await imagePickerUtils.PickImageFromGallary();
@@ -24,8 +25,8 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
   }
   void _addImagesEvent(AddImagesEvent event,Emitter emit)async{
     List<String> images = List<String>.from(state.images ?? []);
-    XFile? file = await imagePickerUtils.PickImageFromGallary();
-    images.add(file!.path.toString());
+    List<XFile>? file = await imagePickerUtils.pickMultipleImageFromGallery();
+    file?.map((e)=>images.add(e.path.toString())).toList();
     emit(state.copyWith(images: images));
   }
 
@@ -38,5 +39,11 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       emit(state.copyWith(addProductStatus: status.failure,errorMessage: 'error'));
     }
 
+  }
+
+  void _onCancelImageEvent(OnCancelImageEvent event,Emitter emit){
+    List<String> images = List<String>.from(state.images ?? []);
+    images.removeAt(event.index);
+    emit(state.copyWith(images: images));
   }
 }
