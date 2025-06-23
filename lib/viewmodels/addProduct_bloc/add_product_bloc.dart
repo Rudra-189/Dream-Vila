@@ -12,10 +12,11 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
   final productRepository = ProductRepository(ApiClient());
   final ImagePickerUtils imagePickerUtils;
 
-  AddProductBloc(this.imagePickerUtils) : super(AddProductState()) {
+  AddProductBloc(this.imagePickerUtils) : super(AddProductState.initial()) {
     on<AddImagesEvent>(_addImagesEvent);
     on<OnProductAddButtonSubmitEvent>(_onProductAddButtonSubmitEvent);
     on<OnCancelImageEvent>(_onCancelImageEvent);
+    on<OnDisposeEvent>(_onDisposeEvent);
   }
 
   void _addImagesEvent(AddImagesEvent event,Emitter emit)async{
@@ -40,5 +41,20 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
     List<String> images = List<String>.from(state.images ?? []);
     images.removeAt(event.index);
     emit(state.copyWith(images: images));
+  }
+  void _onDisposeEvent(OnDisposeEvent event, Emitter emit) {
+    state.titleController.text = '';
+    state.descriptionController.text = '';
+    state.addressController.text = '';
+    state.priceController.text = '';
+    state.discountPercentageController.text = '';
+    state.ratingController.text = '';
+    state.plotController.text = '';
+    state.typeController.text = '';
+    state.bedroomController.text = '';
+    state.hallController.text = '';
+    state.kitchenController.text = '';
+    state.washroomController.text = '';
+    state.images!.clear();
   }
 }

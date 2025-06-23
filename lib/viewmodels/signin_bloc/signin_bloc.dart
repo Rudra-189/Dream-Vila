@@ -15,7 +15,8 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
   SignInBloc() : super(SignInState(
     emailController: TextEditingController(),
-    passwordController: TextEditingController()
+    passwordController: TextEditingController(),
+      formKey: GlobalKey<FormState>()
   )) {
     on<TogglePasswordVisibilityEvent>(_togglePasswordVisibilityEvent);
     on<OnLoginButtonEvent>(_onLoginButtonEvent);

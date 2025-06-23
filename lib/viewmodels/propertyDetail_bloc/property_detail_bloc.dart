@@ -16,7 +16,7 @@ class PropertyDetailBloc extends Bloc<PropertyDetailEvent, PropertyDetailState> 
   }
   void _loadProductDetailEvent(LoadProductDetailEvent event,Emitter emit)async{
     emit(state.copyWith(detailPageStatus: status.loading));
-    final ProductModel data = await productRepository.getPropertyDetail(event.id);
+    final ProductDetailModel data = await productRepository.getPropertyDetail(event.id);
     if(data != null){
       emit(state.copyWith(detailPageStatus: status.success,data: data));
     }else{

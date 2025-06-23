@@ -4,12 +4,13 @@ import 'package:dreamvila/core/utils/status.dart';
 import 'package:equatable/equatable.dart';
 class SignupState extends Equatable {
 
-  final TextEditingController? firstNameController;
-  final TextEditingController? lastNameController;
-  final TextEditingController? emailController;
-  final TextEditingController? mobileController;
-  final TextEditingController? passwordController;
-  final TextEditingController? confirmPasswordController;
+  final TextEditingController firstNameController;
+  final TextEditingController lastNameController;
+  final TextEditingController emailController;
+  final TextEditingController mobileController;
+  final TextEditingController passwordController;
+  final TextEditingController confirmPasswordController;
+  final GlobalKey<FormState> formKeySignUp;
 
   final status signUpStatus;
   final String errorMessage;
@@ -26,6 +27,7 @@ class SignupState extends Equatable {
       required this.mobileController,
       required this.passwordController,
       required this.confirmPasswordController,
+      required this.formKeySignUp,
       this.signUpStatus = status.init,
       this.errorMessage = '',
     this.isPasswordVisible = true,
@@ -37,6 +39,7 @@ class SignupState extends Equatable {
 
 
   SignupState copyWith({
+    GlobalKey<FormState>? formKeySignUp,
     TextEditingController? firstNameController,
     TextEditingController? lastNameController,
     TextEditingController? emailController,
@@ -52,6 +55,7 @@ class SignupState extends Equatable {
     List<String>? selectedHobbies,
   }) {
     return SignupState(
+        formKeySignUp: formKeySignUp ?? this.formKeySignUp,
       firstNameController: firstNameController?? this.firstNameController,
       lastNameController: lastNameController ?? this.lastNameController,
       emailController: emailController ?? this.emailController,
@@ -69,5 +73,5 @@ class SignupState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [firstNameController,lastNameController,emailController,mobileController,passwordController,confirmPasswordController,signUpStatus,errorMessage,isPasswordVisible, isConfirmPasswordVisible, file,gender,selectedHobbies];
+  List<Object?> get props => [formKeySignUp,firstNameController,lastNameController,emailController,mobileController,passwordController,confirmPasswordController,signUpStatus,errorMessage,isPasswordVisible, isConfirmPasswordVisible, file,gender,selectedHobbies];
 }

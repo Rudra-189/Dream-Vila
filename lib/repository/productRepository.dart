@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:dreamvila/core/api_config/endpoints/api_endpoint.dart';
 import 'package:dreamvila/models/addProductModel.dart';
 import 'package:dreamvila/models/productDataModel.dart';
@@ -10,20 +11,20 @@ class ProductRepository{
 
   ProductRepository(this.apiClint);
 
-  Future<PropertyResponse>getPropertyData()async{
+  Future<PropertyModel>getPropertyData()async{
     final response = await apiClint.request(RequestType.GET, ApiEndPoint.productUrl,);
 
     if(response['status'] == true){
-      return PropertyResponse.fromJson(response);
+      return PropertyModel.fromJson(response);
     }else{
       throw Exception('Failed to load properties: ${response['status']}');
     }
   }
 
-  Future<ProductModel>getPropertyDetail(String id)async{
+  Future<ProductDetailModel>getPropertyDetail(String id)async{
     final response = await apiClint.request(RequestType.GET,'${ApiEndPoint.productDetailUrl}/$id');
     if(response['status'] == true){
-      return ProductModel.fromJson(response["data"]);
+      return ProductDetailModel.fromJson(response["data"]);
     }else{
       throw Exception('Failed to load properties: ${response['status']}');
     }
@@ -48,6 +49,26 @@ class ProductRepository{
     };
     final response = await apiClint.request(RequestType.POST,ApiEndPoint.addProductUrl,data:data);
     print(response);
+    if(response['status'] == true){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  Future<bool>updateProduct(Map<String,dynamic> data,String id)async{
+    final response = await apiClint.request(RequestType.PUT, '${ApiEndPoint.updateProductUrl}/$id',data: data);
+    if(response['status'] == true){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  Future<bool>deleteProduct(String id)async{
+    final response = await apiClint.request(RequestType.DELETE,'${ApiEndPoint.deleteProductUrl}/$id');
+
+    print("////////////$response////////////");
     if(response['status'] == true){
       return true;
     }else{

@@ -24,7 +24,7 @@
   "lbl_office":"Office",
   "lbl_land":"Land",
   "lbl_plots":"Plots",
-  "lbl_discount":"Discount",
+  "lbl_discount":" % Discount",
   "lbl_title":"Title",
   "lbl_description":"Description",
   "lbl_address":"Address",
@@ -37,7 +37,14 @@
   "lbl_hall":"Hall",
   "lbl_kitchen":"Kitchen",
   "lbl_washroom":"Washroom",
-  "lbl_thumbnail":"Thumbnail",
-  "lbl_images":"Images",
-  "lbl_add_product":"Add Product"
+  "lbl_add_product":"+Add Product",
+  "lbl_do_not_have_an_account": "Don’t have an account? ",
+  "lbl_already_have_an_account": "Already have an account? ",
+  "lbl_password_hint": "* * * * * *",
+  "lbl_forgot_password" : "Forgot Password?",
+  "lbl_male": "Male",
+  "lbl_female": "Female",
+  "lbl_mobil_hint": "+91",
+  "lbl_email_hint": "abc@gmail.com",
+  "lbl_upload_images": "Upload Images"
 }

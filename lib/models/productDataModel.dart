@@ -1,4 +1,4 @@
-class PropertyResponse {
+class PropertyModel {
   final bool status;
   final String message;
   final int page;
@@ -9,7 +9,7 @@ class PropertyResponse {
   final int totalPages;
   final List<Property> data;
 
-  PropertyResponse({
+  PropertyModel({
     required this.status,
     required this.message,
     required this.page,
@@ -21,8 +21,8 @@ class PropertyResponse {
     required this.data,
   });
 
-  factory PropertyResponse.fromJson(Map<String, dynamic> json) {
-    return PropertyResponse(
+  factory PropertyModel.fromJson(Map<String, dynamic> json) {
+    return PropertyModel(
       status: json['status'],
       message: json['message'],
       page: json['page'] ?? 0,

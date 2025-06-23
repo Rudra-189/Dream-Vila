@@ -7,18 +7,24 @@ import 'custom_textfields.dart';
 
 class LabeledTextField extends StatelessWidget {
   final String label;
+  final String? hint;
+  bool? obscureText;
   final TextEditingController controller;
   final InputType inputType;
   final int? maxLines;
   final String? Function(String?)? validator;
+  final Widget? suffixIcon;
 
-  const LabeledTextField({
+  LabeledTextField({
     super.key,
     required this.label,
+    this.obscureText,
+    this.hint,
     required this.controller,
     required this.inputType,
     this.maxLines,
     this.validator,
+    this.suffixIcon
   });
 
   @override
@@ -32,12 +38,14 @@ class LabeledTextField extends StatelessWidget {
         SizedBox(height: 5.h),
         CustomTextInputField(
           context: context,
+          obscureText: obscureText,
           type: inputType,
-          hintLabel: label,
+          hintLabel: hint ?? label,
           controller: controller,
           hintStyle: textTheme.displayLarge,
           validator: validator ?? (value) => Validation.validateNotEmpty(value!, label),
           maxLines: maxLines ?? 1,
+          suffixIcon: suffixIcon,
         ),
         SizedBox(height: 20.h),
       ],

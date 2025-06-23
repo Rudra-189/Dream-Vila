@@ -9,39 +9,21 @@ class AddProductView extends StatefulWidget {
 }
 
 class _AddProductViewState extends State<AddProductView> {
-  final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController titleController = TextEditingController();
 
-  final TextEditingController descriptionController = TextEditingController();
-
-  final TextEditingController addressController = TextEditingController();
-
-  final TextEditingController priceController = TextEditingController();
-
-  final TextEditingController discountPercentageController = TextEditingController();
-
-  final TextEditingController ratingController = TextEditingController();
-
-  final TextEditingController plotController = TextEditingController();
-
-  final TextEditingController typeController = TextEditingController();
-
-  final TextEditingController bedroomController = TextEditingController();
-
-  final TextEditingController hallController = TextEditingController();
-
-  final TextEditingController kitchenController = TextEditingController();
-
-  final TextEditingController washroomController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: BlocConsumer<AddProductBloc, AddProductState>(
-        listener: (context,state){
-          if(state.addProductStatus == status.success){
-            Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.homeScreen, (Route<dynamic> route) => false,);
+        listener: (context, state) {
+          if (state.addProductStatus == status.success) {
+            context.read<AddProductBloc>().add(OnDisposeEvent());
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              AppRoutes.homeScreen,
+              (Route<dynamic> route) => false,
+            );
           }
         },
         builder: (context, state) {
@@ -49,93 +31,14 @@ class _AddProductViewState extends State<AddProductView> {
             padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: SingleChildScrollView(
               child: Form(
-                key: _formKey,
+                key: state.formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
                       height: 50.h,
                     ),
-                    LabeledTextField(label: 'Title', controller: titleController, inputType: InputType.text),
-                    LabeledTextField(label: 'Description', controller: descriptionController, inputType: InputType.text,maxLines: 3,),
-                    LabeledTextField(label: 'Address', controller: addressController, inputType: InputType.text),
-                    LabeledTextField(label: 'Price', controller: priceController, inputType: InputType.digits),
-                    LabeledTextField(label: 'Discount Percentage', controller: discountPercentageController, inputType: InputType.digits),
-                    LabeledTextField(label: 'Rating', controller: ratingController, inputType: InputType.text),
-                    LabeledTextField(label: 'Plot', controller: plotController, inputType: InputType.digits),
-                    LabeledTextField(label: 'Type', controller: typeController, inputType: InputType.text),
-                    LabeledTextField(label: 'Bedroom', controller: bedroomController, inputType: InputType.digits),
-                    LabeledTextField(label: 'Hall', controller: hallController, inputType: InputType.digits),
-                    LabeledTextField(label: 'Kitchen', controller: kitchenController, inputType: InputType.digits),
-                    LabeledTextField(label: 'Washroom', controller: washroomController, inputType: InputType.digits),
-                    Text("Thumbnail",
-                        style: MyAppThemeHelper.lightTheme.textTheme.bodyLarge),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    Center(
-                      child: DottedBorder(
-                        color: Colors.black,
-                        strokeWidth: 1,
-                        borderType: BorderType.RRect,
-                        radius: Radius.circular(12),
-                        dashPattern: [13, 13],
-                        child: GestureDetector(
-                          onTap: () {
-                            context.read<AddProductBloc>().add(AddImagesEvent());
-                          },
-                          child: state.images != null && state.images!.isNotEmpty
-                              ? SizedBox(
-                            height: 150.h,
-                            width: 250.w,
-                            child: PageView.builder(
-                              itemCount: state.images!.length,
-                              itemBuilder: (context, index) {
-                                return Stack(
-                                  children: [
-                                    CustomImageView(
-                                      imagePath: state.images![index],
-                                      height: 150.h,
-                                      width: 250.w,
-                                      radius: BorderRadius.circular(10),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    Positioned(
-                                      bottom: 110,
-                                      left: 210,
-                                      child: IconButton(onPressed: (){
-                                        context.read<AddProductBloc>().add(OnCancelImageEvent(index));
-                                      }, icon: Icon(Icons.cancel_rounded,color: Colors.red,)),
-                                    )
-                                  ],
-                                );
-                              },
-                            ),
-                          )
-                              : Container(
-                            height: 150.h,
-                            width: 250.w,
-                            decoration: BoxDecoration(
-                              color: Color(0XFFF8F8F8),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CustomImageView(
-                                  imagePath: "assets/images/svgs/icons/ic_cloude.svg",
-                                ),
-                                SizedBox(height: 5.h),
-                                Text(
-                                  "Select Image",
-                                  style: TextStyle(color: Color(0XFF2F2F2F)),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                    _buildCommonInput(context,state),
                     SizedBox(
                       height: 50.h,
                     ),
@@ -149,9 +52,11 @@ class _AddProductViewState extends State<AddProductView> {
                         buttonStyle: ElevatedButton.styleFrom(
                           backgroundColor: Color(0XFFFF6F42),
                         ),
-                        isLoading: state.addProductStatus == status.loading ? true : false,
+                        isLoading: state.addProductStatus == status.loading
+                            ? true
+                            : false,
                         onPressed: () {
-                          _submit(context,state);
+                          _submit(context, state);
                         },
                       ),
                     ),
@@ -167,25 +72,95 @@ class _AddProductViewState extends State<AddProductView> {
       ),
     );
   }
+
   void _submit(BuildContext context, AddProductState state) async {
-    if (_formKey.currentState!.validate()) {
+    if (state.formKey.currentState!.validate()) {
       final product = AddProductModel(
-       title: titleController.text,
-        description: descriptionController.text,
-        address: addressController.text,
-        price: double.parse(priceController.text),
-        discountPercentage: int.parse(discountPercentageController.text),
-        rating: double.parse(ratingController.text),
-        plot: int.parse(plotController.text),
-        type: typeController.text,
-        bedroom: int.parse(bedroomController.text),
-        hall: int.parse(hallController.text),
-        kitchen: int.parse(kitchenController.text),
-        washroom: int.parse(washroomController.text),
-        thumbnail: state.thumbnail.toString(),
-        images: state.images
-      );
-      context.read<AddProductBloc>().add(OnProductAddButtonSubmitEvent(product));
+          title: state.titleController.text,
+          description: state.descriptionController.text,
+          address: state.addressController.text,
+          price: double.parse(state.priceController.text),
+          discountPercentage: int.parse(state.discountPercentageController.text),
+          rating: double.parse(state.ratingController.text),
+          plot: int.parse(state.plotController.text),
+          type: state.typeController.text,
+          bedroom: int.parse(state.bedroomController.text),
+          hall: int.parse(state.hallController.text),
+          kitchen: int.parse(state.kitchenController.text),
+          washroom: int.parse(state.washroomController.text),
+          thumbnail: state.thumbnail.toString(),
+          images: state.images);
+      context
+          .read<AddProductBloc>()
+          .add(OnProductAddButtonSubmitEvent(product));
     }
   }
+}
+
+Widget _buildCommonInput(BuildContext context,AddProductState state){
+  return Column(
+    children: [
+      LabeledTextField(
+          label: Lang.of(context).lbl_title,
+          controller: state.titleController,
+          inputType: InputType.text),
+      LabeledTextField(
+        label: Lang.of(context).lbl_description,
+        controller: state.descriptionController,
+        inputType: InputType.text,
+        maxLines: 3,
+      ),
+      LabeledTextField(
+          label: Lang.of(context).lbl_address,
+          controller: state.addressController,
+          inputType: InputType.text),
+      LabeledTextField(
+          label: Lang.of(context).lbl_price,
+          controller: state.priceController,
+          inputType: InputType.digits),
+      LabeledTextField(
+          label: Lang.of(context).lbl_discount_percentage,
+          controller: state.discountPercentageController,
+          inputType: InputType.digits),
+      LabeledTextField(
+          label: Lang.of(context).lbl_rating,
+          controller: state.ratingController,
+          inputType: InputType.text),
+      LabeledTextField(
+          label: Lang.of(context).lbl_plot,
+          controller: state.plotController,
+          inputType: InputType.digits),
+      LabeledTextField(
+          label: Lang.of(context).lbl_type,
+          controller: state.typeController,
+          inputType: InputType.text),
+      LabeledTextField(
+          label: Lang.of(context).lbl_bedroom,
+          controller: state.bedroomController,
+          inputType: InputType.digits),
+      LabeledTextField(
+          label: Lang.of(context).lbl_hall,
+          controller: state.hallController,
+          inputType: InputType.digits),
+      LabeledTextField(
+          label: Lang.of(context).lbl_kitchen,
+          controller: state.kitchenController,
+          inputType: InputType.digits),
+      LabeledTextField(
+          label: Lang.of(context).lbl_washroom,
+          controller: state.washroomController,
+          inputType: InputType.digits),
+      CommonImageInput(
+        label: Lang.of(context).lbl_upload_images,
+        imagePaths: state.images!,
+        onTap: () {
+          context.read<AddProductBloc>().add(AddImagesEvent());
+        },
+        onRemove: (value) {
+          context.read<AddProductBloc>().add(OnCancelImageEvent(value));
+        },
+        allowMultiple: true,
+      ),
+    ],
+  );
 }

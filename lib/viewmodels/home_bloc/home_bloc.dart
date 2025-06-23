@@ -18,11 +18,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(HomeState(index: 0)) {
     on<LoadHomePageDataEvent>(_loadHomePageDataEvent);
     on<OnTabIndexChangeEvent>(_onTabIndexChangeEvent);
+    on<OnProductDelete>(_onProductDelete);
+    on<OnProductUpdate>(_onProductUpdate);
   }
 
   void _loadHomePageDataEvent(LoadHomePageDataEvent event,Emitter emit)async{
     emit(state.copyWith(homeStatus: status.loading));
-    final PropertyResponse data = await productRepository.getPropertyData();
+    final PropertyModel data = await productRepository.getPropertyData();
     final UserModel user = await userRepository.getUserData();
     print(data.status);
     if(data.status == true && user != null){
@@ -34,5 +36,24 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   void _onTabIndexChangeEvent(OnTabIndexChangeEvent event,Emitter emit){
     emit(state.copyWith(index: event.index));
+  }
+
+  void _onProductDelete(OnProductDelete event,Emitter emit)async{
+    emit(state.copyWith(homeStatus: status.loading));
+    final result = await productRepository.deleteProduct(event.id);
+    if(result){
+      final PropertyModel data = await productRepository.getPropertyData();
+      print(data.status);
+      if(data.status == true ){
+        emit(state.copyWith(homeStatus: status.success,data: data));
+      }else{
+        emit(state.copyWith(homeStatus: status.failure,errorMessage: data.message));
+      }
+    }else{
+      emit(state.copyWith(homeStatus: status.failure,errorMessage: 'error'));
+    }
+  }
+
+  void _onProductUpdate(OnProductUpdate event,Emitter emit)async{
   }
 }

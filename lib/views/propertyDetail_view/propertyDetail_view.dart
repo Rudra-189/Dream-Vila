@@ -97,7 +97,7 @@ Widget _buildPropertyImages(BuildContext context, List images,PropertyDetailStat
   );
 }
 
-Widget _buildPropertyDetail(BuildContext context, ProductModel product) {
+Widget _buildPropertyDetail(BuildContext context, ProductDetailModel product) {
   final Map<String, String> details = {
     "Location": product.address,
     "Price": "\$ ${product.price}",

@@ -7,7 +7,7 @@ class HomeState extends Equatable{
 
   final status homeStatus;
   final String errorMessage;
-  final PropertyResponse? data;
+  final PropertyModel? data;
   final UserModel? user;
   final int index;
 
@@ -16,8 +16,7 @@ class HomeState extends Equatable{
   HomeState copyWith({
     status? homeStatus,
     String? errorMessage,
-    PropertyResponse? data,
-
+    PropertyModel? data,
     UserModel? user,
     int? index
 

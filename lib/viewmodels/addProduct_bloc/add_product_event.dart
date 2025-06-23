@@ -20,3 +20,5 @@ class OnCancelImageEvent extends AddProductEvent{
   final int index;
   OnCancelImageEvent(this.index);
 }
+
+class OnDisposeEvent extends AddImagesEvent{}

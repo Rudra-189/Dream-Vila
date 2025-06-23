@@ -1,6 +1,8 @@
 import 'package:dreamvila/core/utils/exports.dart';
 import 'package:flutter/material.dart';
 
+import '../../widgets/common_widget/custompopup_menu.dart';
+
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
@@ -15,7 +17,6 @@ class HomeView extends StatelessWidget {
             if(state.homeStatus == status.loading){
               return Center(child: CircularProgressIndicator(),);
             }else if(state.homeStatus == status.success){
-              final data = state.data;
               return SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -27,7 +28,7 @@ class HomeView extends StatelessWidget {
                       SizedBox(
                         height: 10.h,
                       ),
-                      _buildPropertyList(context,data!,state)
+                      _buildPropertyList(context,state)
                     ],
                   ),
                 ),
@@ -82,7 +83,7 @@ Widget _buildUserInfo(BuildContext context,UserModel user) {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  "Hello!",
+                  Lang.of(context).lbl_hello,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 Text(
@@ -140,7 +141,7 @@ Widget _buildUserInfo(BuildContext context,UserModel user) {
                   Navigator.of(context).pushNamed(AppRoutes.addProductScreen);
                 },
                 child: Text(
-                  "+Add Property",
+                  Lang.of(context).lbl_add_product,
                   style: Theme.of(context).textTheme.displayMedium,
                 ),
               ),
@@ -176,31 +177,31 @@ Widget _buildTabView(BuildContext context) {
         ]),
 
     tabs: [
-      Tab(text: 'House'),
-      Tab(text: 'Apartment'),
-      Tab(text: 'Office'),
-      Tab(text: 'Land'),
+      Tab(text: Lang.of(context).lbl_house),
+      Tab(text: Lang.of(context).lbl_apartment),
+      Tab(text: Lang.of(context).lbl_office),
+      Tab(text: Lang.of(context).lbl_land),
     ],
   );
 }
 
-Widget _buildPropertyList(BuildContext context,PropertyResponse data,HomeState state) {
+Widget _buildPropertyList(BuildContext context,HomeState state) {
 
   final categoryFilter = ['house', 'apartment', 'office', 'land'];
 
-  final filteredData = data.data.where((e) => e.type == categoryFilter [state.index]).toList();
+  final filteredData = state.data!.data.where((e) => e.type == categoryFilter [state.index]).toList();
 
   return Expanded(
     child: ListView.builder(
       itemBuilder: (context, index) {
         final property = filteredData[index];
-        if(filteredData.isEmpty){
-          return Text("Data Not Found!",style: Theme.of(context).textTheme.bodyLarge,);
-        }else{
-          return GestureDetector(
+        return GestureDetector(
             onTap: () {
               Navigator.of(context).pushNamed(AppRoutes.propertyDetailScreen,arguments: property.id);
             },
+          onLongPressStart: (details){
+            showContextMenu(context,details.globalPosition,property.id);
+          },
             child: Card(
               color: Colors.white,
               shadowColor: Theme.of(context).customColors.borderColor,
@@ -254,7 +255,7 @@ Widget _buildPropertyList(BuildContext context,PropertyResponse data,HomeState s
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                "Plots ${property.plot.toString()}",
+                                "${Lang.of(context).lbl_plots} ${property.plot.toString()}",
                                 style: TextStyle(
                                     color: Colors.black38, fontSize: 10),
                               ),
@@ -272,7 +273,7 @@ Widget _buildPropertyList(BuildContext context,PropertyResponse data,HomeState s
                                 width: 5,
                               ),
                               Text(
-                                "${property.discountPercentage} % Discount",
+                                "${property.discountPercentage} ${Lang.of(context).lbl_discount}",
                                 style: TextStyle(
                                     color: Colors.black38, fontSize: 10),
                               ),
@@ -315,7 +316,6 @@ Widget _buildPropertyList(BuildContext context,PropertyResponse data,HomeState s
               ),
             ),
           );
-        }
       },
       itemCount:filteredData.length,
     ),

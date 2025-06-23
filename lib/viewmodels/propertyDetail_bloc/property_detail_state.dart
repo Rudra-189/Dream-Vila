@@ -6,7 +6,7 @@ import '../../core/utils/status.dart';
 class PropertyDetailState extends Equatable{
   final status detailPageStatus;
   final String errorMessage;
-  final ProductModel? data;
+  final ProductDetailModel? data;
   final int currentIndex;
 
   const PropertyDetailState({this.detailPageStatus = status.init,  this.errorMessage = '',  this.data,required this.currentIndex});
@@ -14,7 +14,7 @@ class PropertyDetailState extends Equatable{
   PropertyDetailState copyWith({
     status? detailPageStatus,
     String? errorMessage,
-    ProductModel? data,
+    ProductDetailModel? data,
     int? currentIndex,
   }){
     return PropertyDetailState(

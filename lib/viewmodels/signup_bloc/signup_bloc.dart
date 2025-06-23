@@ -12,8 +12,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   final ImagePickerUtils imagePickerUtils;
 
   final AuthRepository authRepository = AuthRepository(ApiClient());
-
-
+  
   SignupBloc(this.imagePickerUtils)
       : super(SignupState(
     firstNameController:TextEditingController(),
@@ -22,6 +21,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     mobileController: TextEditingController(),
     passwordController: TextEditingController(),
     confirmPasswordController: TextEditingController(),
+    formKeySignUp: GlobalKey<FormState>(),
   )) {
     on<ToggleSPasswordVisibilityEvent>(_togglePasswordVisibilityEvent);
     on<ToggleConfirmPasswordVisibilityEvent>(_toggleConfirmPasswordVisibilityEvent);

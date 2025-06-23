@@ -1,21 +1,23 @@
 import 'package:dreamvila/core/utils/exports.dart';
-import 'package:dreamvila/viewmodels/signup_bloc/signup_event.dart';
 import 'package:flutter/material.dart';
 
-class SignUpView extends StatelessWidget {
+class SignUpView extends StatefulWidget {
   SignUpView({super.key});
 
-  final _formKey = GlobalKey<FormState>();
+  @override
+  State<SignUpView> createState() => _SignUpViewState();
+}
 
+class _SignUpViewState extends State<SignUpView> {
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: BlocConsumer<SignupBloc, SignupState>(
-        listener: (context,state){
-          if(state.signUpStatus == status.success){
-            Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.signInScreen,(Route<dynamic> route) => false);
+        listener: (context, state) {
+          if (state.signUpStatus == status.success) {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                AppRoutes.signInScreen, (Route<dynamic> route) => false);
           }
         },
         builder: (context, state) {
@@ -23,31 +25,33 @@ class SignUpView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: SingleChildScrollView(
               child: Form(
-                key: _formKey,
+                key: state.formKeySignUp,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    BuildCommonAuthDesign(label: "Sign Up",),
-                    _buildCommonInput(state),
-                    _buildGenderInput(context,state),
+                    BuildCommonAuthDesign(
+                      label: Lang.of(context).lbl_sign_up,
+                    ),
+                    _buildCommonInput(context,state),
+                    _buildGenderInput(context, state),
                     SizedBox(
                       height: 20.h,
                     ),
-                    _buildImageInput(context,state),
+                    _buildImageInput(context, state),
                     SizedBox(
                       height: 30.h,
                     ),
-                    _buildPasswordInput(context,state),
+                    _buildPasswordInput(context, state),
                     SizedBox(
                       height: 20.h,
                     ),
-                    _buildHobbyInput(context,state),
+                    _buildHobbyInput(context, state),
                     SizedBox(
                       height: 20.h,
                     ),
                     CommonAuthFooter(
-                      buttonText: "Sign Up",
-                      footerText: "Already have an account? ",
+                      buttonText: Lang.of(context).lbl_sign_up,
+                      footerText: Lang.of(context).lbl_already_have_an_account,
                       onActionTap: () {
                         Navigator.of(context).pushNamed(AppRoutes.signInScreen);
                       },
@@ -67,203 +71,155 @@ class SignUpView extends StatelessWidget {
   }
 
   void _submit(BuildContext context, SignupState state) async {
-    if (_formKey.currentState!.validate()) {
+    if (state.formKeySignUp.currentState!.validate()) {
       final user = SignupModel(
-        firstName: state.firstNameController!.text,
-        lastName: state.lastNameController!.text,
-        email: state.emailController!.text,
-        mobile: state.mobileController!.text,
-        gender: state.gender == 'Male' ? 1 : 2,
+        firstName: state.firstNameController.text,
+        lastName: state.lastNameController.text,
+        email: state.emailController.text,
+        mobile: state.mobileController.text,
+        gender: state.gender == Lang.of(context).lbl_male ? 1 : 2,
         hobbies: state.selectedHobbies.join(","),
         image: state.file,
-        password: state.passwordController!.text,
+        password: state.passwordController.text,
       );
       context.read<SignupBloc>().add(SignupSubmittedEvent(user));
     }
   }
 }
 
-Widget _buildCommonInput(SignupState state){
+Widget _buildCommonInput(BuildContext context,SignupState state) {
   return Column(
     children: [
-      LabeledTextField(label: 'First Name', controller: state.firstNameController!, inputType: InputType.text,validator: (value) => Validation.validateName(value!),),
-      LabeledTextField(label: 'Last Name', controller: state.lastNameController!, inputType: InputType.text,validator: (value) => Validation.validateName(value!),),
-      LabeledTextField(label: 'Email', controller: state.emailController!, inputType: InputType.text,validator: (value) => Validation.validateEmail(value!),),
-      LabeledTextField(label: 'Mobile', controller: state.mobileController!, inputType: InputType.phoneNumber,validator: (value) => Validation.validateMobile(value!),),
+      LabeledTextField(
+        label: Lang.of(context).lbl_first_name,
+        controller: state.firstNameController,
+        inputType: InputType.text,
+        validator: (value) => Validation.validateName(value!),
+      ),
+      LabeledTextField(
+        label: Lang.of(context).lbl_last_name,
+        controller: state.lastNameController,
+        inputType: InputType.text,
+        validator: (value) => Validation.validateName(value!),
+      ),
+      LabeledTextField(
+        label: Lang.of(context).lbl_email,
+        controller: state.emailController,
+        hint: Lang.of(context).lbl_email_hint,
+        inputType: InputType.text,
+        validator: (value) => Validation.validateEmail(value!),
+      ),
+      LabeledTextField(
+        label: Lang.of(context).lbl_mobil,
+        controller: state.mobileController,
+        hint: Lang.of(context).lbl_mobil_hint,
+        inputType: InputType.phoneNumber,
+        validator: (value) => Validation.validateMobile(value!),
+      ),
     ],
   );
 }
 
-Widget _buildPasswordInput(BuildContext context,SignupState state){
+Widget _buildPasswordInput(BuildContext context, SignupState state) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text("Password", style: Theme.of(context).textTheme.bodyLarge),
-      SizedBox(
-        height: 5.h,
-      ),
-      CustomTextInputField(
-        context: context,
+      LabeledTextField(
+        label: Lang.of(context).lbl_password,
         obscureText: state.isPasswordVisible,
-        type: InputType.text,
-        hintLabel: '* * * * * * *',
         controller: state.passwordController,
-        hintStyle:
-       Theme.of(context).textTheme.displayLarge,
+        hint: Lang.of(context).lbl_password_hint,
+        inputType: InputType.text,
         validator: (value) => Validation.validatePassword(value!),
-        suffixIcon: IconButton(onPressed: (){
-          context.read<SignupBloc>().add(ToggleSPasswordVisibilityEvent());
-        }, icon: Icon(
-          state.isPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-          size: 20,
+        suffixIcon: IconButton(
+          onPressed: () {
+            context.read<SignupBloc>().add(ToggleSPasswordVisibilityEvent());
+          },
+          icon: Icon(
+            state.isPasswordVisible
+                ? Icons.visibility_off_outlined
+                : Icons.visibility_outlined,
+            size: 20,
+          ),
         ),
-        ),
       ),
-      SizedBox(
-        height: 20.h,
-      ),
-      Text("Confirm Password",
-          style: Theme.of(context).textTheme.bodyLarge),
-      SizedBox(
-        height: 5.h,
-      ),
-      CustomTextInputField(
-        context: context,
+      LabeledTextField(
+        label: Lang.of(context).lbl_confirm_password,
         obscureText: state.isConfirmPasswordVisible,
-        type: InputType.text,
-        hintLabel: '* * * * * * *',
         controller: state.confirmPasswordController,
-        hintStyle:
-        Theme.of(context).textTheme.displayLarge,
-        validator: (value) => Validation.validateConfirmPassword(value!,state.passwordController!.text),
-        suffixIcon: IconButton(onPressed: (){
-          context.read<SignupBloc>().add(ToggleConfirmPasswordVisibilityEvent());
-        }, icon: Icon(
-          state.isConfirmPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-          size: 20,
-        )),
+        hint: Lang.of(context).lbl_password_hint,
+        inputType: InputType.text,
+        validator: (value) => Validation.validateConfirmPassword(
+            value!, state.passwordController.text),
+        suffixIcon: IconButton(
+            onPressed: () {
+              context
+                  .read<SignupBloc>()
+                  .add(ToggleConfirmPasswordVisibilityEvent());
+            },
+            icon: Icon(
+              state.isConfirmPasswordVisible
+                  ? Icons.visibility_off_outlined
+                  : Icons.visibility_outlined,
+              size: 20,
+            )),
       ),
     ],
   );
 }
 
-Widget _buildGenderInput(BuildContext context,SignupState state){
+Widget _buildGenderInput(BuildContext context, SignupState state) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text("Gender",
-          style:Theme.of(context).textTheme.bodyLarge),
+      Text(Lang.of(context).lbl_gender, style: Theme.of(context).textTheme.bodyLarge),
       SizedBox(
         height: 10.h,
       ),
       Row(
         children: [
-          Row(
-            children: [
-              Radio<String>(
-                value: 'Male',
-                groupValue: state.gender,
-                activeColor: Theme.of(context)
-                    .customColors
-                    .primaryColor, // Highlight selected with orange
-                hoverColor: Colors.orange,
-                onChanged: (value) {
-                  context.read<SignupBloc>().add(OnGenderChangeEvent(value!));
-                },
-              ),
-              Text(
-                'Male',
-                style: TextStyle(fontSize: 15),
-              ),
-            ],
-          ),
+          CommonRadioButton(
+              label: Lang.of(context).lbl_male,
+              selectedGender: state.gender,
+              onChanged: (value) {
+                context.read<SignupBloc>().add(OnGenderChangeEvent(value!));
+              }),
           SizedBox(
             width: 50.w,
           ),
-          Row(
-            children: [
-              Radio<String>(
-                value: 'Female',
-                groupValue: state.gender,
-                activeColor: Theme.of(context)
-                    .customColors
-                    .primaryColor, // Highlight selected with orange
-                hoverColor: Colors.orange,
-
-                onChanged: (value) {
-                  context.read<SignupBloc>().add(OnGenderChangeEvent(value!));
-                },
-              ),
-              Text(
-                'Female',
-                style: TextStyle(fontSize: 15),
-              ),
-            ],
-          )
+          CommonRadioButton(
+              label: Lang.of(context).lbl_female,
+              selectedGender: state.gender,
+              onChanged: (value) {
+                context.read<SignupBloc>().add(OnGenderChangeEvent(value!));
+              })
         ],
       ),
     ],
   );
 }
 
-Widget _buildImageInput(BuildContext context,SignupState state){
+Widget _buildImageInput(BuildContext context, SignupState state) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text("Upload User Profile",
-          style: Theme.of(context).textTheme.bodyLarge),
-      SizedBox(
-        height: 30.h,
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          DottedBorder(
-            color: Colors.black,
-            strokeWidth: 1,
-            borderType: BorderType.RRect,
-            radius: Radius.circular(12),
-            dashPattern: [13, 13],
-            child: Container(
-              height: 150.h,
-              width: 250.w,
-              decoration: BoxDecoration(
-                color: Color(0XFFF8F8F8),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: state.file != null? CustomImageView(imagePath: state.file!.path.toString(),fit: BoxFit.cover,) : GestureDetector(onTap: (){
-                context.read<SignupBloc>().add(ImagePickedEvent());
-              },child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomImageView(
-                    imagePath:
-                    "assets/images/svgs/icons/ic_cloude.svg",
-                  ),
-                  SizedBox(
-                    height: 5.h,
-                  ),
-                  Text(
-                    "Select Image",
-                    style: TextStyle(color: Color(0XFF2F2F2F)),
-                  )
-                ],
-              ),) ,
-            ),
-          )
-        ],
+      CommonImageInput(
+        label: Lang.of(context).lbl_upload_user_profile,
+        imagePaths: state.file != null ? [state.file!.path.toString()] : [],
+        onTap: () {
+          context.read<SignupBloc>().add(ImagePickedEvent());
+        },
       ),
     ],
   );
 }
 
-Widget _buildHobbyInput(BuildContext context,SignupState state){
+Widget _buildHobbyInput(BuildContext context, SignupState state) {
   final List<String> hobbies = ['Reading', 'Gaming', 'Traveling', 'Cooking'];
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text("Hobby",
-          style: Theme.of(context).textTheme.bodyLarge),
+      Text("Hobby", style: Theme.of(context).textTheme.bodyLarge),
       SizedBox(
         height: 10.h,
       ),

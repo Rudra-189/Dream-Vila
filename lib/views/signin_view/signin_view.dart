@@ -1,18 +1,23 @@
 import 'package:dreamvila/core/utils/exports.dart';
 import 'package:flutter/material.dart';
 
-class SignInView extends StatelessWidget {
+class SignInView extends StatefulWidget {
   SignInView({super.key});
 
-  final _formKey = GlobalKey<FormState>();
+  @override
+  State<SignInView> createState() => _SignInViewState();
+}
+
+class _SignInViewState extends State<SignInView> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocConsumer<SignInBloc, SignInState>(
-        listener: (context,state){
-          if(state.signInStatus == status.success){
-            Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.signInScreen, (Route<dynamic> route) => false);
+        listener: (context, state) {
+          if (state.signInStatus == status.success) {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                AppRoutes.homeScreen, (Route<dynamic> route) => false);
           }
         },
         builder: (context, state) {
@@ -20,46 +25,26 @@ class SignInView extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Form(
-                key: _formKey,
+                key: state.formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    BuildCommonAuthDesign(label: "Sign In",),
-                    LabeledTextField(label: 'Email', controller: state.emailController!, inputType: InputType.email,validator: (value) => Validation.validateEmail(value!),),
-                    Text("Password",
-                        style: MyAppThemeHelper.lightTheme.textTheme.bodyLarge),
-                    SizedBox(
-                      height: 5.h,
+                    BuildCommonAuthDesign(
+                      label: Lang.of(context).lbl_sign_in,
                     ),
-                    CustomTextInputField(
-                      context: context,
-                      type: InputType.text,
-                      hintLabel: '* * * * * * *',
-                      controller: state.passwordController,
-                      hintStyle: MyAppThemeHelper.lightTheme.textTheme.displayLarge,
-                      suffixIcon: Icon(
-                        Icons.visibility_off_outlined,
-                        size: 20,
-                      ),
-                      validator: (value) => Validation.validatePassword(value!),
+                    LabeledTextField(
+                      label: Lang.of(context).lbl_email,
+                      controller: state.emailController,
+                      inputType: InputType.email,
+                      validator: (value) => Validation.validateEmail(value!),
                     ),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text("Forgot Password?",
-                            style:
-                                TextStyle(color: Color(0XFFFF6F42), fontSize: 13))
-                      ],
-                    ),
+                    _buildCommonInput(context,state),
                     SizedBox(
                       height: 100.h,
                     ),
                     CommonAuthFooter(
-                      buttonText: "Sign In",
-                      footerText: "Don’t have an account? ",
+                      buttonText: Lang.of(context).lbl_sign_in,
+                      footerText: Lang.of(context).lbl_do_not_have_an_account,
                       onActionTap: () {
                         Navigator.pushNamed(context, AppRoutes.signupScreen);
                       },
@@ -79,9 +64,47 @@ class SignInView extends StatelessWidget {
   }
 
   void _submit(BuildContext context, SignInState state) async {
-    if (_formKey.currentState!.validate()) {
-      context.read<SignInBloc>().add(OnLoginButtonEvent(state.emailController!.text, state.passwordController!.text));
+    if (state.formKey.currentState!.validate()) {
+      context.read<SignInBloc>().add(OnLoginButtonEvent(
+          state.emailController.text, state.passwordController.text));
     }
-    Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.homeScreen,(Route<dynamic> route) => false,);
   }
+}
+
+Widget _buildCommonInput(BuildContext context,SignInState state){
+  return Column(
+    children: [
+      LabeledTextField(
+        label: Lang.of(context).lbl_password,
+        hint: Lang.of(context).lbl_password_hint,
+        controller: state.passwordController,
+        inputType: InputType.text,
+        validator: (value) => Validation.validatePassword(value!),
+        suffixIcon: IconButton(
+          onPressed: () {
+            context
+                .read<SignInBloc>()
+                .add(TogglePasswordVisibilityEvent());
+          },
+          icon: Icon(
+            state.isPasswordVisible
+                ? Icons.visibility_off_outlined
+                : Icons.visibility_outlined,
+            size: 20,
+          ),
+        ),
+      ),
+      SizedBox(
+        height: 10.h,
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Text(Lang.of(context).lbl_forgot_password,
+              style: TextStyle(
+                  color: Color(0XFFFF6F42), fontSize: 13))
+        ],
+      ),
+    ],
+  );
 }
