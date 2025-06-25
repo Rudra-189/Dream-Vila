@@ -9,15 +9,22 @@ class AppRoutes {
   static const String addProductScreen = '/addProductScreen';
 
   static Map<String, WidgetBuilder> get routes => {
-    initialRoute : (context) => SplashView(),
-    signInScreen : (context) => SignInView(),
-    signupScreen : (context) => SignUpView(),
-    homeScreen : (context) => HomeView(),
-    propertyDetailScreen : (context) {
+    initialRoute : SplashView.builder,
+    signInScreen : SignInView.builder,
+    signupScreen : SignUpView.builder,
+    homeScreen : HomeView.builder,
+    propertyDetailScreen : (BuildContext context) {
       final arg = ModalRoute.of(context)!.settings.arguments;
       final id = (arg is String) ? arg : '';
       return PropertyDetailView(id: id,);
       },
-    addProductScreen : (context) => AddProductView(),
+    addProductScreen : (BuildContext context) {
+      final args = ModalRoute.of(context)!.settings.arguments;
+      final data = args is Map<String, dynamic> ? args : {};
+      return AddProductView(
+        isUpdate: data['isUpdate'] ?? false,
+        data: data['data'],
+      );
+    },
   };
 }

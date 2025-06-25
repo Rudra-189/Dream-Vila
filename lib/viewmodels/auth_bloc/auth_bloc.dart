@@ -1,40 +1,67 @@
 import 'dart:io';
+
+import 'package:bloc/bloc.dart';
 import 'package:dreamvila/core/api_config/client/api_client.dart';
 import 'package:dreamvila/core/utils/ImagePickerUtils.dart';
+import 'package:dreamvila/core/utils/sharedPreferences.dart';
+import 'package:dreamvila/core/utils/status.dart';
 import 'package:dreamvila/repository/authRepository.dart';
-import 'package:dreamvila/viewmodels/signup_bloc/signup_event.dart';
+import 'package:dreamvila/widgets/common_widget/app_toast_message.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:meta/meta.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toastification/toastification.dart';
 
-import '../../core/utils/exports.dart';
+import 'auth_event.dart';
+import 'auth_state.dart';
 
-class SignupBloc extends Bloc<SignupEvent, SignupState> {
-
-  final ImagePickerUtils imagePickerUtils;
+class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   final AuthRepository authRepository = AuthRepository(ApiClient());
-  
-  SignupBloc(this.imagePickerUtils)
-      : super(SignupState(
-    firstNameController:TextEditingController(),
-    lastNameController: TextEditingController(),
-    emailController: TextEditingController(),
-    mobileController: TextEditingController(),
-    passwordController: TextEditingController(),
-    confirmPasswordController: TextEditingController(),
-    formKeySignUp: GlobalKey<FormState>(),
-  )) {
-    on<ToggleSPasswordVisibilityEvent>(_togglePasswordVisibilityEvent);
+
+  final SharedPreferencesService sharedPreferencesService = SharedPreferencesService();
+
+  final ImagePickerUtils imagePickerUtils = ImagePickerUtils();
+
+  AuthBloc() : super(AuthState.initial()) {
+    //signIn
+    on<TogglePasswordVisibilityEvent>(_togglePasswordVisibilityEvent);
+    on<OnLoginButtonEvent>(_onLoginButtonEvent);
+
+    //SignUp
     on<ToggleConfirmPasswordVisibilityEvent>(_toggleConfirmPasswordVisibilityEvent);
     on<ImagePickedEvent>(_imagePickedEvent);
     on<SignupSubmittedEvent>(_signupSubmittedEvent);
     on<OnHobbyChangeEvent>(_onHobbyChangeEvent);
     on<OnGenderChangeEvent>(_onGenderChangeEvent);
   }
-  void _togglePasswordVisibilityEvent(
-      ToggleSPasswordVisibilityEvent event, Emitter emit) {
+
+  //signIn
+  void _togglePasswordVisibilityEvent(TogglePasswordVisibilityEvent event,Emitter emit){
     emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible));
   }
 
+  void _onLoginButtonEvent(OnLoginButtonEvent event,Emitter emit)async{
+    emit(state.copyWith(signInStatus: status.loading));
+    Map<String,dynamic> data = {
+      "email": event.email,
+      "password":event.password
+    };
+
+    final storage = FlutterSecureStorage();
+
+    final result = await authRepository.userLogin(data);
+    if(result.status == true){
+      await storage.write(key: "deviceToken", value: result.token);
+      sharedPreferencesService.storeUserIsLogin(true);
+      emit(state.copyWith(signInStatus: status.success));
+    }else{
+      AppToast.show(message: result.message,type: ToastificationType.error);
+    }
+  }
+
+  //SignUp
   void _toggleConfirmPasswordVisibilityEvent(
       ToggleConfirmPasswordVisibilityEvent event, Emitter emit) {
     emit(state.copyWith(
@@ -50,10 +77,11 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     print("Signup Submitted: ${event.formData}");
     emit(state.copyWith(signUpStatus: status.loading));
     final result = await authRepository.userSignup(event.formData);
-    if(result){
+    if(result.status == true){
       emit(state.copyWith(signUpStatus: status.success));
     }else{
-      emit(state.copyWith(signUpStatus: status.failure,errorMessage: 'some things was wrong!'));
+      AppToast.show(message: result.message,type: ToastificationType.error);
+      emit(state.copyWith(signUpStatus: status.failure));
     }
   }
 
@@ -70,4 +98,5 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   void _onGenderChangeEvent(OnGenderChangeEvent event, Emitter emit) {
     emit(state.copyWith(gender: event.gender));
   }
+
 }

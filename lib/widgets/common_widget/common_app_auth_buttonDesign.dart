@@ -1,3 +1,4 @@
+import 'package:dreamvila/core/generated/assets.gen.dart';
 import 'package:dreamvila/core/themes/theme_helper.dart';
 import 'package:dreamvila/widgets/common_widget/image_view.dart';
 import 'package:flutter/material.dart';
@@ -73,8 +74,8 @@ class CommonAuthFooter extends StatelessWidget {
         // Social buttons (SVG image)
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            CustomImageView(imagePath: "assets/images/svgs/auth_buttons.svg"),
+          children: [
+            CustomImageView(imagePath: Assets.images.svgs.authButtons.path),
           ],
         ),
 

@@ -1,23 +1,22 @@
 import 'package:dreamvila/core/utils/exports.dart';
+import 'package:dreamvila/viewmodels/auth_bloc/auth_bloc.dart';
+import 'package:dreamvila/viewmodels/auth_bloc/auth_event.dart';
+import 'package:dreamvila/viewmodels/auth_bloc/auth_state.dart';
 import 'package:flutter/material.dart';
 
-class SignUpView extends StatefulWidget {
-  SignUpView({super.key});
+class SignUpView extends StatelessWidget {
+  static Widget builder(BuildContext context) {
+    return const SignUpView();
+  }
+  const SignUpView({super.key});
 
-  @override
-  State<SignUpView> createState() => _SignUpViewState();
-}
-
-class _SignUpViewState extends State<SignUpView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: BlocConsumer<SignupBloc, SignupState>(
+      body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state.signUpStatus == status.success) {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                AppRoutes.signInScreen, (Route<dynamic> route) => false);
+            NavigatorService.pushNamedAndRemoveUntil(AppRoutes.signInScreen);
           }
         },
         builder: (context, state) {
@@ -25,7 +24,7 @@ class _SignUpViewState extends State<SignUpView> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: SingleChildScrollView(
               child: Form(
-                key: state.formKeySignUp,
+                key: state.signUpFromKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -53,12 +52,12 @@ class _SignUpViewState extends State<SignUpView> {
                       buttonText: Lang.of(context).lbl_sign_up,
                       footerText: Lang.of(context).lbl_already_have_an_account,
                       onActionTap: () {
-                        Navigator.of(context).pushNamed(AppRoutes.signInScreen);
+                        NavigatorService.pushNamedAndRemoveUntil(AppRoutes.signInScreen);
                       },
                       onButtonTap: () {
                         _submit(context, state);
                       },
-                      isLoading: state.signUpStatus == status.loading,
+                      isLoading: state.signUpStatus == status.loading ? true : false,
                     )
                   ],
                 ),
@@ -70,8 +69,8 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 
-  void _submit(BuildContext context, SignupState state) async {
-    if (state.formKeySignUp.currentState!.validate()) {
+  void _submit(BuildContext context, AuthState state) async {
+    if (state.signUpFromKey.currentState!.validate()) {
       final user = SignupModel(
         firstName: state.firstNameController.text,
         lastName: state.lastNameController.text,
@@ -82,12 +81,12 @@ class _SignUpViewState extends State<SignUpView> {
         image: state.file,
         password: state.passwordController.text,
       );
-      context.read<SignupBloc>().add(SignupSubmittedEvent(user));
+      context.read<AuthBloc>().add(SignupSubmittedEvent(user));
     }
   }
 }
 
-Widget _buildCommonInput(BuildContext context,SignupState state) {
+Widget _buildCommonInput(BuildContext context,AuthState state) {
   return Column(
     children: [
       LabeledTextField(
@@ -120,7 +119,7 @@ Widget _buildCommonInput(BuildContext context,SignupState state) {
   );
 }
 
-Widget _buildPasswordInput(BuildContext context, SignupState state) {
+Widget _buildPasswordInput(BuildContext context, AuthState state) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -133,7 +132,7 @@ Widget _buildPasswordInput(BuildContext context, SignupState state) {
         validator: (value) => Validation.validatePassword(value!),
         suffixIcon: IconButton(
           onPressed: () {
-            context.read<SignupBloc>().add(ToggleSPasswordVisibilityEvent());
+            context.read<AuthBloc>().add(TogglePasswordVisibilityEvent());
           },
           icon: Icon(
             state.isPasswordVisible
@@ -154,7 +153,7 @@ Widget _buildPasswordInput(BuildContext context, SignupState state) {
         suffixIcon: IconButton(
             onPressed: () {
               context
-                  .read<SignupBloc>()
+                  .read<AuthBloc>()
                   .add(ToggleConfirmPasswordVisibilityEvent());
             },
             icon: Icon(
@@ -168,7 +167,7 @@ Widget _buildPasswordInput(BuildContext context, SignupState state) {
   );
 }
 
-Widget _buildGenderInput(BuildContext context, SignupState state) {
+Widget _buildGenderInput(BuildContext context, AuthState state) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -182,7 +181,7 @@ Widget _buildGenderInput(BuildContext context, SignupState state) {
               label: Lang.of(context).lbl_male,
               selectedGender: state.gender,
               onChanged: (value) {
-                context.read<SignupBloc>().add(OnGenderChangeEvent(value!));
+                context.read<AuthBloc>().add(OnGenderChangeEvent(value!));
               }),
           SizedBox(
             width: 50.w,
@@ -191,7 +190,7 @@ Widget _buildGenderInput(BuildContext context, SignupState state) {
               label: Lang.of(context).lbl_female,
               selectedGender: state.gender,
               onChanged: (value) {
-                context.read<SignupBloc>().add(OnGenderChangeEvent(value!));
+                context.read<AuthBloc>().add(OnGenderChangeEvent(value!));
               })
         ],
       ),
@@ -199,22 +198,17 @@ Widget _buildGenderInput(BuildContext context, SignupState state) {
   );
 }
 
-Widget _buildImageInput(BuildContext context, SignupState state) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      CommonImageInput(
-        label: Lang.of(context).lbl_upload_user_profile,
-        imagePaths: state.file != null ? [state.file!.path.toString()] : [],
-        onTap: () {
-          context.read<SignupBloc>().add(ImagePickedEvent());
-        },
-      ),
-    ],
+Widget _buildImageInput(BuildContext context, AuthState state) {
+  return CommonImageInput(
+    label: Lang.of(context).lbl_upload_user_profile,
+    imagePaths: state.file != null ? [state.file!.path.toString()] : [],
+    onTap: () {
+      context.read<AuthBloc>().add(ImagePickedEvent());
+    },
   );
 }
 
-Widget _buildHobbyInput(BuildContext context, SignupState state) {
+Widget _buildHobbyInput(BuildContext context, AuthState state) {
   final List<String> hobbies = ['Reading', 'Gaming', 'Traveling', 'Cooking'];
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,7 +223,7 @@ Widget _buildHobbyInput(BuildContext context, SignupState state) {
             value: state.selectedHobbies.contains(hobbies[0]),
             text: hobbies[0],
             onChanged: (_) {
-              context.read<SignupBloc>().add(OnHobbyChangeEvent(hobbies[0]));
+              context.read<AuthBloc>().add(OnHobbyChangeEvent(hobbies[0]));
             },
           ),
           SizedBox(
@@ -239,7 +233,7 @@ Widget _buildHobbyInput(BuildContext context, SignupState state) {
             value: state.selectedHobbies.contains(hobbies[1]),
             text: hobbies[1],
             onChanged: (_) {
-              context.read<SignupBloc>().add(OnHobbyChangeEvent(hobbies[1]));
+              context.read<AuthBloc>().add(OnHobbyChangeEvent(hobbies[1]));
             },
           ),
         ],
@@ -250,7 +244,7 @@ Widget _buildHobbyInput(BuildContext context, SignupState state) {
             value: state.selectedHobbies.contains(hobbies[2]),
             text: hobbies[2],
             onChanged: (_) {
-              context.read<SignupBloc>().add(OnHobbyChangeEvent(hobbies[2]));
+              context.read<AuthBloc>().add(OnHobbyChangeEvent(hobbies[2]));
             },
           ),
           SizedBox(
@@ -260,7 +254,7 @@ Widget _buildHobbyInput(BuildContext context, SignupState state) {
             value: state.selectedHobbies.contains(hobbies[3]),
             text: hobbies[3],
             onChanged: (_) {
-              context.read<SignupBloc>().add(OnHobbyChangeEvent(hobbies[3]));
+              context.read<AuthBloc>().add(OnHobbyChangeEvent(hobbies[3]));
             },
           ),
         ],

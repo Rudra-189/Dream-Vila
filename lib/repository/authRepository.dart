@@ -1,8 +1,8 @@
 import 'package:dreamvila/core/api_config/client/api_client.dart';
 import 'package:dreamvila/core/api_config/endpoints/api_endpoint.dart';
 import 'package:dreamvila/models/signUpModel.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dreamvila/models/signupResponseDataModel.dart';
+import '../models/loginResponseDataModel.dart';
 
 
 class AuthRepository{
@@ -11,10 +11,7 @@ class AuthRepository{
 
   AuthRepository(this.apiClint);
 
-  final storage = FlutterSecureStorage();
-
-
-  Future<bool> userSignup (SignupModel data)async{
+  Future<SignUpResponseModel> userSignup (SignupModel data)async{
     Map<String,dynamic> formData = {
       'image': [data.image!.path],
       'firstName': data.firstName,
@@ -25,31 +22,14 @@ class AuthRepository{
       'mobile': data.mobile.toString(),
       'password': data.password
     };
+    final response = await apiClint.request(
+        RequestType.MULTIPART_POST, ApiEndPoint.signUpUser,multipartData: formData);
 
-    try {
-      final response = await apiClint.request(
-          RequestType.MULTIPART_POST, ApiEndPoint.signUpUser,multipartData: formData);
-      if (response['status'] == true && response["data"] != null) {
-        print("true");
-        return true;
-      }else{
-        return false;
-      }
-    }catch(e){
-      rethrow;
-    }
+    return SignUpResponseModel.fromJson(response);
   }
 
-  Future<bool> userLogin (Map<String,dynamic> data)async{
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+  Future<LoginResponseMode> userLogin (Map<String,dynamic> data)async{
     final response = await apiClint.request(RequestType.POST,ApiEndPoint.signInUser,data: data);
-
-    if(response['status'] == true){
-      await storage.write(key: "deviceToken", value: response['token']);
-      await prefs.setBool('isLogin', true);
-      return true;
-    }else{
-      return false;
-    }
+    return LoginResponseMode.fromJson(response);
   }
 }

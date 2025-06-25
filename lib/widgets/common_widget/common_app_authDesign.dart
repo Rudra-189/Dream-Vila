@@ -1,3 +1,4 @@
+import 'package:dreamvila/core/generated/assets.gen.dart';
 import 'package:dreamvila/core/themes/theme_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,7 +20,7 @@ class BuildCommonAuthDesign extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CustomImageView(
-              imagePath: "assets/images/pngs/app_logo.png",
+              imagePath: Assets.images.pngs.appLogo.path,
               height: 50.h,
               width: 200.w,
             ),

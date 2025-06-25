@@ -2,12 +2,15 @@
 
 import 'package:dreamvila/core/utils/ImagePickerUtils.dart';
 import 'package:dreamvila/core/utils/exports.dart';
+import 'package:dreamvila/viewmodels/auth_bloc/auth_bloc.dart';
 import 'package:dreamvila/viewmodels/language_bloc/language_bloc.dart';
 import 'package:dreamvila/viewmodels/language_bloc/language_event.dart';
 import 'package:dreamvila/viewmodels/language_bloc/language_state.dart';
 import 'package:dreamvila/viewmodels/splash_bloc/splash_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
+import '../utils/navigator_service.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -18,11 +21,10 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => LanguageBloc()..add(LoadLanguageEvent())),
         BlocProvider(create: (_) => SplashBloc()..add(LoadSplashEvent())),
-        BlocProvider(create: (_) => SignupBloc(ImagePickerUtils())),
-        BlocProvider(create: (_) => SignInBloc()),
+        BlocProvider(create: (_) => AuthBloc()),
         BlocProvider(create: (_) => HomeBloc()),
         BlocProvider(create: (_) => PropertyDetailBloc()),
-        BlocProvider(create: (_) => AddProductBloc(ImagePickerUtils()))
+        BlocProvider(create: (_) => AddProductBloc())
       ],
       child: BlocBuilder<LanguageBloc, LanguageState>(
         builder: (context, state) {
@@ -38,6 +40,7 @@ class MyApp extends StatelessWidget {
                 routes: AppRoutes.routes,
                 initialRoute: AppRoutes.initialRoute,
                 locale: state.locale,
+                navigatorKey: NavigatorService.navigatorKey,
                 localizationsDelegates: const [
                   Lang.delegate,
                   GlobalMaterialLocalizations.delegate,

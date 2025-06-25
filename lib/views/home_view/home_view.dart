@@ -1,9 +1,18 @@
+import 'dart:ffi';
+
+import 'package:dreamvila/core/api_config/endpoints/api_endpoint.dart';
 import 'package:dreamvila/core/utils/exports.dart';
+import 'package:dreamvila/views/home_view/home_shimmer.dart';
 import 'package:flutter/material.dart';
 
 import '../../widgets/common_widget/custompopup_menu.dart';
 
 class HomeView extends StatelessWidget {
+
+  static Widget builder(BuildContext context) {
+    return const HomeView();
+  }
+
   const HomeView({super.key});
 
   @override
@@ -15,11 +24,11 @@ class HomeView extends StatelessWidget {
         body: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
             if(state.homeStatus == status.loading){
-              return Center(child: CircularProgressIndicator(),);
+              return HomeShimmer.buildHomePageSimmer(context);
             }else if(state.homeStatus == status.success){
               return SafeArea(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Column(
                     children: [
                       SizedBox(height: 20.h),
@@ -77,7 +86,7 @@ Widget _buildUserInfo(BuildContext context,UserModel user) {
                         offset: Offset(2, 2),
                         blurRadius: 10)
                   ]),
-              child: CustomImageView(imagePath: 'https://interview.flexioninfotech.com/uploads/${user.image}',fit: BoxFit.cover,radius: BorderRadius.circular(10.r),),
+              child: CustomImageView(imagePath: '${ApiEndPoint.userImageUrl}/${user.image}',fit: BoxFit.cover,radius: BorderRadius.circular(10.r),),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -138,7 +147,10 @@ Widget _buildUserInfo(BuildContext context,UserModel user) {
               alignment: Alignment.center,
               child: GestureDetector(
                 onTap: (){
-                  Navigator.of(context).pushNamed(AppRoutes.addProductScreen);
+                  Navigator.of(context).pushNamed(AppRoutes.addProductScreen,arguments: {
+                    'isUpdate':false,
+                    // 'data': null
+                  });
                 },
                 child: Text(
                   Lang.of(context).lbl_add_product,
@@ -160,7 +172,7 @@ Widget _buildTabView(BuildContext context) {
     },
 
     labelColor: Theme.of(context).customColors.primaryColor,
-    unselectedLabelColor: Colors.black54,
+    unselectedLabelColor: Theme.of(context).customColors.iconColor,
     indicatorSize: TabBarIndicatorSize.tab,
     dividerColor: Colors.transparent,
     labelPadding: EdgeInsets.all(0.r),
@@ -191,133 +203,144 @@ Widget _buildPropertyList(BuildContext context,HomeState state) {
 
   final filteredData = state.data!.data.where((e) => e.type == categoryFilter [state.index]).toList();
 
-  return Expanded(
-    child: ListView.builder(
-      itemBuilder: (context, index) {
-        final property = filteredData[index];
-        return GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed(AppRoutes.propertyDetailScreen,arguments: property.id);
-            },
-          onLongPressStart: (details){
-            showContextMenu(context,details.globalPosition,property.id);
-          },
-            child: Card(
-              color: Colors.white,
-              shadowColor: Theme.of(context).customColors.borderColor,
-              margin: EdgeInsets.only(bottom: 20),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    CustomImageView(imagePath: property.thumbnail,height: 85.h,width: 85.h,radius: BorderRadius.circular(10)),
-                    SizedBox(
-                      width: 5.w,
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Text(property.title,
-                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(overflow: TextOverflow.ellipsis)),
-                              ),
-                              Text(
-                                "\$ ${property.price.toString()}",
-                                style: Theme.of(context).textTheme.displayMedium,
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10.h,
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.location_pin,
-                                color: Colors.black54,
-                                size: 18.sp,
-                              ),
-                              Expanded(
-                                child: Text(property.address,
-                                    style: TextStyle(
-                                        color: Colors.black54, fontSize: 12,overflow: TextOverflow.ellipsis)),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10.h,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                "${Lang.of(context).lbl_plots} ${property.plot.toString()}",
-                                style: TextStyle(
-                                    color: Colors.black38, fontSize: 10),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                "|",
-                                style: TextStyle(
-                                    color: Theme.of(context)
-                                        .customColors
-                                        .primaryColor),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                "${property.discountPercentage} ${Lang.of(context).lbl_discount}",
-                                style: TextStyle(
-                                    color: Colors.black38, fontSize: 10),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                "|",
-                                style: TextStyle(
-                                    color: Theme.of(context)
-                                        .customColors
-                                        .primaryColor),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.star,
-                                    color: Theme.of(context)
-                                        .customColors
-                                        .primaryColor,
-                                    size: 15,
-                                  ),
-                                  Text(
-                                    property.rating.toString(),
-                                    style: TextStyle(
-                                        color: Colors.black38, fontSize: 10),
-                                  )
-                                ],
-                              )
-                            ],
-                          )
-                        ],
+  return BlocBuilder<HomeBloc, HomeState>(
+    buildWhen: (previous, current) => previous.productStatus != current.productStatus || previous.productStatus != current.productStatus,
+  builder: (context, state) {
+    if(state.productStatus == status.loading){
+      return Expanded(child: Center(child: CircularProgressIndicator()));
+    }else if(state.productStatus == status.success){
+      return Expanded(
+        child: ListView.builder(
+          itemBuilder: (context, index) {
+            final property = filteredData[index];
+            return GestureDetector(
+              onTap: () {
+                NavigatorService.pushNamed(AppRoutes.propertyDetailScreen,arguments: property.id,);
+              },
+              onLongPressStart: (details){
+                showContextMenu(context,details.globalPosition,property.id,property);
+              },
+              child: Card(
+                color: Theme.of(context).customColors.secondaryColor,
+                shadowColor: Theme.of(context).customColors.borderColor,
+                margin: EdgeInsets.only(bottom: 20),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      CustomImageView(imagePath: property.thumbnail,height: 85.h,width: 85.h,radius: BorderRadius.circular(10)),
+                      SizedBox(
+                        width: 5.w,
                       ),
-                    )
-                  ],
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(property.title,
+                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(overflow: TextOverflow.ellipsis)),
+                                ),
+                                Text(
+                                  "\$ ${property.price.toString()}",
+                                  style: Theme.of(context).textTheme.displayMedium,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.location_pin,
+                                  color: Theme.of(context).customColors.iconColor,
+                                  size: 18.sp,
+                                ),
+                                Expanded(
+                                  child: Text(property.address,
+                                      style: TextStyle(
+                                          color:Theme.of(context).customColors.iconColor, fontSize: 12,overflow: TextOverflow.ellipsis)),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "${Lang.of(context).lbl_plots} ${property.plot.toString()}",
+                                  style: TextStyle(
+                                      color: Theme.of(context).customColors.cardLowerTextColor, fontSize: 10),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "|",
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .customColors
+                                          .primaryColor),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "${property.discountPercentage} ${Lang.of(context).lbl_discount}",
+                                  style: TextStyle(
+                                      color: Theme.of(context).customColors.cardLowerTextColor, fontSize: 10),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "|",
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .customColors
+                                          .primaryColor),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.star,
+                                      color: Theme.of(context)
+                                          .customColors
+                                          .primaryColor,
+                                      size: 15,
+                                    ),
+                                    Text(
+                                      property.rating.toString(),
+                                      style: TextStyle(
+                                          color: Theme.of(context).customColors.cardLowerTextColor, fontSize: 10),
+                                    )
+                                  ],
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-      },
-      itemCount:filteredData.length,
-    ),
-  );
+            );
+          },
+          itemCount:filteredData.length,
+        ),
+      );
+    }else{
+      return Expanded(child: Center(child: Text(state.errorMessage)));
+    }
+  },
+);
 }

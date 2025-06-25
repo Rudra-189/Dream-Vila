@@ -5,7 +5,7 @@ class AddProductModel extends Equatable {
   final String description;
   final String address;
   final double price;
-  final int discountPercentage;
+  final double discountPercentage;
   final double rating;
   final int plot;
   final String type;
@@ -13,8 +13,8 @@ class AddProductModel extends Equatable {
   final int hall;
   final int kitchen;
   final int washroom;
-  final String thumbnail; // Use File if you're uploading image
-  final List<String>? images; // List of image files
+  final String thumbnail;
+  final List<String> images;
 
   const AddProductModel({
     required this.title,
@@ -30,8 +30,27 @@ class AddProductModel extends Equatable {
     required this.kitchen,
     required this.washroom,
     required this.thumbnail,
-    this.images,
+    this.images = const [],
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'description': description,
+      'address': address,
+      'price': price,
+      'discountPercentage': discountPercentage,
+      'rating': rating,
+      'plot': plot,
+      'type': type,
+      'bedroom': bedroom,
+      'hall': hall,
+      'kitchen': kitchen,
+      'washroom': washroom,
+      'thumbnail': thumbnail,
+      'images': images,
+    };
+  }
 
   @override
   List<Object?> get props => [

@@ -13,8 +13,6 @@ class OnTabIndexChangeEvent extends HomeEvent{
   OnTabIndexChangeEvent(this.index);
 }
 
-class OnProductUpdate extends HomeEvent{}
-
 class OnProductDelete extends HomeEvent{
   final String id;
 

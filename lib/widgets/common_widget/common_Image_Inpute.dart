@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dreamvila/core/generated/assets.gen.dart';
 import 'package:dreamvila/core/utils/exports.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -97,7 +98,7 @@ class CommonImageInput extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CustomImageView(
-                      imagePath: "assets/images/svgs/icons/ic_cloud.png",
+                      imagePath: Assets.images.svgs.icons.icCloud.path,
                     ),
                     const SizedBox(height: 5),
                     const Text(

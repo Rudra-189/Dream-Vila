@@ -1,3 +1,4 @@
+import 'package:dreamvila/core/utils/exports.dart';
 import 'package:dreamvila/models/addProductModel.dart';
 import 'package:equatable/equatable.dart';
 
@@ -21,4 +22,16 @@ class OnCancelImageEvent extends AddProductEvent{
   OnCancelImageEvent(this.index);
 }
 
-class OnDisposeEvent extends AddImagesEvent{}
+class InitializeProductEvent extends AddProductEvent {
+  final Property product;
+  InitializeProductEvent(this.product);
+}
+
+class OnUpdateProductEvent extends AddProductEvent{
+  final AddProductModel product;
+  final String id;
+
+  OnUpdateProductEvent(this.product,this.id);
+  @override
+  List<Object>get props => [product,id];
+}

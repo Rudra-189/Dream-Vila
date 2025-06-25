@@ -18,20 +18,17 @@ class Lang {
   static Lang? _current;
 
   static Lang get current {
-    assert(
-      _current != null,
-      'No instance of Lang was loaded. Try to initialize the Lang delegate before accessing Lang.current.',
-    );
+    assert(_current != null,
+        'No instance of Lang was loaded. Try to initialize the Lang delegate before accessing Lang.current.');
     return _current!;
   }
 
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<Lang> load(Locale locale) {
-    final name =
-        (locale.countryCode?.isEmpty ?? false)
-            ? locale.languageCode
-            : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -44,10 +41,8 @@ class Lang {
 
   static Lang of(BuildContext context) {
     final instance = Lang.maybeOf(context);
-    assert(
-      instance != null,
-      'No instance of Lang present in the widget tree. Did you add Lang.delegate in localizationsDelegates?',
-    );
+    assert(instance != null,
+        'No instance of Lang present in the widget tree. Did you add Lang.delegate in localizationsDelegates?');
     return instance!;
   }
 
@@ -57,17 +52,32 @@ class Lang {
 
   /// `Dream Vila`
   String get lbl_app_name {
-    return Intl.message('Dream Vila', name: 'lbl_app_name', desc: '', args: []);
+    return Intl.message(
+      'Dream Vila',
+      name: 'lbl_app_name',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Sign In`
   String get lbl_sign_in {
-    return Intl.message('Sign In', name: 'lbl_sign_in', desc: '', args: []);
+    return Intl.message(
+      'Sign In',
+      name: 'lbl_sign_in',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Sign Up`
   String get lbl_sign_up {
-    return Intl.message('Sign Up', name: 'lbl_sign_up', desc: '', args: []);
+    return Intl.message(
+      'Sign Up',
+      name: 'lbl_sign_up',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `First Name`
@@ -82,22 +92,42 @@ class Lang {
 
   /// `Last Name`
   String get lbl_last_name {
-    return Intl.message('Last Name', name: 'lbl_last_name', desc: '', args: []);
+    return Intl.message(
+      'Last Name',
+      name: 'lbl_last_name',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Email`
   String get lbl_email {
-    return Intl.message('Email', name: 'lbl_email', desc: '', args: []);
+    return Intl.message(
+      'Email',
+      name: 'lbl_email',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Mobil`
   String get lbl_mobil {
-    return Intl.message('Mobil', name: 'lbl_mobil', desc: '', args: []);
+    return Intl.message(
+      'Mobil',
+      name: 'lbl_mobil',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Gender`
   String get lbl_gender {
-    return Intl.message('Gender', name: 'lbl_gender', desc: '', args: []);
+    return Intl.message(
+      'Gender',
+      name: 'lbl_gender',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Upload User Profile`
@@ -122,7 +152,12 @@ class Lang {
 
   /// `Password`
   String get lbl_password {
-    return Intl.message('Password', name: 'lbl_password', desc: '', args: []);
+    return Intl.message(
+      'Password',
+      name: 'lbl_password',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Confirm Password`
@@ -137,22 +172,42 @@ class Lang {
 
   /// `Hobby`
   String get lbl_hobby {
-    return Intl.message('Hobby', name: 'lbl_hobby', desc: '', args: []);
+    return Intl.message(
+      'Hobby',
+      name: 'lbl_hobby',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Reading`
   String get lbl_reading {
-    return Intl.message('Reading', name: 'lbl_reading', desc: '', args: []);
+    return Intl.message(
+      'Reading',
+      name: 'lbl_reading',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Drawing`
   String get lbl_drawing {
-    return Intl.message('Drawing', name: 'lbl_drawing', desc: '', args: []);
+    return Intl.message(
+      'Drawing',
+      name: 'lbl_drawing',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Writing`
   String get lbl_writing {
-    return Intl.message('Writing', name: 'lbl_writing', desc: '', args: []);
+    return Intl.message(
+      'Writing',
+      name: 'lbl_writing',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Photography`
@@ -167,32 +222,62 @@ class Lang {
 
   /// `Hello!`
   String get lbl_hello {
-    return Intl.message('Hello!', name: 'lbl_hello', desc: '', args: []);
+    return Intl.message(
+      'Hello!',
+      name: 'lbl_hello',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `House`
   String get lbl_house {
-    return Intl.message('House', name: 'lbl_house', desc: '', args: []);
+    return Intl.message(
+      'House',
+      name: 'lbl_house',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Apartment`
   String get lbl_apartment {
-    return Intl.message('Apartment', name: 'lbl_apartment', desc: '', args: []);
+    return Intl.message(
+      'Apartment',
+      name: 'lbl_apartment',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Office`
   String get lbl_office {
-    return Intl.message('Office', name: 'lbl_office', desc: '', args: []);
+    return Intl.message(
+      'Office',
+      name: 'lbl_office',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Land`
   String get lbl_land {
-    return Intl.message('Land', name: 'lbl_land', desc: '', args: []);
+    return Intl.message(
+      'Land',
+      name: 'lbl_land',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Plots`
   String get lbl_plots {
-    return Intl.message('Plots', name: 'lbl_plots', desc: '', args: []);
+    return Intl.message(
+      'Plots',
+      name: 'lbl_plots',
+      desc: '',
+      args: [],
+    );
   }
 
   /// ` % Discount`
@@ -207,7 +292,12 @@ class Lang {
 
   /// `Title`
   String get lbl_title {
-    return Intl.message('Title', name: 'lbl_title', desc: '', args: []);
+    return Intl.message(
+      'Title',
+      name: 'lbl_title',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Description`
@@ -222,12 +312,22 @@ class Lang {
 
   /// `Address`
   String get lbl_address {
-    return Intl.message('Address', name: 'lbl_address', desc: '', args: []);
+    return Intl.message(
+      'Address',
+      name: 'lbl_address',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Price`
   String get lbl_price {
-    return Intl.message('Price', name: 'lbl_price', desc: '', args: []);
+    return Intl.message(
+      'Price',
+      name: 'lbl_price',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Discount Percentage`
@@ -242,44 +342,89 @@ class Lang {
 
   /// `Rating`
   String get lbl_rating {
-    return Intl.message('Rating', name: 'lbl_rating', desc: '', args: []);
+    return Intl.message(
+      'Rating',
+      name: 'lbl_rating',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Plot`
   String get lbl_plot {
-    return Intl.message('Plot', name: 'lbl_plot', desc: '', args: []);
+    return Intl.message(
+      'Plot',
+      name: 'lbl_plot',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Type`
   String get lbl_type {
-    return Intl.message('Type', name: 'lbl_type', desc: '', args: []);
+    return Intl.message(
+      'Type',
+      name: 'lbl_type',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Bad Room`
   String get lbl_bedroom {
-    return Intl.message('Bad Room', name: 'lbl_bedroom', desc: '', args: []);
+    return Intl.message(
+      'Bad Room',
+      name: 'lbl_bedroom',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Hall`
   String get lbl_hall {
-    return Intl.message('Hall', name: 'lbl_hall', desc: '', args: []);
+    return Intl.message(
+      'Hall',
+      name: 'lbl_hall',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Kitchen`
   String get lbl_kitchen {
-    return Intl.message('Kitchen', name: 'lbl_kitchen', desc: '', args: []);
+    return Intl.message(
+      'Kitchen',
+      name: 'lbl_kitchen',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Washroom`
   String get lbl_washroom {
-    return Intl.message('Washroom', name: 'lbl_washroom', desc: '', args: []);
+    return Intl.message(
+      'Washroom',
+      name: 'lbl_washroom',
+      desc: '',
+      args: [],
+    );
   }
 
-  /// `+Add Product`
+  /// `Add Product`
   String get lbl_add_product {
     return Intl.message(
-      '+Add Product',
+      'Add Product',
       name: 'lbl_add_product',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update Product`
+  String get lbl_update_product {
+    return Intl.message(
+      'Update Product',
+      name: 'lbl_update_product',
       desc: '',
       args: [],
     );
@@ -327,17 +472,32 @@ class Lang {
 
   /// `Male`
   String get lbl_male {
-    return Intl.message('Male', name: 'lbl_male', desc: '', args: []);
+    return Intl.message(
+      'Male',
+      name: 'lbl_male',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Female`
   String get lbl_female {
-    return Intl.message('Female', name: 'lbl_female', desc: '', args: []);
+    return Intl.message(
+      'Female',
+      name: 'lbl_female',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `+91`
   String get lbl_mobil_hint {
-    return Intl.message('+91', name: 'lbl_mobil_hint', desc: '', args: []);
+    return Intl.message(
+      '+91',
+      name: 'lbl_mobil_hint',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `abc@gmail.com`
@@ -365,7 +525,9 @@ class AppLocalizationDelegate extends LocalizationsDelegate<Lang> {
   const AppLocalizationDelegate();
 
   List<Locale> get supportedLocales {
-    return const <Locale>[Locale.fromSubtags(languageCode: 'en')];
+    return const <Locale>[
+      Locale.fromSubtags(languageCode: 'en'),
+    ];
   }
 
   @override

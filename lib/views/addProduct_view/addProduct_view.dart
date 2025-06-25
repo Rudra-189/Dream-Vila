@@ -1,32 +1,29 @@
 import 'package:dreamvila/core/utils/exports.dart';
 import 'package:flutter/material.dart';
 
-class AddProductView extends StatefulWidget {
-  const AddProductView({super.key});
+class AddProductView extends StatelessWidget {
 
-  @override
-  State<AddProductView> createState() => _AddProductViewState();
-}
+  bool isUpdate;
+  Property? data;
 
-class _AddProductViewState extends State<AddProductView> {
-
-
+  AddProductView({super.key, required this.isUpdate,this.data});
 
   @override
   Widget build(BuildContext context) {
-
+    if (isUpdate == true) {
+      context.read<AddProductBloc>().add(InitializeProductEvent(data!));
+    }
     return Scaffold(
       body: BlocConsumer<AddProductBloc, AddProductState>(
         listener: (context, state) {
-          if (state.addProductStatus == status.success) {
-            context.read<AddProductBloc>().add(OnDisposeEvent());
-            Navigator.of(context).pushNamedAndRemoveUntil(
-              AppRoutes.homeScreen,
-              (Route<dynamic> route) => false,
-            );
+          if (state.addProductStatus == status.success){
+            NavigatorService.pushNamedAndRemoveUntil(AppRoutes.homeScreen);
           }
         },
         builder: (context, state) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+
+          });
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: SingleChildScrollView(
@@ -46,11 +43,10 @@ class _AddProductViewState extends State<AddProductView> {
                       child: CustomElevatedButton(
                         height: 0.060.sh,
                         width: 0.85.sw,
-                        text: 'Add Product',
-                        buttonTextStyle:
-                            TextStyle(color: Color(0xFFFFFFFF), fontSize: 16),
+                        text: isUpdate ? Lang.of(context).lbl_update_product:Lang.of(context).lbl_add_product,
+                        buttonTextStyle: TextStyle(color: Color(0xFFFFFFFF), fontSize: 16),
                         buttonStyle: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0XFFFF6F42),
+                          backgroundColor: Theme.of(context).customColors.primaryColor,
                         ),
                         isLoading: state.addProductStatus == status.loading
                             ? true
@@ -73,26 +69,30 @@ class _AddProductViewState extends State<AddProductView> {
     );
   }
 
-  void _submit(BuildContext context, AddProductState state) async {
+  void _submit(BuildContext context, AddProductState state) {
     if (state.formKey.currentState!.validate()) {
       final product = AddProductModel(
-          title: state.titleController.text,
-          description: state.descriptionController.text,
-          address: state.addressController.text,
-          price: double.parse(state.priceController.text),
-          discountPercentage: int.parse(state.discountPercentageController.text),
-          rating: double.parse(state.ratingController.text),
-          plot: int.parse(state.plotController.text),
-          type: state.typeController.text,
-          bedroom: int.parse(state.bedroomController.text),
-          hall: int.parse(state.hallController.text),
-          kitchen: int.parse(state.kitchenController.text),
-          washroom: int.parse(state.washroomController.text),
-          thumbnail: state.thumbnail.toString(),
-          images: state.images);
-      context
-          .read<AddProductBloc>()
-          .add(OnProductAddButtonSubmitEvent(product));
+        title: state.titleController.text,
+        description: state.descriptionController.text,
+        address: state.addressController.text,
+        price: double.tryParse(state.priceController.text) ?? 0,
+        discountPercentage: double.tryParse(state.discountPercentageController.text) ?? 0,
+        rating: double.tryParse(state.ratingController.text) ?? 0,
+        plot: int.tryParse(state.plotController.text) ?? 0,
+        type: state.typeController.text,
+        bedroom: int.tryParse(state.bedroomController.text) ?? 0,
+        hall: int.tryParse(state.hallController.text) ?? 0,
+        kitchen: int.tryParse(state.kitchenController.text) ?? 0,
+        washroom: int.tryParse(state.washroomController.text) ?? 0,
+        thumbnail: state.thumbnail!,
+        images: state.images ?? [],
+      );
+
+      if (isUpdate == true) {
+        context.read<AddProductBloc>().add(OnUpdateProductEvent(product, data!.id));
+      } else {
+        context.read<AddProductBloc>().add(OnProductAddButtonSubmitEvent(product));
+      }
     }
   }
 }

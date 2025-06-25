@@ -10,10 +10,6 @@ class UserRepository{
 
   Future<UserModel>getUserData()async{
     final response = await apiClint.request(RequestType.GET, ApiEndPoint.userDataUrl);
-    if(response['status'] == true){
-      return UserModel.fromJson(response["data"]);
-    }else{
-      throw Exception('Failed to load user data: ${response['status']}');
-    }
+    return UserModel.fromJson(response["data"]);
   }
 }

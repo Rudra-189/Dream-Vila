@@ -5,28 +5,41 @@ import 'package:equatable/equatable.dart';
 
 class HomeState extends Equatable{
 
-  final status homeStatus;
-  final String errorMessage;
-  final PropertyModel? data;
-  final UserModel? user;
   final int index;
+  final status homeStatus;
+  final status productStatus;
+  final PropertyModel? data;
+  // final List<Property> filteredProperties;
+  final UserModel? user;
+  final String errorMessage;
 
-  const HomeState({this.homeStatus = status.init,  this.errorMessage = '',  this.data,this.user,required this.index});
+  HomeState({
+    this.index = 0,
+    this.homeStatus = status.init,
+    this.productStatus = status.init,
+    this.data,
+    this.user,
+    // this.filteredProperties = const [],
+    this.errorMessage = '',
+  });
 
   HomeState copyWith({
+    int? index,
     status? homeStatus,
-    String? errorMessage,
+    status? productStatus,
     PropertyModel? data,
     UserModel? user,
-    int? index
-
-}){
+    String? errorMessage,
+    // List<Property>? filteredProperties
+  }) {
     return HomeState(
+      index: index ?? this.index,
       homeStatus: homeStatus ?? this.homeStatus,
-      errorMessage: errorMessage ?? this.errorMessage,
+      productStatus: productStatus ?? this.productStatus,
       data: data ?? this.data,
       user: user ?? this.user,
-      index: index ?? this.index
+      // filteredProperties: filteredProperties ?? this.filteredProperties,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 

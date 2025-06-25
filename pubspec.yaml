@@ -59,6 +59,8 @@ dependencies:
   shared_preferences: ^2.5.3
   flutter_localizations:
     sdk: flutter
+  build_runner: ^2.4.6
+  flutter_gen_runner: ^5.3.1
 
 
 dev_dependencies:
@@ -116,6 +118,15 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_gen:
+  line_length: 160
+  integrations:
+    flutter_svg: true
+    lottie: true
+  assets:
+    enabled: true
+  output: lib/core/generated
 
 flutter_intl:
   enabled: true

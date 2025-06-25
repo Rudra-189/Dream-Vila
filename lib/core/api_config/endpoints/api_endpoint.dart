@@ -11,4 +11,5 @@ class ApiEndPoint {
   static String get userDataUrl=> '$baseUrl/private/user/profile';
   static String get updateProductUrl=> '$baseUrl/private/products/product';
   static String get deleteProductUrl=> '$baseUrl/private/products/product';
+  static String get userImageUrl=> '$baseUrl/uploads';
 }

@@ -1,23 +1,22 @@
 import 'package:dreamvila/core/utils/exports.dart';
+import 'package:dreamvila/viewmodels/auth_bloc/auth_bloc.dart';
+import 'package:dreamvila/viewmodels/auth_bloc/auth_event.dart';
+import 'package:dreamvila/viewmodels/auth_bloc/auth_state.dart';
 import 'package:flutter/material.dart';
 
-class SignInView extends StatefulWidget {
-  SignInView({super.key});
-
-  @override
-  State<SignInView> createState() => _SignInViewState();
-}
-
-class _SignInViewState extends State<SignInView> {
+class SignInView extends StatelessWidget {
+  static Widget builder(BuildContext context) {
+    return const SignInView();
+  }
+  const SignInView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<SignInBloc, SignInState>(
+      body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state.signInStatus == status.success) {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                AppRoutes.homeScreen, (Route<dynamic> route) => false);
+            NavigatorService.pushNamedAndRemoveUntil(AppRoutes.homeScreen);
           }
         },
         builder: (context, state) {
@@ -25,18 +24,12 @@ class _SignInViewState extends State<SignInView> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Form(
-                key: state.formKey,
+                key: state.signInFromKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     BuildCommonAuthDesign(
                       label: Lang.of(context).lbl_sign_in,
-                    ),
-                    LabeledTextField(
-                      label: Lang.of(context).lbl_email,
-                      controller: state.emailController,
-                      inputType: InputType.email,
-                      validator: (value) => Validation.validateEmail(value!),
                     ),
                     _buildCommonInput(context,state),
                     SizedBox(
@@ -46,7 +39,7 @@ class _SignInViewState extends State<SignInView> {
                       buttonText: Lang.of(context).lbl_sign_in,
                       footerText: Lang.of(context).lbl_do_not_have_an_account,
                       onActionTap: () {
-                        Navigator.pushNamed(context, AppRoutes.signupScreen);
+                        NavigatorService.pushNamedAndRemoveUntil(AppRoutes.signupScreen);
                       },
                       onButtonTap: () {
                         _submit(context, state);
@@ -63,27 +56,34 @@ class _SignInViewState extends State<SignInView> {
     );
   }
 
-  void _submit(BuildContext context, SignInState state) async {
-    if (state.formKey.currentState!.validate()) {
-      context.read<SignInBloc>().add(OnLoginButtonEvent(
-          state.emailController.text, state.passwordController.text));
+  void _submit(BuildContext context, AuthState state) async {
+    if (state.signInFromKey.currentState!.validate()) {
+      context.read<AuthBloc>().add(OnLoginButtonEvent(
+          state.signInEmailController.text, state.signInPasswordController.text));
     }
   }
 }
 
-Widget _buildCommonInput(BuildContext context,SignInState state){
+Widget _buildCommonInput(BuildContext context,AuthState state){
   return Column(
     children: [
       LabeledTextField(
+        label: Lang.of(context).lbl_email,
+        controller: state.signInEmailController,
+        inputType: InputType.email,
+        validator: (value) => Validation.validateEmail(value!),
+      ),
+      LabeledTextField(
+        obscureText: state.isPasswordVisible,
         label: Lang.of(context).lbl_password,
         hint: Lang.of(context).lbl_password_hint,
-        controller: state.passwordController,
+        controller: state.signInPasswordController,
         inputType: InputType.text,
         validator: (value) => Validation.validatePassword(value!),
         suffixIcon: IconButton(
           onPressed: () {
             context
-                .read<SignInBloc>()
+                .read<AuthBloc>()
                 .add(TogglePasswordVisibilityEvent());
           },
           icon: Icon(
@@ -100,9 +100,7 @@ Widget _buildCommonInput(BuildContext context,SignInState state){
       Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text(Lang.of(context).lbl_forgot_password,
-              style: TextStyle(
-                  color: Color(0XFFFF6F42), fontSize: 13))
+          Text(Lang.of(context).lbl_forgot_password,style: Theme.of(context).textTheme.displayMedium,)
         ],
       ),
     ],

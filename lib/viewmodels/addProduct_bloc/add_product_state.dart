@@ -5,6 +5,8 @@ import '../../core/utils/exports.dart';
 import '../../core/utils/status.dart';
 
 class AddProductState extends Equatable {
+
+  final bool isInitialized;
   final status addProductStatus;
   final String errorMessage;
   final String? thumbnail;
@@ -25,12 +27,13 @@ class AddProductState extends Equatable {
   final TextEditingController kitchenController;
   final TextEditingController washroomController;
 
-  const AddProductState({
+   AddProductState({
+     this.isInitialized = false,
+     required this.formKey,
     this.addProductStatus = status.init,
     this.errorMessage = '',
     this.thumbnail,
     this.images = const [],
-    required this.formKey,
     required this.titleController,
     required this.descriptionController,
     required this.addressController,
@@ -65,11 +68,11 @@ class AddProductState extends Equatable {
   }
 
   AddProductState copyWith({
+    bool? isInitialized,
     status? addProductStatus,
     String? errorMessage,
     String? thumbnail,
     List<String>? images,
-    GlobalKey<FormState>? formKey,
     TextEditingController? titleController,
     TextEditingController? descriptionController,
     TextEditingController? addressController,
@@ -84,11 +87,12 @@ class AddProductState extends Equatable {
     TextEditingController? washroomController,
   }) {
     return AddProductState(
+      formKey: formKey,
+      isInitialized: isInitialized ?? this.isInitialized,
       addProductStatus: addProductStatus ?? this.addProductStatus,
       errorMessage: errorMessage ?? this.errorMessage,
       thumbnail: thumbnail ?? this.thumbnail,
       images: images ?? this.images,
-      formKey: formKey ?? this.formKey,
       titleController: titleController ?? this.titleController,
       descriptionController: descriptionController ?? this.descriptionController,
       addressController: addressController ?? this.addressController,
@@ -106,6 +110,7 @@ class AddProductState extends Equatable {
 
   @override
   List<Object?> get props => [
+    isInitialized,
     addProductStatus,
     errorMessage,
     thumbnail,

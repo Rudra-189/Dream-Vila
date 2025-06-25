@@ -1,9 +1,15 @@
 import 'package:dreamvila/core/utils/exports.dart';
+import 'package:dreamvila/views/propertyDetail_view/propertyDetail_Shimmer.dart';
 import 'package:flutter/material.dart';
 
 class PropertyDetailView extends StatelessWidget {
-  String id;
-  PropertyDetailView({super.key,required this.id});
+
+  static Widget builder(BuildContext context) {
+    return PropertyDetailView(id: '');
+  }
+
+  final String id;
+  const PropertyDetailView({super.key,required this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +18,7 @@ class PropertyDetailView extends StatelessWidget {
       body: BlocBuilder<PropertyDetailBloc, PropertyDetailState>(
         builder: (context, state) {
           if(state.detailPageStatus == status.loading){
-            return Center(child: CircularProgressIndicator());
+            return PropertyDetailShimmer.buildPropertyDetailShimmer(context);
           }else if(state.detailPageStatus == status.success){
             return SingleChildScrollView(
               child: Column(
@@ -48,9 +54,9 @@ Widget _buildPropertyImages(BuildContext context, List images,PropertyDetailStat
               .map((e) => Card(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    color: Colors.white,
+                    color: Theme.of(context).customColors.secondaryColor,
                     shadowColor: Theme.of(context).customColors.borderColor,
-                    child: CustomImageView(imagePath: e,height: 0.25.sh, width: 0.90.sw,radius: BorderRadius.circular(10),),
+                    child: CustomImageView(imagePath: e,height: 0.25.sh, width: 0.90.sw,radius: BorderRadius.circular(10.r),),
                   ))
               .toList(),
           options: CarouselOptions(
@@ -75,18 +81,18 @@ Widget _buildPropertyImages(BuildContext context, List images,PropertyDetailStat
         height: 10.h,
       ),
       SizedBox(
-        height: 10,
+        height: 10.h,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(images.length, (index) {
             return Container(
               height: 7.h,
               width: 7.h,
-              margin: EdgeInsets.symmetric(horizontal: 4),
+              margin: EdgeInsets.symmetric(horizontal: 4.w),
               decoration: BoxDecoration(
                 color:  state.currentIndex == index
                     ? Theme.of(context).customColors.primaryColor
-                    : Colors.black38,
+                    : Theme.of(context).customColors.cardLowerTextColor,
                 shape: BoxShape.circle,
               ),
             );
@@ -117,13 +123,13 @@ Widget _buildPropertyDetail(BuildContext context, ProductDetailModel product) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Description",
+          Lang.of(context).lbl_description,
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         SizedBox(height: 10.h),
         Card(
           color: Theme.of(context).customColors.secondaryColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
