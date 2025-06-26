@@ -1,4 +1,6 @@
+import 'package:dreamvila/core/generated/assets.gen.dart';
 import 'package:dreamvila/core/utils/exports.dart';
+import 'package:dreamvila/models/auth_model/signUpModel.dart';
 import 'package:dreamvila/viewmodels/auth_bloc/auth_bloc.dart';
 import 'package:dreamvila/viewmodels/auth_bloc/auth_event.dart';
 import 'package:dreamvila/viewmodels/auth_bloc/auth_state.dart';
@@ -8,17 +10,13 @@ class SignUpView extends StatelessWidget {
   static Widget builder(BuildContext context) {
     return const SignUpView();
   }
+
   const SignUpView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if (state.signUpStatus == status.success) {
-            NavigatorService.pushNamedAndRemoveUntil(AppRoutes.signInScreen);
-          }
-        },
+      body: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -28,10 +26,8 @@ class SignUpView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    BuildCommonAuthDesign(
-                      label: Lang.of(context).lbl_sign_up,
-                    ),
-                    _buildCommonInput(context,state),
+                    _buildHeaderDesign(context),
+                    _buildCommonInput(context, state),
                     _buildGenderInput(context, state),
                     SizedBox(
                       height: 20.h,
@@ -48,17 +44,25 @@ class SignUpView extends StatelessWidget {
                     SizedBox(
                       height: 20.h,
                     ),
-                    CommonAuthFooter(
-                      buttonText: Lang.of(context).lbl_sign_up,
-                      footerText: Lang.of(context).lbl_already_have_an_account,
-                      onActionTap: () {
-                        NavigatorService.pushNamedAndRemoveUntil(AppRoutes.signInScreen);
-                      },
-                      onButtonTap: () {
-                        _submit(context, state);
-                      },
-                      isLoading: state.signUpStatus == status.loading ? true : false,
-                    )
+                    Center(
+                      child: CustomElevatedButton(
+                        height: 0.060.sh,
+                        width: 0.85.sw,
+                        text: Lang.of(context).lbl_sign_up,
+                        buttonTextStyle: TextStyle(
+                          color: Theme.of(context).customColors.secondaryColor,
+                          fontSize: 16,
+                        ),
+                        buttonStyle: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).customColors.primaryColor,
+                        ),
+                        isLoading: state.signUpStatus == status.loading ? true : false,
+                        onPressed: () {
+                          _submit(context, state);
+                        },
+                      ),
+                    ),
+                    _buildFooterDesign(context)
                   ],
                 ),
               ),
@@ -86,7 +90,44 @@ class SignUpView extends StatelessWidget {
   }
 }
 
-Widget _buildCommonInput(BuildContext context,AuthState state) {
+Widget _buildHeaderDesign(BuildContext context) {
+  return Column(
+    children: [
+      SizedBox(
+        height: 50.h,
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CustomImageView(
+            imagePath: Assets.images.pngs.appLogo.path,
+            height: 50.h,
+            width: 200.w,
+          ),
+        ],
+      ),
+      SizedBox(
+        height: 50.h,
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            Lang.of(context).lbl_sign_up,
+            style: TextStyle(
+                color: Theme.of(context).customColors.primaryColor,
+                fontSize: 30.sp),
+          )
+        ],
+      ),
+      SizedBox(
+        height: 50.h,
+      ),
+    ],
+  );
+}
+
+Widget _buildCommonInput(BuildContext context, AuthState state) {
   return Column(
     children: [
       LabeledTextField(
@@ -171,7 +212,8 @@ Widget _buildGenderInput(BuildContext context, AuthState state) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(Lang.of(context).lbl_gender, style: Theme.of(context).textTheme.bodyLarge),
+      Text(Lang.of(context).lbl_gender,
+          style: Theme.of(context).textTheme.bodyLarge),
       SizedBox(
         height: 10.h,
       ),
@@ -259,6 +301,51 @@ Widget _buildHobbyInput(BuildContext context, AuthState state) {
           ),
         ],
       ),
+    ],
+  );
+}
+
+Widget _buildFooterDesign(BuildContext context) {
+  return Column(
+    children: [
+      // Primary button
+      SizedBox(height: 40.h),
+
+      // Footer text + action
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            Lang.of(context).lbl_already_have_an_account,
+            style: TextStyle(color: const Color(0xFF000000), fontSize: 15.sp),
+          ),
+          InkWell(
+            onTap: (){
+              NavigatorService.pushNamedAndRemoveUntil(
+              AppRoutes.signInScreen);
+            },
+            child: Text(
+              Lang.of(context).lbl_sign_in,
+              style: TextStyle(
+                color: Theme.of(context).customColors.primaryColor,
+                fontSize: 15.sp,
+              ),
+            ),
+          ),
+        ],
+      ),
+
+      SizedBox(height: 30.h),
+
+      // Social buttons (SVG image)
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CustomImageView(imagePath: Assets.images.svgs.authButtons.path),
+        ],
+      ),
+
+      SizedBox(height: 50.h),
     ],
   );
 }

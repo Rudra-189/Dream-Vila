@@ -1,16 +1,15 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:dreamvila/core/api_config/client/api_client.dart';
+import 'package:dreamvila/core/routes/app_routes.dart';
 import 'package:dreamvila/core/utils/ImagePickerUtils.dart';
+import 'package:dreamvila/core/utils/navigator_service.dart';
 import 'package:dreamvila/core/utils/sharedPreferences.dart';
 import 'package:dreamvila/core/utils/status.dart';
-import 'package:dreamvila/repository/authRepository.dart';
+import 'package:dreamvila/repository/auth_repository.dart';
 import 'package:dreamvila/widgets/common_widget/app_toast_message.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:meta/meta.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toastification/toastification.dart';
 
 import 'auth_event.dart';
@@ -56,6 +55,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await storage.write(key: "deviceToken", value: result.token);
       sharedPreferencesService.storeUserIsLogin(true);
       emit(state.copyWith(signInStatus: status.success));
+      NavigatorService.pushNamedAndRemoveUntil(AppRoutes.homeScreen);
     }else{
       AppToast.show(message: result.message,type: ToastificationType.error);
     }
@@ -74,11 +74,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _signupSubmittedEvent(SignupSubmittedEvent event, Emitter emit)async{
-    print("Signup Submitted: ${event.formData}");
     emit(state.copyWith(signUpStatus: status.loading));
-    final result = await authRepository.userSignup(event.formData);
+
+    Map<String,dynamic> data = {
+      'image': [event.formData.image!.path],
+      'firstName': event.formData.firstName,
+      'lastName': event.formData.lastName,
+      'gender': event.formData.gender.toString(),
+      'hobby': event.formData.hobbies,
+      'email': event.formData.email,
+      'mobile': event.formData.mobile.toString(),
+      'password': event.formData.password
+    };
+
+    final result = await authRepository.userSignup(data);
     if(result.status == true){
       emit(state.copyWith(signUpStatus: status.success));
+      NavigatorService.pushNamedAndRemoveUntil(AppRoutes.signInScreen);
     }else{
       AppToast.show(message: result.message,type: ToastificationType.error);
       emit(state.copyWith(signUpStatus: status.failure));

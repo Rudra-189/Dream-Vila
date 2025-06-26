@@ -1,6 +1,6 @@
 import 'package:dreamvila/core/utils/status.dart';
-import 'package:dreamvila/models/productDataModel.dart';
-import 'package:dreamvila/models/userModel.dart';
+import 'package:dreamvila/models/property_model/productDataModel.dart';
+import 'package:dreamvila/models/user_model/userModel.dart';
 import 'package:equatable/equatable.dart';
 
 class HomeState extends Equatable{
@@ -10,7 +10,7 @@ class HomeState extends Equatable{
   final status productStatus;
   final PropertyModel? data;
   // final List<Property> filteredProperties;
-  final UserModel? user;
+  final UserProfileResponse? user;
   final String errorMessage;
 
   HomeState({
@@ -28,7 +28,7 @@ class HomeState extends Equatable{
     status? homeStatus,
     status? productStatus,
     PropertyModel? data,
-    UserModel? user,
+    UserProfileResponse? user,
     String? errorMessage,
     // List<Property>? filteredProperties
   }) {

@@ -2,7 +2,7 @@
   import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../core/utils/exports.dart';
+import '../../../core/utils/exports.dart';
 
 
 class HomeShimmer{

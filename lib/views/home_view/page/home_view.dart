@@ -2,10 +2,10 @@ import 'dart:ffi';
 
 import 'package:dreamvila/core/api_config/endpoints/api_endpoint.dart';
 import 'package:dreamvila/core/utils/exports.dart';
-import 'package:dreamvila/views/home_view/home_shimmer.dart';
+import 'package:dreamvila/views/home_view/widget/home_shimmer.dart';
 import 'package:flutter/material.dart';
 
-import '../../widgets/common_widget/custompopup_menu.dart';
+import '../../../widgets/common_widget/custompopup_menu.dart';
 
 class HomeView extends StatelessWidget {
 
@@ -52,7 +52,8 @@ class HomeView extends StatelessWidget {
   }
 }
 
-Widget _buildUserInfo(BuildContext context,UserModel user) {
+Widget _buildUserInfo(BuildContext context,UserProfileResponse user) {
+
   return SizedBox(
     height: 150.h,
     child: Column(
@@ -66,27 +67,18 @@ Widget _buildUserInfo(BuildContext context,UserModel user) {
               width: 75.h,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.r),
-                  border: Border(
-                    top: BorderSide(
-                        color: Theme.of(context).customColors.secondaryColor,
-                        width: 3.w),
-                    bottom: BorderSide(
-                        color: Theme.of(context).customColors.secondaryColor,
-                        width: 3.w),
-                    left: BorderSide(
-                        color: Theme.of(context).customColors.secondaryColor,
-                        width: 3.w),
-                    right: BorderSide(
-                        color: Theme.of(context).customColors.secondaryColor,
-                        width: 3.w),
+                  border: Border.all (
+                      color: Theme.of(context).customColors.secondaryColor,
+                      width: 3.w
                   ),
                   boxShadow: [
                     BoxShadow(
                         color: Theme.of(context).customColors.borderColor,
                         offset: Offset(2, 2),
-                        blurRadius: 10)
+                        blurRadius: 10.r
+                    )
                   ]),
-              child: CustomImageView(imagePath: '${ApiEndPoint.userImageUrl}/${user.image}',fit: BoxFit.cover,radius: BorderRadius.circular(10.r),),
+              child: CustomImageView(imagePath: '${ApiEndPoint.userImageUrl}/${user.data?.image}',fit: BoxFit.cover,radius: BorderRadius.circular(10.r),),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -96,7 +88,7 @@ Widget _buildUserInfo(BuildContext context,UserModel user) {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 Text(
-                  "${user.firstName} ${user.lastName}",
+                  "${user.data?.firstName} ${user.data?.lastName}",
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ],
@@ -110,38 +102,19 @@ Widget _buildUserInfo(BuildContext context,UserModel user) {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              user.email,
+              user.data!.email.toString(),
               style: Theme.of(context).textTheme.titleMedium,
             ),
             Container(
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.r),
-                border: Border(
-                  top: BorderSide(
-                      color: Theme.of(context)
-                          .customColors
-                          .primaryColor
-                          .withOpacity(0.25),
-                      width: 1.w),
-                  bottom: BorderSide(
-                      color: Theme.of(context)
-                          .customColors
-                          .primaryColor
-                          .withOpacity(0.25),
-                      width: 1.w),
-                  left: BorderSide(
-                      color: Theme.of(context)
-                          .customColors
-                          .primaryColor
-                          .withOpacity(0.25),
-                      width: 1.w),
-                  right: BorderSide(
-                      color: Theme.of(context)
-                          .customColors
-                          .primaryColor
-                          .withOpacity(0.25),
-                      width: 1.w),
+                border: Border.all(
+                    color: Theme.of(context)
+                        .customColors
+                        .primaryColor
+                        .withOpacity(0.25),
+                    width: 1.w
                 ),
               ),
               alignment: Alignment.center,

@@ -15,7 +15,7 @@ class CommonImageInput extends StatelessWidget {
   final bool allowMultiple;
 
   const CommonImageInput({
-    Key? key,
+    super.key,
     required this.label,
     required this.imagePaths,
     required this.onTap,
@@ -23,7 +23,7 @@ class CommonImageInput extends StatelessWidget {
     this.height = 150,
     this.width = 250,
     this.allowMultiple = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

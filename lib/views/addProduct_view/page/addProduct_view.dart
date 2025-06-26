@@ -1,4 +1,8 @@
 import 'package:dreamvila/core/utils/exports.dart';
+import 'package:dreamvila/models/property_model/productDataModel.dart';
+import 'package:dreamvila/viewmodels/add_product_bloc/add_product_bloc.dart';
+import 'package:dreamvila/viewmodels/add_product_bloc/add_product_event.dart';
+import 'package:dreamvila/viewmodels/add_product_bloc/add_product_state.dart';
 import 'package:flutter/material.dart';
 
 class AddProductView extends StatelessWidget {
@@ -10,61 +14,64 @@ class AddProductView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isUpdate == true) {
-      context.read<AddProductBloc>().add(InitializeProductEvent(data!));
-    }
-    return Scaffold(
-      body: BlocConsumer<AddProductBloc, AddProductState>(
-        listener: (context, state) {
-          if (state.addProductStatus == status.success){
-            NavigatorService.pushNamedAndRemoveUntil(AppRoutes.homeScreen);
-          }
-        },
-        builder: (context, state) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (isUpdate && !context.read<AddProductBloc>().state.isInitialized) {
+        context.read<AddProductBloc>().add(InitializeProductEvent(data!));
+      }else if (!isUpdate && context.read<AddProductBloc>().state.isInitialized){
+        context.read<AddProductBloc>().add(OnDisposeEvent());
+      }
+    });
+    return WillPopScope(
+      onWillPop: () async {
+        context.read<AddProductBloc>().add(OnDisposeEvent());
+        return true;
+      },
+      child: Scaffold(
+        body: BlocBuilder<AddProductBloc, AddProductState>(
 
-          });
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: SingleChildScrollView(
-              child: Form(
-                key: state.formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 50.h,
-                    ),
-                    _buildCommonInput(context,state),
-                    SizedBox(
-                      height: 50.h,
-                    ),
-                    Center(
-                      child: CustomElevatedButton(
-                        height: 0.060.sh,
-                        width: 0.85.sw,
-                        text: isUpdate ? Lang.of(context).lbl_update_product:Lang.of(context).lbl_add_product,
-                        buttonTextStyle: TextStyle(color: Color(0xFFFFFFFF), fontSize: 16),
-                        buttonStyle: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).customColors.primaryColor,
-                        ),
-                        isLoading: state.addProductStatus == status.loading
-                            ? true
-                            : false,
-                        onPressed: () {
-                          _submit(context, state);
-                        },
+          builder: (context, state) {
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: SingleChildScrollView(
+                child: Form(
+                  key: state.formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 50.h,
                       ),
-                    ),
-                    SizedBox(
-                      height: 50.h,
-                    ),
-                  ],
+                      _buildCommonInput(context,state),
+                      SizedBox(
+                        height: 50.h,
+                      ),
+                      Center(
+                        child: CustomElevatedButton(
+                          height: 0.060.sh,
+                          width: 0.85.sw,
+                          text: isUpdate ? Lang.of(context).lbl_update_product:Lang.of(context).lbl_add_product,
+                          buttonTextStyle: TextStyle(color: Color(0xFFFFFFFF), fontSize: 16),
+                          buttonStyle: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).customColors.primaryColor,
+                          ),
+                          isLoading: state.addProductStatus == status.loading
+                              ? true
+                              : false,
+                          onPressed: () {
+                            _submit(context, state);
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 50.h,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

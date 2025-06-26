@@ -1,5 +1,6 @@
 import 'package:dreamvila/core/utils/exports.dart';
-import 'package:dreamvila/models/addProductModel.dart';
+import 'package:dreamvila/models/property_model/addProductModel.dart';
+import 'package:dreamvila/models/property_model/productDataModel.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class AddProductEvent extends Equatable{
@@ -35,3 +36,5 @@ class OnUpdateProductEvent extends AddProductEvent{
   @override
   List<Object>get props => [product,id];
 }
+
+class OnDisposeEvent extends AddProductEvent{}

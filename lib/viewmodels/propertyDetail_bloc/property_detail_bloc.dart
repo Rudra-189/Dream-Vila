@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:dreamvila/core/utils/status.dart';
-import 'package:dreamvila/models/productDetailModel.dart';
+import 'package:dreamvila/models/property_model/productDetailModel.dart';
 import 'package:dreamvila/viewmodels/propertyDetail_bloc/property_detail_event.dart';
 import 'package:dreamvila/viewmodels/propertyDetail_bloc/property_detail_state.dart';
 import '../../core/api_config/client/api_client.dart';
-import '../../repository/productRepository.dart';
+import '../../repository/product_repository.dart';
 
 class PropertyDetailBloc extends Bloc<PropertyDetailEvent, PropertyDetailState> {
 

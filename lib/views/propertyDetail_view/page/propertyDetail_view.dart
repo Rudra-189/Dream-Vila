@@ -1,5 +1,6 @@
 import 'package:dreamvila/core/utils/exports.dart';
-import 'package:dreamvila/views/propertyDetail_view/propertyDetail_Shimmer.dart';
+import 'package:dreamvila/models/property_model/productDetailModel.dart';
+import 'package:dreamvila/views/propertyDetail_view/widget/propertyDetail_Shimmer.dart';
 import 'package:flutter/material.dart';
 
 class PropertyDetailView extends StatelessWidget {
@@ -145,12 +146,12 @@ Widget _buildPropertyDetail(BuildContext context, ProductDetailModel product) {
                     0: IntrinsicColumnWidth(), // label column adjusts to its width
                     1: FlexColumnWidth(),      // value column takes remaining space
                   },
-                  defaultVerticalAlignment: TableCellVerticalAlignment.top,
+                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                   children: details.entries.map((entry) {
                     return TableRow(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
                           child: Text(
                             "${entry.key} :",
                             style: Theme.of(context).textTheme.bodyLarge,

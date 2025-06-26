@@ -24,7 +24,6 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
     }catch(e){
       emit(state.copyWith(languageStatus: status.failure,errorMessage: e.toString()));
     }
-
   }
   Future<void>_changeLanguageEvent(ChangeLanguageEvent event,Emitter emit)async{
    try{

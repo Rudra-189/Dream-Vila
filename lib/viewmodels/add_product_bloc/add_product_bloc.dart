@@ -6,7 +6,7 @@ import 'package:toastification/toastification.dart';
 import '../../core/api_config/client/api_client.dart';
 import '../../core/utils/ImagePickerUtils.dart';
 import '../../core/utils/exports.dart';
-import '../../repository/productRepository.dart';
+import '../../repository/product_repository.dart';
 import 'add_product_event.dart';
 import 'add_product_state.dart';
 
@@ -21,6 +21,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
     on<OnCancelImageEvent>(_onCancelImageEvent);
     on<InitializeProductEvent>(_initializeProductEvent);
     on<OnUpdateProductEvent>(_onUpdateProductEvent);
+    on<OnDisposeEvent>(_onDisposeEvent);
   }
 
   void _addImagesEvent(AddImagesEvent event,Emitter emit)async{
@@ -32,10 +33,27 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
 
   void _onProductAddButtonSubmitEvent(OnProductAddButtonSubmitEvent event,Emitter emit)async{
     emit(state.copyWith(addProductStatus: status.loading));
-    final result = await productRepository.addProduct(event.product);
+    Map<String,dynamic> data = {
+      'title': event.product.title,
+      'description': event.product.description,
+      'address': event.product.address,
+      'price': event.product.price,
+      'discountPercentage': event.product.discountPercentage,
+      'rating': event.product.rating,
+      'plot': event.product.plot,
+      'type': event.product.type,
+      'bedroom': event.product.bedroom,
+      'hall': event.product.hall,
+      'kitchen': event.product.kitchen,
+      'washroom': event.product.washroom,
+      'thumbnail': event.product.thumbnail,
+      'images': event.product.images
+    };
+    final result = await productRepository.addProduct(data);
     if(result.status == true){
-      _onDisposeEvent();
       emit(state.copyWith(addProductStatus: status.success));
+      add(OnDisposeEvent());
+      NavigatorService.pushNamedAndRemoveUntil(AppRoutes.homeScreen);
     }else{
       AppToast.show(message: result.message,type: ToastificationType.error);
       emit(state.copyWith(addProductStatus: status.failure,errorMessage: result.message));
@@ -49,35 +67,18 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
     emit(state.copyWith(images: images));
   }
 
-  void _onDisposeEvent() {
-    print("////////////////////////////////////////////////////////////////////////////");
-    // Clear controllers
-    state.titleController.clear();
-    state.descriptionController.clear();
-    state.addressController.clear();
-    state.priceController.clear();
-    state.discountPercentageController.clear();
-    state.ratingController.clear();
-    state.plotController.clear();
-    state.typeController.clear();
-    state.bedroomController.clear();
-    state.hallController.clear();
-    state.kitchenController.clear();
-    state.washroomController.clear();
+  Future<void> close() {
+    state.dispose(); // Clean up controllers
+    return super.close();
+  }
 
-    // Reset form state in bloc
-    emit(state.copyWith(
-      images: [],
-      thumbnail: null,
-      addProductStatus: status.init,
-      errorMessage: '',
-      isInitialized: false,
-    ));
+  void _onDisposeEvent(OnDisposeEvent event,Emitter emit){
+    state.dispose();
+    emit(AddProductState.initial());
   }
 
   void _initializeProductEvent(InitializeProductEvent event, Emitter emit) {
     if (!state.isInitialized) {
-      // Set text controllers only once
       state.titleController.text = event.product.title;
       state.descriptionController.text = event.product.description;
       state.addressController.text = event.product.address;
@@ -94,17 +95,34 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       emit(state.copyWith(
         thumbnail: event.product.thumbnail,
         images: event.product.images,
-        isInitialized: true, // so it doesn’t re-run
+        isInitialized: true,
       ));
     }
   }
 
   void _onUpdateProductEvent(OnUpdateProductEvent event,Emitter emit)async{
     emit(state.copyWith(addProductStatus: status.loading));
-    final result  = await productRepository.updateProduct(event.product,event.id);
+    Map<String,dynamic> data = {
+      'title': event.product.title,
+      'description': event.product.description,
+      'address': event.product.address,
+      'price': event.product.price,
+      'discountPercentage': event.product.discountPercentage,
+      'rating': event.product.rating,
+      'plot': event.product.plot,
+      'type': event.product.type,
+      'bedroom': event.product.bedroom,
+      'hall': event.product.hall,
+      'kitchen': event.product.kitchen,
+      'washroom': event.product.washroom,
+      'thumbnail': event.product.thumbnail,
+      'images':event.product.images
+    };
+    final result  = await productRepository.updateProduct(data,event.id);
     if(result.status == true){
-      _onDisposeEvent();
       emit(state.copyWith(addProductStatus: status.success));
+      add(OnDisposeEvent());
+      NavigatorService.pushNamedAndRemoveUntil(AppRoutes.homeScreen);
     }else{
       AppToast.show(message: result.message,type: ToastificationType.error);
       emit(state.copyWith(addProductStatus: status.failure));

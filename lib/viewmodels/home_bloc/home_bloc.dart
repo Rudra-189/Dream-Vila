@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:dreamvila/core/api_config/client/api_client.dart';
 import 'package:dreamvila/core/utils/status.dart';
-import 'package:dreamvila/models/productDataModel.dart';
-import 'package:dreamvila/models/userModel.dart';
-import 'package:dreamvila/repository/productRepository.dart';
-import 'package:dreamvila/repository/userRepository.dart';
+import 'package:dreamvila/models/property_model/productDataModel.dart';
+import 'package:dreamvila/models/user_model/userModel.dart';
+import 'package:dreamvila/repository/product_repository.dart';
+import 'package:dreamvila/repository/user_repository.dart';
 
 import 'home_event.dart';
 import 'home_state.dart';
@@ -24,7 +24,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   void _loadHomePageDataEvent(LoadHomePageDataEvent event,Emitter emit)async{
     emit(state.copyWith(homeStatus: status.loading));
     final PropertyModel data = await productRepository.getPropertyData();
-    final UserModel user = await userRepository.getUserData();
+    final UserProfileResponse user = await userRepository.getUserData();
     print(data.status);
     if(data.status == true && user != null){
       emit(state.copyWith(homeStatus: status.success,productStatus: status.success,data: data,user: user));

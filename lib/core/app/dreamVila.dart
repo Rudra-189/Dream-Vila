@@ -2,6 +2,7 @@
 
 import 'package:dreamvila/core/utils/ImagePickerUtils.dart';
 import 'package:dreamvila/core/utils/exports.dart';
+import 'package:dreamvila/viewmodels/add_product_bloc/add_product_bloc.dart';
 import 'package:dreamvila/viewmodels/auth_bloc/auth_bloc.dart';
 import 'package:dreamvila/viewmodels/language_bloc/language_bloc.dart';
 import 'package:dreamvila/viewmodels/language_bloc/language_event.dart';

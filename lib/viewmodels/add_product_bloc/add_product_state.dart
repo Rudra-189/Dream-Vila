@@ -67,6 +67,8 @@ class AddProductState extends Equatable {
     );
   }
 
+
+
   AddProductState copyWith({
     bool? isInitialized,
     status? addProductStatus,
@@ -130,3 +132,21 @@ class AddProductState extends Equatable {
     washroomController,
   ];
 }
+
+extension AddProductStateExtension on AddProductState {
+  void dispose() {
+    titleController.dispose();
+    descriptionController.dispose();
+    addressController.dispose();
+    priceController.dispose();
+    discountPercentageController.dispose();
+    ratingController.dispose();
+    plotController.dispose();
+    typeController.dispose();
+    bedroomController.dispose();
+    hallController.dispose();
+    kitchenController.dispose();
+    washroomController.dispose();
+  }
+}
+

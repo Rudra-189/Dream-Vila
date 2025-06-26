@@ -1,4 +1,5 @@
-import 'package:dreamvila/models/productDetailModel.dart';
+
+import 'package:dreamvila/models/property_model/productDetailModel.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../core/utils/status.dart';
