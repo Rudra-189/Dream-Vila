@@ -519,6 +519,16 @@ class Lang {
       args: [],
     );
   }
+
+  /// `No Data Found!`
+  String get lbl_no_data_found {
+    return Intl.message(
+      'No Data Found!',
+      name: 'lbl_no_data_found',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Lang> {

@@ -55,6 +55,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "lbl_male": MessageLookupByLibrary.simpleMessage("Male"),
         "lbl_mobil": MessageLookupByLibrary.simpleMessage("Mobil"),
         "lbl_mobil_hint": MessageLookupByLibrary.simpleMessage("+91"),
+        "lbl_no_data_found":
+            MessageLookupByLibrary.simpleMessage("No Data Found!"),
         "lbl_office": MessageLookupByLibrary.simpleMessage("Office"),
         "lbl_password": MessageLookupByLibrary.simpleMessage("Password"),
         "lbl_password_hint":

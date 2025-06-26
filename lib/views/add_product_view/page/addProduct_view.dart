@@ -1,5 +1,6 @@
+import 'package:dreamvila/core/generated/assets.gen.dart';
 import 'package:dreamvila/core/utils/exports.dart';
-import 'package:dreamvila/models/property_model/productDataModel.dart';
+import 'package:dreamvila/models/property_model/product_data_model.dart';
 import 'package:dreamvila/viewmodels/add_product_bloc/add_product_bloc.dart';
 import 'package:dreamvila/viewmodels/add_product_bloc/add_product_event.dart';
 import 'package:dreamvila/viewmodels/add_product_bloc/add_product_state.dart';
@@ -137,10 +138,11 @@ Widget _buildCommonInput(BuildContext context,AddProductState state){
           label: Lang.of(context).lbl_plot,
           controller: state.plotController,
           inputType: InputType.digits),
-      LabeledTextField(
-          label: Lang.of(context).lbl_type,
-          controller: state.typeController,
-          inputType: InputType.text),
+      _buildDropdownInput(context,state),
+      // LabeledTextField(
+      //     label: Lang.of(context).lbl_type,
+      //     controller: state.typeController,
+      //     inputType: InputType.text),
       LabeledTextField(
           label: Lang.of(context).lbl_bedroom,
           controller: state.bedroomController,
@@ -157,17 +159,145 @@ Widget _buildCommonInput(BuildContext context,AddProductState state){
           label: Lang.of(context).lbl_washroom,
           controller: state.washroomController,
           inputType: InputType.digits),
-      CommonImageInput(
-        label: Lang.of(context).lbl_upload_images,
-        imagePaths: state.images!,
-        onTap: () {
-          context.read<AddProductBloc>().add(AddImagesEvent());
-        },
-        onRemove: (value) {
-          context.read<AddProductBloc>().add(OnCancelImageEvent(value));
-        },
-        allowMultiple: true,
-      ),
+      // _buildImageInput(context,state)
     ],
   );
 }
+
+Widget _buildDropdownInput(BuildContext context, AddProductState state) {
+  List<String> items = ['house', 'apartment', 'office', 'land'];
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text("Type", style: Theme.of(context).textTheme.bodyLarge),
+      SizedBox(height: 5.h),
+      SizedBox(
+        height: 55.h,
+        width: double.infinity,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            border: Border.all(color: Theme.of(context).customColors.borderColor, width: 1.w),
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+          child: AbsorbPointer(
+            absorbing: false, // Set to true if you want to completely disable interactions
+            child: Focus(
+              onFocusChange: (hasFocus) {
+                if (hasFocus) {
+                  // Explicitly handle focus if needed
+                }
+              },
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  value: state.selectedIndex,
+                  icon: Icon(Icons.arrow_drop_down),
+                  focusColor: Colors.transparent,
+                  onChanged: (String? newValue) {
+                    // Add debug print to confirm this is being called
+                    debugPrint('Dropdown changed to: $newValue');
+                    FocusScope.of(context).unfocus();
+                    if (newValue != null) {
+                      context.read<AddProductBloc>().add(OnDropDownValueChange(newValue));
+                    }
+                  },
+                  items: items.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      SizedBox(height: 20.h),
+    ],
+  );
+}
+
+// Widget _buildImageInput(BuildContext context, AddProductState state) {
+//   print("imageBuild");
+//   return Column(
+//     crossAxisAlignment: CrossAxisAlignment.start,
+//     children: [
+//       Text(Lang.of(context).lbl_upload_images, style: Theme.of(context).textTheme.bodyLarge),
+//       SizedBox(height: 30.h),
+//       Center(
+//         child: DottedBorder(
+//           color: Colors.black,
+//           strokeWidth: 1,
+//           borderType: BorderType.RRect,
+//           radius: const Radius.circular(12),
+//           dashPattern: const [13, 13],
+//           child: state.images!.isNotEmpty
+//               ? SizedBox(
+//             height: 150.h,
+//             width: 250.w,
+//             child: Stack(
+//               children: [
+//                 CarouselSlider.builder(
+//                   itemCount: state.images?.length ?? 0,
+//                   itemBuilder: (context, index, realIdx) {
+//                     return Stack(children: [
+//                       CustomImageView(
+//                         imagePath: state.images?[index],
+//                         height: 150.h,
+//                         width: 250.w,
+//                         radius: BorderRadius.circular(10.r),
+//                       ),
+//                       Positioned(
+//                         top: -10,
+//                         right: -10,
+//                         child: IconButton(
+//                           icon: const Icon(Icons.cancel_rounded, color: Colors.red),
+//                           onPressed: () {
+//                             context.read<AddProductBloc>().add(OnCancelImageEvent(index));
+//                           },
+//                         ),
+//                       ),
+//                     ]);
+//                   },
+//                   options: CarouselOptions(
+//                     height: 150.h,
+//                     viewportFraction: 1.0,
+//                     enableInfiniteScroll: false,
+//                     autoPlay: false,
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           )
+//               : GestureDetector(
+//             onTap: () {
+//               // context.read<AddProductBloc>().add(AddImagesEvent());
+//             },
+//             child: Container(
+//               height: 150,
+//               width: 250,
+//               decoration: BoxDecoration(
+//                 color: const Color(0xFFF8F8F8),
+//                 borderRadius: BorderRadius.circular(16),
+//               ),
+//               child: Column(
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 children: [
+//                   CustomImageView(
+//                     imagePath: Assets.images.svgs.icons.icCloud.path,
+//                   ),
+//                   const SizedBox(height: 5),
+//                   const Text(
+//                     "Select Images",
+//                     style: TextStyle(color: Color(0xFF2F2F2F)),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ),
+//       )
+//     ],
+//   );
+// }

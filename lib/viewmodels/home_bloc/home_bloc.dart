@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:dreamvila/core/api_config/client/api_client.dart';
 import 'package:dreamvila/core/utils/status.dart';
-import 'package:dreamvila/models/property_model/productDataModel.dart';
-import 'package:dreamvila/models/user_model/userModel.dart';
+import 'package:dreamvila/models/property_model/product_data_model.dart';
+import 'package:dreamvila/models/user_model/user_model.dart';
 import 'package:dreamvila/repository/product_repository.dart';
 import 'package:dreamvila/repository/user_repository.dart';
 

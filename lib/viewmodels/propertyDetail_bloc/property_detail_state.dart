@@ -1,5 +1,5 @@
 
-import 'package:dreamvila/models/property_model/productDetailModel.dart';
+import 'package:dreamvila/models/property_model/product_detail_model.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../core/utils/status.dart';
@@ -7,7 +7,7 @@ import '../../core/utils/status.dart';
 class PropertyDetailState extends Equatable{
   final status detailPageStatus;
   final String errorMessage;
-  final ProductDetailModel? data;
+  final ProductResponse? data;
   final int currentIndex;
 
   const PropertyDetailState({this.detailPageStatus = status.init,  this.errorMessage = '',  this.data,required this.currentIndex});
@@ -15,7 +15,7 @@ class PropertyDetailState extends Equatable{
   PropertyDetailState copyWith({
     status? detailPageStatus,
     String? errorMessage,
-    ProductDetailModel? data,
+    ProductResponse? data,
     int? currentIndex,
   }){
     return PropertyDetailState(

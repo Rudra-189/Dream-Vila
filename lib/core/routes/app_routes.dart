@@ -1,4 +1,6 @@
 import 'package:dreamvila/core/utils/exports.dart';
+import 'package:dreamvila/views/add_product_view/page/addProduct_view.dart';
+import 'package:dreamvila/views/property_detail_view/page/propertyDetail_view.dart';
 
 class AppRoutes {
   static const String initialRoute = '/';

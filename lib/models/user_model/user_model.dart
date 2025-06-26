@@ -47,14 +47,14 @@ class UserData {
 
   factory UserData.fromJson(Map<String, dynamic> json) {
     return UserData(
-      firstName: json['firstName'],
-      lastName: json['lastName'],
-      email: json['email'],
-      mobile: json['mobile'],
-      gender: json['gender'],
-      image: json['image'],
-      password: json['password'],
-      hobby: json['hobby'],
+      firstName: json['firstName'] ?? '',
+      lastName: json['lastName'] ?? '',
+      email: json['email'] ?? '',
+      mobile: json['mobile'] ?? '',
+      gender: json['gender'] ?? '',
+      image: json['image'] ?? '',
+      password: json['password'] ?? '',
+      hobby: json['hobby'] ?? '',
     );
   }
 

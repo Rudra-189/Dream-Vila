@@ -47,5 +47,6 @@
   "lbl_female": "Female",
   "lbl_mobil_hint": "+91",
   "lbl_email_hint": "abc@gmail.com",
-  "lbl_upload_images": "Upload Images"
+  "lbl_upload_images": "Upload Images",
+  "lbl_no_data_found" : "No Data Found!"
 }

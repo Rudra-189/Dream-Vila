@@ -1,5 +1,5 @@
 import 'package:dreamvila/core/utils/exports.dart';
-import 'package:dreamvila/models/property_model/productDataModel.dart';
+import 'package:dreamvila/models/property_model/product_data_model.dart';
 import 'package:flutter/material.dart';
 
 void showContextMenu(BuildContext context, Offset offset,String id,Property property) async {

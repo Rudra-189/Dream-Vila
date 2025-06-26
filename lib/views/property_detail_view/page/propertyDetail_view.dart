@@ -1,6 +1,7 @@
 import 'package:dreamvila/core/utils/exports.dart';
-import 'package:dreamvila/models/property_model/productDetailModel.dart';
-import 'package:dreamvila/views/propertyDetail_view/widget/propertyDetail_Shimmer.dart';
+import 'package:dreamvila/models/property_model/product_detail_model.dart';
+import 'package:dreamvila/views/property_detail_view/widget/propertyDetail_Shimmer.dart';
+
 import 'package:flutter/material.dart';
 
 class PropertyDetailView extends StatelessWidget {
@@ -18,17 +19,17 @@ class PropertyDetailView extends StatelessWidget {
     return Scaffold(
       body: BlocBuilder<PropertyDetailBloc, PropertyDetailState>(
         builder: (context, state) {
-          if(state.detailPageStatus == status.loading){
+          if(state.detailPageStatus == status.loading && state.data == null){
             return PropertyDetailShimmer.buildPropertyDetailShimmer(context);
           }else if(state.detailPageStatus == status.success){
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  _buildPropertyImages(context, state.data!.images,state),
+                  _buildPropertyImages(context,state),
                   SizedBox(
                     height: 30.h,
                   ),
-                  _buildPropertyDetail(context,state.data!),
+                  _buildPropertyDetail(context,state.data?.data),
                   SizedBox(
                     height: 30.h,
                   ),
@@ -44,7 +45,8 @@ class PropertyDetailView extends StatelessWidget {
   }
 }
 
-Widget _buildPropertyImages(BuildContext context, List images,PropertyDetailState state) {
+Widget _buildPropertyImages(BuildContext context,PropertyDetailState state) {
+  final List images = state.data?.data?.images ?? [];
   return Column(
     children: [
       SizedBox(
@@ -104,13 +106,18 @@ Widget _buildPropertyImages(BuildContext context, List images,PropertyDetailStat
   );
 }
 
-Widget _buildPropertyDetail(BuildContext context, ProductDetailModel product) {
+Widget _buildPropertyDetail(BuildContext context,ProductData? product) {
+  if (product == null) {
+    return Center(
+      child: Text(Lang.of(context).lbl_no_data_found),
+    );
+  }
   final Map<String, String> details = {
-    "Location": product.address,
+    "Location": product.address.toString(),
     "Price": "\$ ${product.price}",
     "Discount": "${product.discountPercentage} %",
     "Rating": "${product.rating} / 5",
-    "Type": product.type,
+    "Type": product.type.toString(),
     "Plots": "Plots ${product.plot}",
     "Bedroom": product.bedroom.toString(),
     "Hall": product.hall.toString(),
@@ -137,7 +144,7 @@ Widget _buildPropertyDetail(BuildContext context, ProductDetailModel product) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  product.description,
+                  product.description.toString(),
                   style:Theme.of(context).textTheme.bodyMedium,
                 ),
                 SizedBox(height: 20.h),

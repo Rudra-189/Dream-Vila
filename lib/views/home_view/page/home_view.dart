@@ -148,6 +148,7 @@ Widget _buildTabView(BuildContext context) {
     unselectedLabelColor: Theme.of(context).customColors.iconColor,
     indicatorSize: TabBarIndicatorSize.tab,
     dividerColor: Colors.transparent,
+    overlayColor: MaterialStateProperty.all(Colors.transparent),
     labelPadding: EdgeInsets.all(0.r),
     indicator: ShapeDecoration(
         color: Theme.of(context).customColors.secondaryColor,

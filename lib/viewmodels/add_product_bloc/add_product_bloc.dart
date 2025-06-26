@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dreamvila/core/utils/status.dart';
 import 'package:dreamvila/widgets/common_widget/app_toast_message.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,13 +24,20 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
     on<InitializeProductEvent>(_initializeProductEvent);
     on<OnUpdateProductEvent>(_onUpdateProductEvent);
     on<OnDisposeEvent>(_onDisposeEvent);
+    on<OnDropDownValueChange>(_onDropDownValueChange);
   }
 
   void _addImagesEvent(AddImagesEvent event,Emitter emit)async{
-    List<String> images = List<String>.from(state.images ?? []);
-    List<XFile>? file = await imagePickerUtils.pickMultipleImageFromGallery();
-    file?.map((e)=>images.add(e.path.toString())).toList();
-    emit(state.copyWith(images: images,thumbnail: file?[0].path));
+    log("AddImagesEvent triggered - Stack trace: ${StackTrace.current}");
+    List<XFile>? files = await imagePickerUtils.pickMultipleImageFromGallery();
+
+    if (files != null && files.isNotEmpty) {
+      List<String> updatedImages = List<String>.from(state.images ?? []);
+      updatedImages.addAll(files.map((e) => e.path));
+      String? thumbnail = state.thumbnail ?? files.first.path;
+      emit(state.copyWith(images: updatedImages, thumbnail: thumbnail));
+    }
+
   }
 
   void _onProductAddButtonSubmitEvent(OnProductAddButtonSubmitEvent event,Emitter emit)async{
@@ -67,17 +76,24 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
     emit(state.copyWith(images: images));
   }
 
+  void _onDropDownValueChange(OnDropDownValueChange event,Emitter emit){
+    state.typeController.text = event.item;
+    emit(state.copyWith(selectedIndex: event.item));
+  }
+
   Future<void> close() {
     state.dispose(); // Clean up controllers
     return super.close();
   }
 
   void _onDisposeEvent(OnDisposeEvent event,Emitter emit){
+    log("/////////////////////////////_initializeProductEvent///");
     state.dispose();
     emit(AddProductState.initial());
   }
 
   void _initializeProductEvent(InitializeProductEvent event, Emitter emit) {
+    log("/////////////////////////////_initializeProductEvent///");
     if (!state.isInitialized) {
       state.titleController.text = event.product.title;
       state.descriptionController.text = event.product.description;

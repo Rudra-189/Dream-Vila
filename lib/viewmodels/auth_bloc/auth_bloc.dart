@@ -57,7 +57,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(state.copyWith(signInStatus: status.success));
       NavigatorService.pushNamedAndRemoveUntil(AppRoutes.homeScreen);
     }else{
+
       AppToast.show(message: result.message,type: ToastificationType.error);
+      emit(state.copyWith(signInStatus: status.failure));
     }
   }
 

@@ -1,4 +1,4 @@
-import 'package:dreamvila/models/auth_model/signUpModel.dart';
+import 'package:dreamvila/models/auth_model/sign_up_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class AuthEvent extends Equatable{

@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:dreamvila/core/api_config/endpoints/api_endpoint.dart';
-import 'package:dreamvila/models/user_model/userModel.dart';
+import 'package:dreamvila/models/user_model/user_model.dart';
 
 import '../core/api_config/client/api_client.dart';
 

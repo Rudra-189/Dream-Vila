@@ -1,6 +1,6 @@
 import 'package:dreamvila/core/utils/status.dart';
-import 'package:dreamvila/models/property_model/productDataModel.dart';
-import 'package:dreamvila/models/user_model/userModel.dart';
+import 'package:dreamvila/models/property_model/product_data_model.dart';
+import 'package:dreamvila/models/user_model/user_model.dart';
 import 'package:equatable/equatable.dart';
 
 class HomeState extends Equatable{

@@ -11,6 +11,7 @@ class AddProductState extends Equatable {
   final String errorMessage;
   final String? thumbnail;
   final List<String>? images;
+  final String selectedIndex;
 
   // UI Elements (Not recommended in state)
   final GlobalKey<FormState> formKey;
@@ -28,6 +29,7 @@ class AddProductState extends Equatable {
   final TextEditingController washroomController;
 
    AddProductState({
+     this.selectedIndex = 'house',
      this.isInitialized = false,
      required this.formKey,
     this.addProductStatus = status.init,
@@ -70,6 +72,7 @@ class AddProductState extends Equatable {
 
 
   AddProductState copyWith({
+    String? selectedIndex,
     bool? isInitialized,
     status? addProductStatus,
     String? errorMessage,
@@ -107,12 +110,14 @@ class AddProductState extends Equatable {
       hallController: hallController ?? this.hallController,
       kitchenController: kitchenController ?? this.kitchenController,
       washroomController: washroomController ?? this.washroomController,
+      selectedIndex: selectedIndex ?? this.selectedIndex,
     );
   }
 
   @override
   List<Object?> get props => [
     isInitialized,
+    selectedIndex,
     addProductStatus,
     errorMessage,
     thumbnail,
@@ -135,18 +140,18 @@ class AddProductState extends Equatable {
 
 extension AddProductStateExtension on AddProductState {
   void dispose() {
-    titleController.dispose();
-    descriptionController.dispose();
-    addressController.dispose();
-    priceController.dispose();
-    discountPercentageController.dispose();
-    ratingController.dispose();
-    plotController.dispose();
-    typeController.dispose();
-    bedroomController.dispose();
-    hallController.dispose();
-    kitchenController.dispose();
-    washroomController.dispose();
+    titleController.clear();
+    descriptionController.clear();
+    addressController.clear();
+    priceController.clear();
+    discountPercentageController.clear();
+    ratingController.clear();
+    plotController.clear();
+    typeController.clear();
+    bedroomController.clear();
+    hallController.clear();
+    kitchenController.clear();
+    washroomController.clear();
   }
 }
 

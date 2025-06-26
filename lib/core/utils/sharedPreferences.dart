@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:dreamvila/models/auth_model/signupResponseDataModel.dart';
+import 'package:dreamvila/models/auth_model/signup_response_data_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesService{

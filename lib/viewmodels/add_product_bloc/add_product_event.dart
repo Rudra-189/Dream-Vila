@@ -1,6 +1,6 @@
 import 'package:dreamvila/core/utils/exports.dart';
-import 'package:dreamvila/models/property_model/addProductModel.dart';
-import 'package:dreamvila/models/property_model/productDataModel.dart';
+import 'package:dreamvila/models/property_model/add_product_model.dart';
+import 'package:dreamvila/models/property_model/product_data_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class AddProductEvent extends Equatable{
@@ -21,6 +21,14 @@ class OnProductAddButtonSubmitEvent extends AddProductEvent{
 class OnCancelImageEvent extends AddProductEvent{
   final int index;
   OnCancelImageEvent(this.index);
+}
+
+class OnDropDownValueChange extends AddImagesEvent{
+  final String item;
+
+  OnDropDownValueChange(this.item);
+  @override
+  List<Object>get props => [item];
 }
 
 class InitializeProductEvent extends AddProductEvent {

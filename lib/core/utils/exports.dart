@@ -1,6 +1,4 @@
-export'package:dreamvila/views/addProduct_view/page/addProduct_view.dart';
 export 'package:dreamvila/views/home_view/page/home_view.dart';
-export 'package:dreamvila/views/propertyDetail_view/page/propertyDetail_view.dart';
 export 'package:dreamvila/views/signin_view/page/signin_view.dart';
 export 'package:dreamvila/views/signup_view/page/signup_view.dart';
 export 'package:dreamvila/views/splash_view/page/splash_view.dart';
@@ -8,7 +6,7 @@ export 'package:flutter/cupertino.dart';
 export 'package:dreamvila/core/routes/app_routes.dart';
 export 'package:dreamvila/core/themes/theme_helper.dart';
 export 'package:dreamvila/core/utils/status.dart';
-export 'package:dreamvila/models/user_model/userModel.dart';
+export 'package:dreamvila/models/user_model/user_model.dart';
 export 'package:dreamvila/viewmodels/home_bloc/home_bloc.dart';
 export 'package:dreamvila/viewmodels/home_bloc/home_event.dart';
 export 'package:dreamvila/viewmodels/home_bloc/home_state.dart';
@@ -21,7 +19,7 @@ export 'package:dreamvila/viewmodels/propertyDetail_bloc/property_detail_event.d
 export 'package:dreamvila/viewmodels/propertyDetail_bloc/property_detail_state.dart';
 export 'package:dotted_border/dotted_border.dart';
 export 'package:dreamvila/widgets/common_widget/common_label_text_filed.dart';
-export '../../models/property_model/addProductModel.dart';
+export '../../models/property_model/add_product_model.dart';
 export '../../widgets/common_widget/custom_button.dart';
 export '../../widgets/common_widget/custom_textfields.dart';
 export '../../core/utils/validation.dart';
@@ -30,6 +28,5 @@ export 'package:dreamvila/viewmodels/splash_bloc/splash_bloc.dart';
 export 'package:dreamvila/viewmodels/splash_bloc/splash_state.dart';
 export 'package:dreamvila/views/home_view/widget/common_radio_button.dart';
 export '../../core/generated/l10n.dart';
-export '../../widgets/common_widget/common_Image_Inpute.dart';
 export 'package:dreamvila/core/utils/navigator_service.dart';
 

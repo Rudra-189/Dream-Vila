@@ -15,7 +15,7 @@ class LabeledTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final Widget? suffixIcon;
 
-  LabeledTextField({
+   LabeledTextField({
     super.key,
     required this.label,
     this.obscureText,

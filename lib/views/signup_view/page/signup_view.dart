@@ -1,10 +1,13 @@
+import 'dart:io';
+
 import 'package:dreamvila/core/generated/assets.gen.dart';
 import 'package:dreamvila/core/utils/exports.dart';
-import 'package:dreamvila/models/auth_model/signUpModel.dart';
+import 'package:dreamvila/models/auth_model/sign_up_model.dart';
 import 'package:dreamvila/viewmodels/auth_bloc/auth_bloc.dart';
 import 'package:dreamvila/viewmodels/auth_bloc/auth_event.dart';
 import 'package:dreamvila/viewmodels/auth_bloc/auth_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/file.dart';
 
 class SignUpView extends StatelessWidget {
   static Widget builder(BuildContext context) {
@@ -241,12 +244,50 @@ Widget _buildGenderInput(BuildContext context, AuthState state) {
 }
 
 Widget _buildImageInput(BuildContext context, AuthState state) {
-  return CommonImageInput(
-    label: Lang.of(context).lbl_upload_user_profile,
-    imagePaths: state.file != null ? [state.file!.path.toString()] : [],
-    onTap: () {
-      context.read<AuthBloc>().add(ImagePickedEvent());
-    },
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(Lang.of(context).lbl_upload_user_profile, style: Theme.of(context).textTheme.bodyLarge),
+      SizedBox(height: 30.h),
+      Center(
+        child: DottedBorder(
+          color: Colors.black,
+          strokeWidth: 1,
+          borderType: BorderType.RRect,
+          radius: const Radius.circular(12),
+          dashPattern: const [13, 13],
+          child: GestureDetector(
+            onTap: (){
+              context.read<AuthBloc>().add(ImagePickedEvent());
+            },
+            child: state.file != null
+                ? CustomImageView(imagePath: state.file!.path,height: 150.h,width: 250.w,radius: BorderRadius.circular(10.r),)
+                : Container(
+              height: 150.h,
+              width: 250.w,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8F8F8),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomImageView(
+                    imagePath: Assets.images.svgs.icons.icCloud.path,
+                  ),
+                  const SizedBox(height: 5),
+                  const Text(
+                    "Select Image",
+                    style: TextStyle(color: Color(0xFF2F2F2F)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    ],
   );
 }
 

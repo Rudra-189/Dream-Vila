@@ -1,9 +1,9 @@
 import 'dart:developer';
 import 'package:dreamvila/core/api_config/endpoints/api_endpoint.dart';
-import 'package:dreamvila/models/property_model/addProductResponseDataModel.dart';
-import 'package:dreamvila/models/property_model/deleteProductDataModel.dart';
-import 'package:dreamvila/models/property_model/productDataModel.dart';
-import 'package:dreamvila/models/property_model/productDetailModel.dart';
+import 'package:dreamvila/models/property_model/add_product_response_data_model.dart';
+import 'package:dreamvila/models/property_model/delete_product_data_model.dart';
+import 'package:dreamvila/models/property_model/product_data_model.dart';
+import 'package:dreamvila/models/property_model/product_detail_model.dart';
 
 import '../core/api_config/client/api_client.dart';
 
@@ -24,10 +24,10 @@ class ProductRepository{
 
   }
 
-  Future<ProductDetailModel>getPropertyDetail(String id)async{
+  Future<ProductResponse>getPropertyDetail(String id)async{
     try {
       final response = await apiClint.request(RequestType.GET, '${ApiEndPoint.productDetailUrl}/$id');
-      return ProductDetailModel.fromJson(response["data"]);
+      return ProductResponse.fromJson(response);
     }catch(e){
       log(e.toString());
       rethrow;
