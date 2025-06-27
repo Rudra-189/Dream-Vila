@@ -529,6 +529,26 @@ class Lang {
       args: [],
     );
   }
+
+  /// `Limited time`
+  String get lbl_limited_time {
+    return Intl.message(
+      'Limited time',
+      name: 'lbl_limited_time',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `is coming back!`
+  String get lbl_is_coming_back {
+    return Intl.message(
+      'is coming back!',
+      name: 'lbl_is_coming_back',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<Lang> {

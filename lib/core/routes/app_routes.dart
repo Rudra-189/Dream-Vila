@@ -23,9 +23,9 @@ class AppRoutes {
     addProductScreen : (BuildContext context) {
       final args = ModalRoute.of(context)!.settings.arguments;
       final data = args is Map<String, dynamic> ? args : {};
-      return AddProductView(
+      return AddOrUpdateProductScreen(
         isUpdate: data['isUpdate'] ?? false,
-        data: data['data'],
+        product: data['data'],
       );
     },
   };

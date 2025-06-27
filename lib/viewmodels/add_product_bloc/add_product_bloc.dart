@@ -1,99 +1,83 @@
-import 'dart:developer';
-
-import 'package:dreamvila/core/utils/status.dart';
-import 'package:dreamvila/widgets/common_widget/app_toast_message.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:toastification/toastification.dart';
-import '../../core/api_config/client/api_client.dart';
-import '../../core/utils/ImagePickerUtils.dart';
-import '../../core/utils/exports.dart';
-import '../../repository/product_repository.dart';
-import 'add_product_event.dart';
-import 'add_product_state.dart';
-
+import 'package:dreamvila/core/api_config/client/api_client.dart';
+import 'package:dreamvila/core/utils/ImagePickerUtils.dart';
+import 'package:dreamvila/core/utils/exports.dart';
+import 'package:dreamvila/repository/product_repository.dart';
+import 'package:dreamvila/viewmodels/add_product_bloc/add_product_event.dart';
+import 'package:dreamvila/viewmodels/add_product_bloc/add_product_state.dart';
 
 class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
   final productRepository = ProductRepository(ApiClient());
-  final ImagePickerUtils imagePickerUtils = ImagePickerUtils();
+  final imagePickerUtils = ImagePickerUtils();
 
   AddProductBloc() : super(AddProductState.initial()) {
-    on<AddImagesEvent>(_addImagesEvent);
-    on<OnProductAddButtonSubmitEvent>(_onProductAddButtonSubmitEvent);
-    on<OnCancelImageEvent>(_onCancelImageEvent);
-    on<InitializeProductEvent>(_initializeProductEvent);
-    on<OnUpdateProductEvent>(_onUpdateProductEvent);
-    on<OnDisposeEvent>(_onDisposeEvent);
-    on<OnDropDownValueChange>(_onDropDownValueChange);
+    on<AddImagesEvent>(_onAddImages);
+    on<CancelImageEvent>(_onCancelImage);
+    on<DropDownChangedEvent>(_onDropDownChanged);
+    on<SubmitProductEvent>(_onSubmit);
+    on<InitializeProductEvent>(_onInitialize);
+    on<DisposeEvent>(_onDispose);
   }
 
-  void _addImagesEvent(AddImagesEvent event,Emitter emit)async{
-    log("AddImagesEvent triggered - Stack trace: ${StackTrace.current}");
-    List<XFile>? files = await imagePickerUtils.pickMultipleImageFromGallery();
-
+  Future<void> _onAddImages(AddImagesEvent event, Emitter emit) async {
+    final files = await imagePickerUtils.pickMultipleImageFromGallery();
     if (files != null && files.isNotEmpty) {
-      List<String> updatedImages = List<String>.from(state.images ?? []);
-      updatedImages.addAll(files.map((e) => e.path));
-      String? thumbnail = state.thumbnail ?? files.first.path;
-      emit(state.copyWith(images: updatedImages, thumbnail: thumbnail));
+      final paths = files.map((e) => e.path).toList();
+      emit(state.copyWith(
+        images: [...state.images, ...paths],
+        thumbnail: state.thumbnail ?? paths.first,
+      ));
     }
-
   }
 
-  void _onProductAddButtonSubmitEvent(OnProductAddButtonSubmitEvent event,Emitter emit)async{
+  void _onCancelImage(CancelImageEvent event, Emitter emit) {
+    final updated = List<String>.from(state.images);
+    updated.removeAt(event.index);
+    emit(state.copyWith(images: updated));
+  }
+
+  void _onDropDownChanged(DropDownChangedEvent event, Emitter emit) {
+    state.typeController.text = event.type;
+    emit(state.copyWith(selectedType: event.type));
+  }
+
+  Future<void> _onSubmit(SubmitProductEvent event, Emitter emit) async {
     emit(state.copyWith(addProductStatus: status.loading));
-    Map<String,dynamic> data = {
-      'title': event.product.title,
-      'description': event.product.description,
-      'address': event.product.address,
-      'price': event.product.price,
-      'discountPercentage': event.product.discountPercentage,
-      'rating': event.product.rating,
-      'plot': event.product.plot,
-      'type': event.product.type,
-      'bedroom': event.product.bedroom,
-      'hall': event.product.hall,
-      'kitchen': event.product.kitchen,
-      'washroom': event.product.washroom,
-      'thumbnail': event.product.thumbnail,
-      'images': event.product.images
+
+    final Map<String,dynamic>product = {
+      "title": state.titleController.text,
+      "description": state.descriptionController.text,
+      "address": state.addressController.text,
+      "price": double.tryParse(state.priceController.text) ?? 0,
+      "discountPercentage": double.tryParse(
+          state.discountPercentageController.text) ?? 0,
+      "rating": double.tryParse(state.ratingController.text) ?? 0,
+      "plot": int.tryParse(state.plotController.text) ?? 0,
+      "type": state.selectedType,
+      "bedroom": int.tryParse(state.bedroomController.text) ?? 0,
+      "hall": int.tryParse(state.hallController.text) ?? 0,
+      "kitchen": int.tryParse(state.kitchenController.text) ?? 0,
+      "washroom": int.tryParse(state.washroomController.text) ?? 0,
+      "thumbnail": state.thumbnail ?? '',
+      "images": state.images,
     };
-    final result = await productRepository.addProduct(data);
-    if(result.status == true){
+
+    final result = event.isUpdate
+        ? await productRepository.updateProduct(product, event.id!)
+        : await productRepository.addProduct(product);
+
+    if (result.status == true) {
       emit(state.copyWith(addProductStatus: status.success));
-      add(OnDisposeEvent());
+      add(DisposeEvent());
       NavigatorService.pushNamedAndRemoveUntil(AppRoutes.homeScreen);
-    }else{
-      AppToast.show(message: result.message,type: ToastificationType.error);
-      emit(state.copyWith(addProductStatus: status.failure,errorMessage: result.message));
+    } else {
+      emit(state.copyWith(
+        addProductStatus: status.failure,
+        errorMessage: result.message,
+      ));
     }
-
   }
 
-  void _onCancelImageEvent(OnCancelImageEvent event,Emitter emit){
-    List<String> images = List<String>.from(state.images ?? []);
-    images.removeAt(event.index);
-    emit(state.copyWith(images: images));
-  }
-
-  void _onDropDownValueChange(OnDropDownValueChange event,Emitter emit){
-    state.typeController.text = event.item;
-    emit(state.copyWith(selectedIndex: event.item));
-  }
-
-  Future<void> close() {
-    state.dispose(); // Clean up controllers
-    return super.close();
-  }
-
-  void _onDisposeEvent(OnDisposeEvent event,Emitter emit){
-    log("/////////////////////////////_initializeProductEvent///");
-    state.dispose();
-    emit(AddProductState.initial());
-  }
-
-  void _initializeProductEvent(InitializeProductEvent event, Emitter emit) {
-    log("/////////////////////////////_initializeProductEvent///");
+  void _onInitialize(InitializeProductEvent event, Emitter emit) {
     if (!state.isInitialized) {
       state.titleController.text = event.product.title;
       state.descriptionController.text = event.product.description;
@@ -109,39 +93,16 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       state.washroomController.text = event.product.washroom.toString();
 
       emit(state.copyWith(
-        thumbnail: event.product.thumbnail,
         images: event.product.images,
+        thumbnail: event.product.thumbnail,
+        selectedType: event.product.type,
         isInitialized: true,
       ));
     }
   }
 
-  void _onUpdateProductEvent(OnUpdateProductEvent event,Emitter emit)async{
-    emit(state.copyWith(addProductStatus: status.loading));
-    Map<String,dynamic> data = {
-      'title': event.product.title,
-      'description': event.product.description,
-      'address': event.product.address,
-      'price': event.product.price,
-      'discountPercentage': event.product.discountPercentage,
-      'rating': event.product.rating,
-      'plot': event.product.plot,
-      'type': event.product.type,
-      'bedroom': event.product.bedroom,
-      'hall': event.product.hall,
-      'kitchen': event.product.kitchen,
-      'washroom': event.product.washroom,
-      'thumbnail': event.product.thumbnail,
-      'images':event.product.images
-    };
-    final result  = await productRepository.updateProduct(data,event.id);
-    if(result.status == true){
-      emit(state.copyWith(addProductStatus: status.success));
-      add(OnDisposeEvent());
-      NavigatorService.pushNamedAndRemoveUntil(AppRoutes.homeScreen);
-    }else{
-      AppToast.show(message: result.message,type: ToastificationType.error);
-      emit(state.copyWith(addProductStatus: status.failure));
-    }
+  void _onDispose(DisposeEvent event, Emitter emit) {
+    state.dispose();
+    emit(AddProductState.initial());
   }
 }

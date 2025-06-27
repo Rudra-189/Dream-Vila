@@ -34,9 +34,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   void _onTabIndexChangeEvent(OnTabIndexChangeEvent event,Emitter emit){
-    final categoryFilter = ['house', 'apartment', 'office', 'land'];
-    // final filteredData = state.data!.data.where((e) => e.type == categoryFilter [state.index]).toList();
-    // print(filteredData.length);
+    // final categoryFilter = ['house', 'apartment', 'office', 'land'];
+    // // final filteredData = state.data!.data.where((e) => e.type == categoryFilter [state.index]).toList();
+    // // print(filteredData.length);
     emit(state.copyWith(index: event.index));
   }
 

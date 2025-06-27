@@ -49,9 +49,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "lbl_hello": MessageLookupByLibrary.simpleMessage("Hello!"),
         "lbl_hobby": MessageLookupByLibrary.simpleMessage("Hobby"),
         "lbl_house": MessageLookupByLibrary.simpleMessage("House"),
+        "lbl_is_coming_back":
+            MessageLookupByLibrary.simpleMessage("is coming back!"),
         "lbl_kitchen": MessageLookupByLibrary.simpleMessage("Kitchen"),
         "lbl_land": MessageLookupByLibrary.simpleMessage("Land"),
         "lbl_last_name": MessageLookupByLibrary.simpleMessage("Last Name"),
+        "lbl_limited_time":
+            MessageLookupByLibrary.simpleMessage("Limited time"),
         "lbl_male": MessageLookupByLibrary.simpleMessage("Male"),
         "lbl_mobil": MessageLookupByLibrary.simpleMessage("Mobil"),
         "lbl_mobil_hint": MessageLookupByLibrary.simpleMessage("+91"),

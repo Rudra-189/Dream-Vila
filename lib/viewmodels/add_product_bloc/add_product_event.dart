@@ -1,48 +1,35 @@
-import 'package:dreamvila/core/utils/exports.dart';
-import 'package:dreamvila/models/property_model/add_product_model.dart';
 import 'package:dreamvila/models/property_model/product_data_model.dart';
 import 'package:equatable/equatable.dart';
 
-abstract class AddProductEvent extends Equatable{
+abstract class AddProductEvent extends Equatable {
   @override
-  List<Object>get props => [];
+  List<Object?> get props => [];
 }
 
-class AddImagesEvent extends AddProductEvent{}
-
-class OnProductAddButtonSubmitEvent extends AddProductEvent{
-  final AddProductModel product;
-
-  OnProductAddButtonSubmitEvent(this.product);
-  @override
-  List<Object>get props => [product];
-}
-
-class OnCancelImageEvent extends AddProductEvent{
+class AddImagesEvent extends AddProductEvent {}
+class CancelImageEvent extends AddProductEvent {
   final int index;
-  OnCancelImageEvent(this.index);
-}
-
-class OnDropDownValueChange extends AddImagesEvent{
-  final String item;
-
-  OnDropDownValueChange(this.item);
+  CancelImageEvent(this.index);
   @override
-  List<Object>get props => [item];
+  List<Object> get props => [index];
 }
-
 class InitializeProductEvent extends AddProductEvent {
   final Property product;
   InitializeProductEvent(this.product);
-}
-
-class OnUpdateProductEvent extends AddProductEvent{
-  final AddProductModel product;
-  final String id;
-
-  OnUpdateProductEvent(this.product,this.id);
   @override
-  List<Object>get props => [product,id];
+  List<Object> get props => [product];
 }
-
-class OnDisposeEvent extends AddProductEvent{}
+class DropDownChangedEvent extends AddProductEvent {
+  final String type;
+  DropDownChangedEvent(this.type);
+  @override
+  List<Object> get props => [type];
+}
+class SubmitProductEvent extends AddProductEvent {
+  final bool isUpdate;
+  final String? id;
+  SubmitProductEvent(this.isUpdate, {this.id});
+  @override
+  List<Object?> get props => [isUpdate, id];
+}
+class DisposeEvent extends AddProductEvent {}

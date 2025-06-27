@@ -41,7 +41,7 @@ class SignInView extends StatelessWidget {
                         buttonStyle: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(context).customColors.primaryColor,
                         ),
-                        isLoading: state.signInStatus == status.loading ? true : false,
+                        isLoading: state.signInStatus == status.loading,
                         onPressed: () {
                           _submit(context, state);
                         },

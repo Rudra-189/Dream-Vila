@@ -51,15 +51,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final storage = FlutterSecureStorage();
 
     final result = await authRepository.userLogin(data);
-    if(result.status == true){
+    if(result.status){
       await storage.write(key: "deviceToken", value: result.token);
       sharedPreferencesService.storeUserIsLogin(true);
       emit(state.copyWith(signInStatus: status.success));
       NavigatorService.pushNamedAndRemoveUntil(AppRoutes.homeScreen);
     }else{
-
-      AppToast.show(message: result.message,type: ToastificationType.error);
       emit(state.copyWith(signInStatus: status.failure));
+      // AppToast.show(message: result.message,type: ToastificationType.error);
     }
   }
 
@@ -94,8 +93,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(state.copyWith(signUpStatus: status.success));
       NavigatorService.pushNamedAndRemoveUntil(AppRoutes.signInScreen);
     }else{
-      AppToast.show(message: result.message,type: ToastificationType.error);
-      emit(state.copyWith(signUpStatus: status.failure));
+      // AppToast.show(message: result.message,type: ToastificationType.error);
+       emit(state.copyWith(signUpStatus: status.failure));
     }
   }
 

@@ -52,6 +52,16 @@ class MyAppThemeHelper {
             color: Color(0XFFFF6F42),
             fontSize: 15,
           ),
+          labelLarge: TextStyle(
+            color: Colors.black,
+            fontSize: 30.sp,
+            fontWeight: FontWeight.w600,
+          ),
+          labelMedium: TextStyle(
+            color: Color(0XFFFF6F42),
+            fontSize: 30.sp,
+            fontWeight: FontWeight.w600,
+          )
         )),
         checkboxTheme: CheckboxThemeData(
           checkColor: MaterialStateProperty.all(Color(0XFFFF6F42)),

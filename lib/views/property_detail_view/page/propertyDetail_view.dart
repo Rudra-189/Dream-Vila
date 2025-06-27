@@ -19,13 +19,31 @@ class PropertyDetailView extends StatelessWidget {
     return Scaffold(
       body: BlocBuilder<PropertyDetailBloc, PropertyDetailState>(
         builder: (context, state) {
-          if(state.detailPageStatus == status.loading && state.data == null){
+          if(state.detailPageStatus == status.loading){
             return PropertyDetailShimmer.buildPropertyDetailShimmer(context);
           }else if(state.detailPageStatus == status.success){
             return SingleChildScrollView(
               child: Column(
                 children: [
                   _buildPropertyImages(context,state),
+                  SizedBox(
+                    height: 30.h,
+                  ),
+                 Padding(
+                   padding: EdgeInsets.symmetric(horizontal: 20.w),
+                   child: RichText(
+                     text: TextSpan(
+                       style: TextStyle(overflow: TextOverflow.ellipsis),
+                       children: [
+                         TextSpan(text : Lang.of(context).lbl_limited_time,style: Theme.of(context).textTheme.labelLarge,),
+                         WidgetSpan(child: SizedBox(width: 8.w)),
+                         TextSpan(text : state.data?.data?.title,style: Theme.of(context).textTheme.labelMedium,),
+                         WidgetSpan(child: SizedBox(width: 8.w)),
+                         TextSpan(text : Lang.of(context).lbl_is_coming_back,style: Theme.of(context).textTheme.labelLarge,),
+                       ]
+                     ),
+                   ),
+                 ),
                   SizedBox(
                     height: 30.h,
                   ),

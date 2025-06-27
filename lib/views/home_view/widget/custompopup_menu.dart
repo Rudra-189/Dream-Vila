@@ -8,8 +8,8 @@ void showContextMenu(BuildContext context, Offset offset,String id,Property prop
     color: Colors.white,
     position: RelativeRect.fromLTRB(offset.dx, offset.dy, offset.dx, offset.dy),
     items: [
-      const PopupMenuItem(value: 'update', child: Text('Update')),
-      const PopupMenuItem(value: 'delete', child: Text('Delete')),
+      const PopupMenuItem(value: 'update', child: Text('Update',style:TextStyle(fontSize: 12,color: Colors.black54),)),
+      const PopupMenuItem(value: 'delete', child: Text('Delete',style:TextStyle(fontSize: 12,color: Colors.black54))),
     ],
   );
 
@@ -18,7 +18,7 @@ void showContextMenu(BuildContext context, Offset offset,String id,Property prop
       'isUpdate': true,
       'data': property
     });
-  }else{
+  }else if(result == 'delete'){
     context.read<HomeBloc>().add(OnProductDelete(id));
   }
 }

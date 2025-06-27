@@ -48,5 +48,7 @@
   "lbl_mobil_hint": "+91",
   "lbl_email_hint": "abc@gmail.com",
   "lbl_upload_images": "Upload Images",
-  "lbl_no_data_found" : "No Data Found!"
+  "lbl_no_data_found" : "No Data Found!",
+  "lbl_limited_time": "Limited time",
+  "lbl_is_coming_back": "is coming back!"
 }

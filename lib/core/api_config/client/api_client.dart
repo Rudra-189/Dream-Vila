@@ -11,19 +11,20 @@ enum RequestType { GET, POST, PUT, DELETE, PATCH, MULTIPART_POST }
 class ApiClient {
   final Dio _dio;
 
-  ApiClient() : _dio = Dio(BaseOptions(headers: {'Content-Type': 'application/json'}))
-        ..interceptors.add(
-          PrettyDioLogger(
-            requestHeader: true,
-            requestBody: true,
-            responseHeader: true,
-            responseBody: true,
-            request: true,
-            error: true,
-            compact: true,
-            maxWidth: 90,
-          ),
-        ) {
+  ApiClient()
+      : _dio = Dio(BaseOptions(headers: {'Content-Type': 'application/json'}))
+    ..interceptors.add(
+      PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseHeader: true,
+        responseBody: true,
+        request: true,
+        error: true,
+        compact: true,
+        maxWidth: 90,
+      ),
+    ) {
     _initializeHeaders();
   }
 
@@ -48,13 +49,14 @@ class ApiClient {
   // --------------------------- REQUEST METHOD ---------------------------
 
   Future<Map<String, dynamic>> request(
-    RequestType type,
-    String path, {
-    Map<String, dynamic>? data,
-    Map<String, dynamic>? multipartData,
-  }) async {
+      RequestType type,
+      String path, {
+        Map<String, dynamic>? data,
+        Map<String, dynamic>? multipartData,
+      }) async {
     try {
       _dio.options.headers = await _buildHeaders();
+
       final Response response = switch (type) {
         RequestType.GET => await _dio.get(path),
         RequestType.POST => await _dio.post(path, data: data),
@@ -66,9 +68,16 @@ class ApiClient {
 
       return _handleSuccess(response);
     } on DioException catch (error) {
-      return _handleDioError(error);
+      return _handleDioError(error); // ✅ no rethrow
     } catch (e) {
-      rethrow;
+      AppToast.show(
+        message: "Unexpected error occurred",
+        type: ToastificationType.error,
+      );
+      return {
+        'status': false,
+        'message': "Unexpected error occurred",
+      };
     }
   }
 
@@ -76,40 +85,43 @@ class ApiClient {
 
   Map<String, dynamic> _handleSuccess(Response response) {
     if ([200, 201, 204].contains(response.statusCode)) {
-      return response.data;
+      if (response.data is Map<String, dynamic>) {
+        return response.data;
+      } else {
+        return {
+          'status': true,
+          'message': 'Success',
+          'data': response.data,
+        };
+      }
     } else {
-      throw _handleFailure(response);
+      return _handleFailure(response); // safe version
     }
   }
 
   // --------------------------- ERROR HANDLERS ---------------------------
 
-  DioException _handleFailure(Response response) {
+  Map<String, dynamic> _handleFailure(Response response) {
     final code = response.statusCode ?? 0;
     final responseData = response.data;
     String message = "Something went wrong";
-    // Improved validation error handling to support multiple formats
+
     if (responseData is Map<String, dynamic>) {
-      // Format 1: Direct validationErrors array
       if (responseData.containsKey('validationErrors') && responseData['validationErrors'] is List) {
         final List errors = responseData['validationErrors'];
         if (errors.isNotEmpty) {
-          // Extract all error messages and join them
           message = errors.map((e) => e['message']).where((m) => m != null).join('');
           if (message.isEmpty) {
             message = "Validation error occurred";
           }
         }
-      }
-      // Fallback to standard message fields
-      else if (responseData.containsKey('message')) {
+      } else if (responseData.containsKey('message')) {
         message = responseData['message'];
       } else if (responseData.containsKey('title')) {
         message = responseData['title'];
       }
     }
 
-    // Toast messages based on status code
     if ([400, 401, 403, 422, 500].contains(code)) {
       AppToast.show(message: message, type: ToastificationType.error);
     } else if ([404, 409].contains(code)) {
@@ -120,20 +132,23 @@ class ApiClient {
       AppToast.show(message: message, type: ToastificationType.error);
     }
 
-    return DioException(
-      requestOptions: response.requestOptions,
-      response: response,
-      type: DioExceptionType.badResponse,
-    );
+    return {
+      'status': false,
+      'message': message,
+    };
   }
 
   Map<String, dynamic> _handleDioError(DioException error) {
     if (error.response != null) {
-      throw _handleFailure(error.response!);
+      return _handleFailure(error.response!);
     } else {
       final message = error.message ?? "Network error. Please check your connection.";
-      AppToast.show(message: message, type: ToastificationType.error);
-      throw DioException(requestOptions: error.requestOptions, error: error.error, type: DioExceptionType.unknown);
+      // AppToast.show(message: message, type: ToastificationType.error);
+
+      return {
+        'status': false,
+        'message': message,
+      };
     }
   }
 

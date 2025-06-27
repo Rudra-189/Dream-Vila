@@ -29,4 +29,7 @@ export 'package:dreamvila/viewmodels/splash_bloc/splash_state.dart';
 export 'package:dreamvila/views/home_view/widget/common_radio_button.dart';
 export '../../core/generated/l10n.dart';
 export 'package:dreamvila/core/utils/navigator_service.dart';
-
+export 'package:dreamvila/models/property_model/product_data_model.dart';
+export 'package:dreamvila/viewmodels/add_product_bloc/add_product_bloc.dart';
+export 'package:dreamvila/viewmodels/add_product_bloc/add_product_event.dart';
+export 'package:dreamvila/viewmodels/add_product_bloc/add_product_state.dart';
