@@ -18,10 +18,10 @@ class UserProfileResponse {
   }
 
   Map<String, dynamic> toJson() => {
-    'status': status,
-    'message': message,
-    'data': data?.toJson(),
-  };
+        'status': status,
+        'message': message,
+        'data': data?.toJson(),
+      };
 }
 
 class UserData {
@@ -59,13 +59,13 @@ class UserData {
   }
 
   Map<String, dynamic> toJson() => {
-    'firstName': firstName,
-    'lastName': lastName,
-    'email': email,
-    'mobile': mobile,
-    'gender': gender,
-    'image': image,
-    'password': password,
-    'hobby': hobby,
-  };
+        'firstName': firstName,
+        'lastName': lastName,
+        'email': email,
+        'mobile': mobile,
+        'gender': gender,
+        'image': image,
+        'password': password,
+        'hobby': hobby,
+      };
 }

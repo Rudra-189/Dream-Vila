@@ -3,14 +3,13 @@ import 'dart:convert';
 import 'package:dreamvila/models/auth_model/signup_response_data_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedPreferencesService{
-
-  Future<void> storeUserIsLogin(bool isLogin)async{
+class SharedPreferencesService {
+  Future<void> storeUserIsLogin(bool isLogin) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool("isLogin", isLogin);
   }
 
-  Future<bool> getUserIsLogin()async{
+  Future<bool> getUserIsLogin() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool("isLogin") ?? false;
   }
@@ -31,5 +30,4 @@ class SharedPreferencesService{
     }
     return null;
   }
-
 }

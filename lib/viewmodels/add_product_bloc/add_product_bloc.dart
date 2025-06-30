@@ -2,8 +2,6 @@ import 'package:dreamvila/core/api_config/client/api_client.dart';
 import 'package:dreamvila/core/utils/ImagePickerUtils.dart';
 import 'package:dreamvila/core/utils/exports.dart';
 import 'package:dreamvila/repository/product_repository.dart';
-import 'package:dreamvila/viewmodels/add_product_bloc/add_product_event.dart';
-import 'package:dreamvila/viewmodels/add_product_bloc/add_product_state.dart';
 
 class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
   final productRepository = ProductRepository(ApiClient());
@@ -41,15 +39,15 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
   }
 
   Future<void> _onSubmit(SubmitProductEvent event, Emitter emit) async {
-    emit(state.copyWith(addProductStatus: status.loading));
+    emit(state.copyWith(addProductstatus: Status.loading));
 
-    final Map<String,dynamic>product = {
+    final Map<String, dynamic> product = {
       "title": state.titleController.text,
       "description": state.descriptionController.text,
       "address": state.addressController.text,
       "price": double.tryParse(state.priceController.text) ?? 0,
-      "discountPercentage": double.tryParse(
-          state.discountPercentageController.text) ?? 0,
+      "discountPercentage":
+          double.tryParse(state.discountPercentageController.text) ?? 0,
       "rating": double.tryParse(state.ratingController.text) ?? 0,
       "plot": int.tryParse(state.plotController.text) ?? 0,
       "type": state.selectedType,
@@ -66,12 +64,12 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
         : await productRepository.addProduct(product);
 
     if (result.status == true) {
-      emit(state.copyWith(addProductStatus: status.success));
+      emit(state.copyWith(addProductstatus: Status.success));
       add(DisposeEvent());
       NavigatorService.pushNamedAndRemoveUntil(AppRoutes.homeScreen);
     } else {
       emit(state.copyWith(
-        addProductStatus: status.failure,
+        addProductstatus: Status.failure,
         errorMessage: result.message,
       ));
     }
@@ -83,7 +81,8 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       state.descriptionController.text = event.product.description;
       state.addressController.text = event.product.address;
       state.priceController.text = event.product.price.toString();
-      state.discountPercentageController.text = event.product.discountPercentage.toString();
+      state.discountPercentageController.text =
+          event.product.discountPercentage.toString();
       state.ratingController.text = event.product.rating.toString();
       state.plotController.text = event.product.plot.toString();
       state.typeController.text = event.product.type;

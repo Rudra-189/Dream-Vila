@@ -64,9 +64,9 @@ class MyAppThemeHelper {
           )
         )),
         checkboxTheme: CheckboxThemeData(
-          checkColor: MaterialStateProperty.all(Color(0XFFFF6F42)),
-          fillColor: MaterialStateProperty.all(Colors.white),
-          side: MaterialStateBorderSide.resolveWith((state) {
+          checkColor: WidgetStateProperty.all(Color(0XFFFF6F42)),
+          fillColor: WidgetStateProperty.all(Colors.white),
+          side: WidgetStateBorderSide.resolveWith((state) {
             return BorderSide(color: Color(0XFFCECCD9), width: 1);
           }),
         ));

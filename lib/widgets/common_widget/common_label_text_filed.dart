@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -14,8 +16,9 @@ class LabeledTextField extends StatelessWidget {
   final int? maxLines;
   final String? Function(String?)? validator;
   final Widget? suffixIcon;
+  bool? readOnly;
 
-   LabeledTextField({
+  LabeledTextField({
     super.key,
     required this.label,
     this.obscureText,
@@ -24,7 +27,8 @@ class LabeledTextField extends StatelessWidget {
     required this.inputType,
     this.maxLines,
     this.validator,
-    this.suffixIcon
+    this.suffixIcon,
+    this.readOnly,
   });
 
   @override
@@ -38,12 +42,14 @@ class LabeledTextField extends StatelessWidget {
         SizedBox(height: 5.h),
         CustomTextInputField(
           context: context,
+          readOnly: readOnly ?? false,
           obscureText: obscureText,
           type: inputType,
           hintLabel: hint ?? label,
           controller: controller,
           hintStyle: textTheme.displayLarge,
-          validator: validator ?? (value) => Validation.validateNotEmpty(value!, label),
+          validator: validator ??
+              (value) => Validation.validateNotEmpty(value!, label),
           maxLines: maxLines ?? 1,
           suffixIcon: suffixIcon,
         ),

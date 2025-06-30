@@ -9,6 +9,7 @@ class SignInView extends StatelessWidget {
   static Widget builder(BuildContext context) {
     return const SignInView();
   }
+
   const SignInView({super.key});
 
   @override
@@ -25,13 +26,13 @@ class SignInView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildHeaderDesign(context),
-                    _buildCommonInput(context,state),
+                    _buildCommonInput(context, state),
                     SizedBox(
                       height: 100.h,
                     ),
                     Center(
                       child: CustomElevatedButton(
-                        height: 0.060.sh,
+                        height: 0.0625.sh,
                         width: 0.85.sw,
                         text: Lang.of(context).lbl_sign_in,
                         buttonTextStyle: TextStyle(
@@ -39,9 +40,10 @@ class SignInView extends StatelessWidget {
                           fontSize: 16,
                         ),
                         buttonStyle: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).customColors.primaryColor,
+                          backgroundColor:
+                              Theme.of(context).customColors.primaryColor,
                         ),
-                        isLoading: state.signInStatus == status.loading,
+                        isLoading: state.signInstatus == Status.loading,
                         onPressed: () {
                           _submit(context, state);
                         },
@@ -61,7 +63,8 @@ class SignInView extends StatelessWidget {
   void _submit(BuildContext context, AuthState state) async {
     if (state.signInFromKey.currentState!.validate()) {
       context.read<AuthBloc>().add(OnLoginButtonEvent(
-          state.signInEmailController.text, state.signInPasswordController.text));
+          state.signInEmailController.text,
+          state.signInPasswordController.text));
     }
   }
 }
@@ -103,7 +106,7 @@ Widget _buildHeaderDesign(BuildContext context) {
   );
 }
 
-Widget _buildCommonInput(BuildContext context,AuthState state){
+Widget _buildCommonInput(BuildContext context, AuthState state) {
   return Column(
     children: [
       LabeledTextField(
@@ -121,9 +124,7 @@ Widget _buildCommonInput(BuildContext context,AuthState state){
         validator: (value) => Validation.validatePassword(value!),
         suffixIcon: IconButton(
           onPressed: () {
-            context
-                .read<AuthBloc>()
-                .add(TogglePasswordVisibilityEvent());
+            context.read<AuthBloc>().add(TogglePasswordVisibilityEvent());
           },
           icon: Icon(
             state.isPasswordVisible
@@ -139,7 +140,10 @@ Widget _buildCommonInput(BuildContext context,AuthState state){
       Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text(Lang.of(context).lbl_forgot_password,style: Theme.of(context).textTheme.displayMedium,)
+          Text(
+            Lang.of(context).lbl_forgot_password,
+            style: Theme.of(context).textTheme.displayMedium,
+          )
         ],
       ),
     ],
@@ -161,9 +165,8 @@ Widget _buildFooterDesign(BuildContext context) {
             style: TextStyle(color: const Color(0xFF000000), fontSize: 15.sp),
           ),
           InkWell(
-            onTap: (){
-              NavigatorService.pushNamedAndRemoveUntil(
-                  AppRoutes.signupScreen);
+            onTap: () {
+              NavigatorService.pushNamedAndRemoveUntil(AppRoutes.signupScreen);
             },
             child: Text(
               Lang.of(context).lbl_sign_up,

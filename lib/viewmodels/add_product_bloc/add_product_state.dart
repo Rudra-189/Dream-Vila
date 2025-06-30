@@ -22,11 +22,13 @@ class AddProductState extends Equatable {
   final String? thumbnail;
 
   final bool isInitialized;
-  final status addProductStatus;
+  final Status addProductstatus;
   final String errorMessage;
+  final int currentIndex;
 
-  AddProductState({
+  const AddProductState({
     required this.formKey,
+    this.currentIndex = 0,
     required this.titleController,
     required this.descriptionController,
     required this.addressController,
@@ -43,54 +45,57 @@ class AddProductState extends Equatable {
     this.images = const [],
     this.thumbnail,
     this.isInitialized = false,
-    this.addProductStatus = status.init,
+    this.addProductstatus = Status.init,
     this.errorMessage = '',
   });
 
   factory AddProductState.initial() => AddProductState(
-    formKey: GlobalKey<FormState>(),
-    titleController: TextEditingController(),
-    descriptionController: TextEditingController(),
-    addressController: TextEditingController(),
-    priceController: TextEditingController(),
-    discountPercentageController: TextEditingController(),
-    ratingController: TextEditingController(),
-    plotController: TextEditingController(),
-    typeController: TextEditingController(),
-    bedroomController: TextEditingController(),
-    hallController: TextEditingController(),
-    kitchenController: TextEditingController(),
-    washroomController: TextEditingController(),
-  );
+        formKey: GlobalKey<FormState>(),
+        titleController: TextEditingController(),
+        descriptionController: TextEditingController(),
+        addressController: TextEditingController(),
+        priceController: TextEditingController(),
+        discountPercentageController: TextEditingController(),
+        ratingController: TextEditingController(),
+        plotController: TextEditingController(),
+        typeController: TextEditingController(),
+        bedroomController: TextEditingController(),
+        hallController: TextEditingController(),
+        kitchenController: TextEditingController(),
+        washroomController: TextEditingController(),
+      );
 
   AddProductState copyWith({
     String? selectedType,
     List<String>? images,
     String? thumbnail,
     bool? isInitialized,
-    status? addProductStatus,
+    Status? addProductstatus,
     String? errorMessage,
-  }) => AddProductState(
-    formKey: formKey,
-    titleController: titleController,
-    descriptionController: descriptionController,
-    addressController: addressController,
-    priceController: priceController,
-    discountPercentageController: discountPercentageController,
-    ratingController: ratingController,
-    plotController: plotController,
-    typeController: typeController,
-    bedroomController: bedroomController,
-    hallController: hallController,
-    kitchenController: kitchenController,
-    washroomController: washroomController,
-    selectedType: selectedType ?? this.selectedType,
-    images: images ?? this.images,
-    thumbnail: thumbnail ?? this.thumbnail,
-    isInitialized: isInitialized ?? this.isInitialized,
-    addProductStatus: addProductStatus ?? this.addProductStatus,
-    errorMessage: errorMessage ?? this.errorMessage,
-  );
+    int? currentIndex,
+  }) =>
+      AddProductState(
+        formKey: formKey,
+        currentIndex: currentIndex ?? this.currentIndex,
+        titleController: titleController,
+        descriptionController: descriptionController,
+        addressController: addressController,
+        priceController: priceController,
+        discountPercentageController: discountPercentageController,
+        ratingController: ratingController,
+        plotController: plotController,
+        typeController: typeController,
+        bedroomController: bedroomController,
+        hallController: hallController,
+        kitchenController: kitchenController,
+        washroomController: washroomController,
+        selectedType: selectedType ?? this.selectedType,
+        images: images ?? this.images,
+        thumbnail: thumbnail ?? this.thumbnail,
+        isInitialized: isInitialized ?? this.isInitialized,
+        addProductstatus: addProductstatus ?? this.addProductstatus,
+        errorMessage: errorMessage ?? this.errorMessage,
+      );
 
   void dispose() {
     titleController.dispose();
@@ -109,24 +114,25 @@ class AddProductState extends Equatable {
 
   @override
   List<Object?> get props => [
-    formKey,
-    titleController,
-    descriptionController,
-    addressController,
-    priceController,
-    discountPercentageController,
-    ratingController,
-    plotController,
-    typeController,
-    bedroomController,
-    hallController,
-    kitchenController,
-    washroomController,
-    selectedType,
-    images,
-    thumbnail,
-    isInitialized,
-    addProductStatus,
-    errorMessage,
-  ];
+        formKey,
+        currentIndex,
+        titleController,
+        descriptionController,
+        addressController,
+        priceController,
+        discountPercentageController,
+        ratingController,
+        plotController,
+        typeController,
+        bedroomController,
+        hallController,
+        kitchenController,
+        washroomController,
+        selectedType,
+        images,
+        thumbnail,
+        isInitialized,
+        addProductstatus,
+        errorMessage,
+      ];
 }

@@ -70,7 +70,8 @@ class ProductData {
       description: json['description'] ?? '',
       address: json['address'] ?? '',
       price: (json['price'] as num?)?.toDouble() ?? 0.0,
-      discountPercentage: (json['discountPercentage'] as num?)?.toDouble() ?? 0.0,
+      discountPercentage:
+          (json['discountPercentage'] as num?)?.toDouble() ?? 0.0,
       rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
       plot: json['plot'] ?? 0,
       type: json['type'] ?? '',
@@ -82,8 +83,8 @@ class ProductData {
       images: (json['images'] is List)
           ? List<String>.from(json['images'])
           : (json['images'] is String)
-          ? [json['images']]
-          : [],
+              ? [json['images']]
+              : [],
       userId: json['userId'] ?? '',
     );
   }

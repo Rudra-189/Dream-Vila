@@ -1,8 +1,4 @@
-
-
-import 'package:dreamvila/core/utils/ImagePickerUtils.dart';
 import 'package:dreamvila/core/utils/exports.dart';
-import 'package:dreamvila/viewmodels/add_product_bloc/add_product_bloc.dart';
 import 'package:dreamvila/viewmodels/auth_bloc/auth_bloc.dart';
 import 'package:dreamvila/viewmodels/language_bloc/language_bloc.dart';
 import 'package:dreamvila/viewmodels/language_bloc/language_event.dart';
@@ -10,8 +6,6 @@ import 'package:dreamvila/viewmodels/language_bloc/language_state.dart';
 import 'package:dreamvila/viewmodels/splash_bloc/splash_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
-import '../utils/navigator_service.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

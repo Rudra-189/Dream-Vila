@@ -13,18 +13,18 @@ class ApiClient {
 
   ApiClient()
       : _dio = Dio(BaseOptions(headers: {'Content-Type': 'application/json'}))
-    ..interceptors.add(
-      PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-        responseHeader: true,
-        responseBody: true,
-        request: true,
-        error: true,
-        compact: true,
-        maxWidth: 90,
-      ),
-    ) {
+          ..interceptors.add(
+            PrettyDioLogger(
+              requestHeader: true,
+              requestBody: true,
+              responseHeader: true,
+              responseBody: true,
+              request: true,
+              error: true,
+              compact: true,
+              maxWidth: 90,
+            ),
+          ) {
     _initializeHeaders();
   }
 
@@ -49,11 +49,11 @@ class ApiClient {
   // --------------------------- REQUEST METHOD ---------------------------
 
   Future<Map<String, dynamic>> request(
-      RequestType type,
-      String path, {
-        Map<String, dynamic>? data,
-        Map<String, dynamic>? multipartData,
-      }) async {
+    RequestType type,
+    String path, {
+    Map<String, dynamic>? data,
+    Map<String, dynamic>? multipartData,
+  }) async {
     try {
       _dio.options.headers = await _buildHeaders();
 
@@ -63,7 +63,8 @@ class ApiClient {
         RequestType.PUT => await _dio.put(path, data: data),
         RequestType.DELETE => await _dio.delete(path),
         RequestType.PATCH => await _dio.patch(path, data: data),
-        RequestType.MULTIPART_POST => await _dio.post(path, data: await _buildMultipartForm(multipartData)),
+        RequestType.MULTIPART_POST =>
+          await _dio.post(path, data: await _buildMultipartForm(multipartData)),
       };
 
       return _handleSuccess(response);
@@ -107,10 +108,12 @@ class ApiClient {
     String message = "Something went wrong";
 
     if (responseData is Map<String, dynamic>) {
-      if (responseData.containsKey('validationErrors') && responseData['validationErrors'] is List) {
+      if (responseData.containsKey('validationErrors') &&
+          responseData['validationErrors'] is List) {
         final List errors = responseData['validationErrors'];
         if (errors.isNotEmpty) {
-          message = errors.map((e) => e['message']).where((m) => m != null).join('');
+          message =
+              errors.map((e) => e['message']).where((m) => m != null).join('');
           if (message.isEmpty) {
             message = "Validation error occurred";
           }
@@ -142,7 +145,8 @@ class ApiClient {
     if (error.response != null) {
       return _handleFailure(error.response!);
     } else {
-      final message = error.message ?? "Network error. Please check your connection.";
+      final message =
+          error.message ?? "Network error. Please check your connection.";
       // AppToast.show(message: message, type: ToastificationType.error);
 
       return {

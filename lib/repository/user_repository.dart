@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:dreamvila/core/api_config/endpoints/api_endpoint.dart';
+import 'package:dreamvila/core/utils/logger.dart';
 import 'package:dreamvila/models/user_model/user_model.dart';
 
 import '../core/api_config/client/api_client.dart';
@@ -16,7 +15,8 @@ class UserRepository{
           await apiClint.request(RequestType.GET, ApiEndPoint.userDataUrl);
       return UserProfileResponse.fromJson(response);
     }catch(e){
-      log(e.toString());
+      Logger.lOG(e.toString());
+      // log(e.toString());
       rethrow;
     }
   }

@@ -5,13 +5,12 @@ import 'package:dreamvila/views/property_detail_view/widget/propertyDetail_Shimm
 import 'package:flutter/material.dart';
 
 class PropertyDetailView extends StatelessWidget {
-
   static Widget builder(BuildContext context) {
     return PropertyDetailView(id: '');
   }
 
   final String id;
-  const PropertyDetailView({super.key,required this.id});
+  const PropertyDetailView({super.key, required this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -19,42 +18,50 @@ class PropertyDetailView extends StatelessWidget {
     return Scaffold(
       body: BlocBuilder<PropertyDetailBloc, PropertyDetailState>(
         builder: (context, state) {
-          if(state.detailPageStatus == status.loading){
+          if (state.detailPagestatus == Status.loading) {
             return PropertyDetailShimmer.buildPropertyDetailShimmer(context);
-          }else if(state.detailPageStatus == status.success){
+          } else if (state.detailPagestatus == Status.success) {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  _buildPropertyImages(context,state),
+                  _buildPropertyImages(context, state),
                   SizedBox(
                     height: 30.h,
                   ),
-                 Padding(
-                   padding: EdgeInsets.symmetric(horizontal: 20.w),
-                   child: RichText(
-                     text: TextSpan(
-                       style: TextStyle(overflow: TextOverflow.ellipsis),
-                       children: [
-                         TextSpan(text : Lang.of(context).lbl_limited_time,style: Theme.of(context).textTheme.labelLarge,),
-                         WidgetSpan(child: SizedBox(width: 8.w)),
-                         TextSpan(text : state.data?.data?.title,style: Theme.of(context).textTheme.labelMedium,),
-                         WidgetSpan(child: SizedBox(width: 8.w)),
-                         TextSpan(text : Lang.of(context).lbl_is_coming_back,style: Theme.of(context).textTheme.labelLarge,),
-                       ]
-                     ),
-                   ),
-                 ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: RichText(
+                      text: TextSpan(
+                          style: TextStyle(overflow: TextOverflow.ellipsis),
+                          children: [
+                            TextSpan(
+                              text: Lang.of(context).lbl_limited_time,
+                              style: Theme.of(context).textTheme.labelLarge,
+                            ),
+                            WidgetSpan(child: SizedBox(width: 8.w)),
+                            TextSpan(
+                              text: state.data?.data?.title,
+                              style: Theme.of(context).textTheme.labelMedium,
+                            ),
+                            WidgetSpan(child: SizedBox(width: 8.w)),
+                            TextSpan(
+                              text: Lang.of(context).lbl_is_coming_back,
+                              style: Theme.of(context).textTheme.labelLarge,
+                            ),
+                          ]),
+                    ),
+                  ),
                   SizedBox(
                     height: 30.h,
                   ),
-                  _buildPropertyDetail(context,state.data?.data),
+                  _buildPropertyDetail(context, state.data?.data),
                   SizedBox(
                     height: 30.h,
                   ),
                 ],
               ),
             );
-          }else{
+          } else {
             return Center(child: Text(state.errorMessage));
           }
         },
@@ -63,7 +70,7 @@ class PropertyDetailView extends StatelessWidget {
   }
 }
 
-Widget _buildPropertyImages(BuildContext context,PropertyDetailState state) {
+Widget _buildPropertyImages(BuildContext context, PropertyDetailState state) {
   final List images = state.data?.data?.images ?? [];
   return Column(
     children: [
@@ -77,7 +84,12 @@ Widget _buildPropertyImages(BuildContext context,PropertyDetailState state) {
                         borderRadius: BorderRadius.circular(10)),
                     color: Theme.of(context).customColors.secondaryColor,
                     shadowColor: Theme.of(context).customColors.borderColor,
-                    child: CustomImageView(imagePath: e,height: 0.25.sh, width: 0.90.sw,radius: BorderRadius.circular(10.r),),
+                    child: CustomImageView(
+                      imagePath: e,
+                      height: 0.25.sh,
+                      width: 0.90.sw,
+                      radius: BorderRadius.circular(10.r),
+                    ),
                   ))
               .toList(),
           options: CarouselOptions(
@@ -111,7 +123,7 @@ Widget _buildPropertyImages(BuildContext context,PropertyDetailState state) {
               width: 7.h,
               margin: EdgeInsets.symmetric(horizontal: 4.w),
               decoration: BoxDecoration(
-                color:  state.currentIndex == index
+                color: state.currentIndex == index
                     ? Theme.of(context).customColors.primaryColor
                     : Theme.of(context).customColors.cardLowerTextColor,
                 shape: BoxShape.circle,
@@ -124,7 +136,7 @@ Widget _buildPropertyImages(BuildContext context,PropertyDetailState state) {
   );
 }
 
-Widget _buildPropertyDetail(BuildContext context,ProductData? product) {
+Widget _buildPropertyDetail(BuildContext context, ProductData? product) {
   if (product == null) {
     return Center(
       child: Text(Lang.of(context).lbl_no_data_found),
@@ -155,7 +167,8 @@ Widget _buildPropertyDetail(BuildContext context,ProductData? product) {
         SizedBox(height: 10.h),
         Card(
           color: Theme.of(context).customColors.secondaryColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -163,13 +176,13 @@ Widget _buildPropertyDetail(BuildContext context,ProductData? product) {
               children: [
                 Text(
                   product.description.toString(),
-                  style:Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 SizedBox(height: 20.h),
                 Table(
                   columnWidths: const {
                     0: IntrinsicColumnWidth(), // label column adjusts to its width
-                    1: FlexColumnWidth(),      // value column takes remaining space
+                    1: FlexColumnWidth(), // value column takes remaining space
                   },
                   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                   children: details.entries.map((entry) {
@@ -203,4 +216,3 @@ Widget _buildPropertyDetail(BuildContext context,ProductData? product) {
     ),
   );
 }
-

@@ -1,13 +1,11 @@
-import 'dart:io';
-
 import 'package:dreamvila/core/generated/assets.gen.dart';
 import 'package:dreamvila/core/utils/exports.dart';
+import 'package:dreamvila/core/utils/status.dart';
 import 'package:dreamvila/models/auth_model/sign_up_model.dart';
 import 'package:dreamvila/viewmodels/auth_bloc/auth_bloc.dart';
 import 'package:dreamvila/viewmodels/auth_bloc/auth_event.dart';
 import 'package:dreamvila/viewmodels/auth_bloc/auth_state.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/file.dart';
 
 class SignUpView extends StatelessWidget {
   static Widget builder(BuildContext context) {
@@ -57,9 +55,11 @@ class SignUpView extends StatelessWidget {
                           fontSize: 16,
                         ),
                         buttonStyle: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).customColors.primaryColor,
+                          backgroundColor:
+                              Theme.of(context).customColors.primaryColor,
                         ),
-                        isLoading: state.signUpStatus == status.loading ? true : false,
+                        isLoading:
+                            state.signUpstatus == Status.loading ? true : false,
                         onPressed: () {
                           _submit(context, state);
                         },
@@ -244,11 +244,11 @@ Widget _buildGenderInput(BuildContext context, AuthState state) {
 }
 
 Widget _buildImageInput(BuildContext context, AuthState state) {
-
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(Lang.of(context).lbl_upload_user_profile, style: Theme.of(context).textTheme.bodyLarge),
+      Text(Lang.of(context).lbl_upload_user_profile,
+          style: Theme.of(context).textTheme.bodyLarge),
       SizedBox(height: 30.h),
       Center(
         child: DottedBorder(
@@ -258,32 +258,37 @@ Widget _buildImageInput(BuildContext context, AuthState state) {
           radius: const Radius.circular(12),
           dashPattern: const [13, 13],
           child: GestureDetector(
-            onTap: (){
+            onTap: () {
               context.read<AuthBloc>().add(ImagePickedEvent());
             },
             child: state.file != null
-                ? CustomImageView(imagePath: state.file!.path,height: 150.h,width: 250.w,radius: BorderRadius.circular(10.r),)
+                ? CustomImageView(
+                    imagePath: state.file!.path,
+                    height: 150.h,
+                    width: 250.w,
+                    radius: BorderRadius.circular(10.r),
+                  )
                 : Container(
-              height: 150.h,
-              width: 250.w,
-              decoration: BoxDecoration(
-                color: const Color(0xFFF8F8F8),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomImageView(
-                    imagePath: Assets.images.svgs.icons.icCloud.path,
+                    height: 150.h,
+                    width: 250.w,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF8F8F8),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomImageView(
+                          imagePath: Assets.images.svgs.icons.icCloud.path,
+                        ),
+                        const SizedBox(height: 5),
+                        const Text(
+                          "Select Image",
+                          style: TextStyle(color: Color(0xFF2F2F2F)),
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 5),
-                  const Text(
-                    "Select Image",
-                    style: TextStyle(color: Color(0xFF2F2F2F)),
-                  ),
-                ],
-              ),
-            ),
           ),
         ),
       ),
@@ -361,9 +366,8 @@ Widget _buildFooterDesign(BuildContext context) {
             style: TextStyle(color: const Color(0xFF000000), fontSize: 15.sp),
           ),
           InkWell(
-            onTap: (){
-              NavigatorService.pushNamedAndRemoveUntil(
-              AppRoutes.signInScreen);
+            onTap: () {
+              NavigatorService.pushNamedAndRemoveUntil(AppRoutes.signInScreen);
             },
             child: Text(
               Lang.of(context).lbl_sign_in,

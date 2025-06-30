@@ -33,3 +33,4 @@ class SubmitProductEvent extends AddProductEvent {
   List<Object?> get props => [isUpdate, id];
 }
 class DisposeEvent extends AddProductEvent {}
+

@@ -2,18 +2,18 @@ import 'package:dreamvila/core/utils/status.dart';
 import 'package:equatable/equatable.dart';
 
 class SplashState extends Equatable {
-  final status splashStatus;
+  final Status splashstatus;
   final String errorMessage;
 
-  const SplashState({this.splashStatus = status.init, this.errorMessage = ''});
+  const SplashState({this.splashstatus = Status.init, this.errorMessage = ''});
 
-  SplashState copyWith({status? splashStatus, String? errorMessage}){
+  SplashState copyWith({Status? splashstatus, String? errorMessage}) {
     return SplashState(
-        splashStatus: splashStatus ?? this.splashStatus,
-        errorMessage: errorMessage ?? this.errorMessage,
+      splashstatus: splashstatus ?? this.splashstatus,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
   @override
-  List<Object> get props => [splashStatus,errorMessage];
+  List<Object> get props => [splashstatus, errorMessage];
 }

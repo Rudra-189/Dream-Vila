@@ -1,12 +1,11 @@
 import 'dart:io';
 
 import 'package:dreamvila/core/utils/exports.dart';
-import 'package:dreamvila/core/utils/status.dart';
 import 'package:equatable/equatable.dart';
 
 class AuthState extends Equatable {
-  final status signInStatus;
-  final status signUpStatus;
+  final Status signInstatus;
+  final Status signUpstatus;
 
   final String errorMessage;
   final bool isPasswordVisible;
@@ -30,7 +29,7 @@ class AuthState extends Equatable {
   final GlobalKey<FormState> signInFromKey = GlobalKey<FormState>();
 
   AuthState({
-    this.signInStatus = status.init,
+    this.signInstatus = Status.init,
     this.errorMessage = '',
     this.isPasswordVisible = true,
     required this.signInEmailController,
@@ -41,7 +40,7 @@ class AuthState extends Equatable {
     required this.lastNameController,
     required this.mobileController,
     required this.confirmPasswordController,
-    this.signUpStatus = status.init,
+    this.signUpstatus = Status.init,
     this.isConfirmPasswordVisible = true,
     this.file,
     this.gender = 'Male',
@@ -64,8 +63,8 @@ class AuthState extends Equatable {
   }
 
   AuthState copyWith({
-    status? signInStatus,
-    status? signUpStatus,
+    Status? signInstatus,
+    Status? signUpstatus,
     String? errorMessage,
     bool? isPasswordVisible,
     bool? isConfirmPasswordVisible,
@@ -84,13 +83,16 @@ class AuthState extends Equatable {
     GlobalKey<FormState>? signInFromKey,
   }) {
     return AuthState(
-        signInStatus: signInStatus ?? this.signInStatus,
-        signUpStatus: signUpStatus ?? this.signUpStatus,
+        signInstatus: signInstatus ?? this.signInstatus,
+        signUpstatus: signUpstatus ?? this.signUpstatus,
         errorMessage: errorMessage ?? this.errorMessage,
-        signInPasswordController: signInPasswordController ?? this.signInPasswordController,
-        signInEmailController: signInEmailController ?? this.signInEmailController,
+        signInPasswordController:
+            signInPasswordController ?? this.signInPasswordController,
+        signInEmailController:
+            signInEmailController ?? this.signInEmailController,
         isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
-        isConfirmPasswordVisible: isConfirmPasswordVisible ?? this.isConfirmPasswordVisible,
+        isConfirmPasswordVisible:
+            isConfirmPasswordVisible ?? this.isConfirmPasswordVisible,
         file: file ?? this.file,
         gender: gender ?? this.gender,
         selectedHobbies: selectedHobbies ?? this.selectedHobbies,
@@ -98,7 +100,8 @@ class AuthState extends Equatable {
         firstNameController: firstNameController ?? this.firstNameController,
         lastNameController: lastNameController ?? this.lastNameController,
         emailController: emailController ?? this.emailController,
-        confirmPasswordController: confirmPasswordController ?? this.confirmPasswordController,
+        confirmPasswordController:
+            confirmPasswordController ?? this.confirmPasswordController,
         mobileController: mobileController ?? this.mobileController,
         signUpFromKey: signUpFromKey,
         signInFromKey: signUpFromKey);
@@ -106,8 +109,8 @@ class AuthState extends Equatable {
 
   @override
   List<Object?> get props => [
-        signInStatus,
-        signInStatus,
+        signInstatus,
+        signInstatus,
         errorMessage,
         isPasswordVisible,
         isConfirmPasswordVisible,

@@ -3,20 +3,19 @@ import 'package:dreamvila/models/property_model/product_data_model.dart';
 import 'package:dreamvila/models/user_model/user_model.dart';
 import 'package:equatable/equatable.dart';
 
-class HomeState extends Equatable{
-
+class HomeState extends Equatable {
   final int index;
-  final status homeStatus;
-  final status productStatus;
+  final Status homestatus;
+  final Status productstatus;
   final PropertyModel? data;
   // final List<Property> filteredProperties;
   final UserProfileResponse? user;
   final String errorMessage;
 
-  HomeState({
+  const HomeState({
     this.index = 0,
-    this.homeStatus = status.init,
-    this.productStatus = status.init,
+    this.homestatus = Status.init,
+    this.productstatus = Status.init,
     this.data,
     this.user,
     // this.filteredProperties = const [],
@@ -25,8 +24,8 @@ class HomeState extends Equatable{
 
   HomeState copyWith({
     int? index,
-    status? homeStatus,
-    status? productStatus,
+    Status? homestatus,
+    Status? productstatus,
     PropertyModel? data,
     UserProfileResponse? user,
     String? errorMessage,
@@ -34,8 +33,8 @@ class HomeState extends Equatable{
   }) {
     return HomeState(
       index: index ?? this.index,
-      homeStatus: homeStatus ?? this.homeStatus,
-      productStatus: productStatus ?? this.productStatus,
+      homestatus: homestatus ?? this.homestatus,
+      productstatus: productstatus ?? this.productstatus,
       data: data ?? this.data,
       user: user ?? this.user,
       // filteredProperties: filteredProperties ?? this.filteredProperties,
@@ -44,6 +43,5 @@ class HomeState extends Equatable{
   }
 
   @override
-  List<Object?>get props => [homeStatus,errorMessage,data,user,index];
+  List<Object?> get props => [homestatus, errorMessage, data, user, index];
 }
-

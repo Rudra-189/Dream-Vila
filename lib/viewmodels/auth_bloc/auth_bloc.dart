@@ -4,22 +4,20 @@ import 'package:dreamvila/core/api_config/client/api_client.dart';
 import 'package:dreamvila/core/routes/app_routes.dart';
 import 'package:dreamvila/core/utils/ImagePickerUtils.dart';
 import 'package:dreamvila/core/utils/navigator_service.dart';
-import 'package:dreamvila/core/utils/sharedPreferences.dart';
 import 'package:dreamvila/core/utils/status.dart';
 import 'package:dreamvila/repository/auth_repository.dart';
-import 'package:dreamvila/widgets/common_widget/app_toast_message.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:toastification/toastification.dart';
 
+import '../../core/utils/shared_Preferences.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-
   final AuthRepository authRepository = AuthRepository(ApiClient());
 
-  final SharedPreferencesService sharedPreferencesService = SharedPreferencesService();
+  final SharedPreferencesService sharedPreferencesService =
+      SharedPreferencesService();
 
   final ImagePickerUtils imagePickerUtils = ImagePickerUtils();
 
@@ -29,7 +27,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<OnLoginButtonEvent>(_onLoginButtonEvent);
 
     //SignUp
-    on<ToggleConfirmPasswordVisibilityEvent>(_toggleConfirmPasswordVisibilityEvent);
+    on<ToggleConfirmPasswordVisibilityEvent>(
+        _toggleConfirmPasswordVisibilityEvent);
     on<ImagePickedEvent>(_imagePickedEvent);
     on<SignupSubmittedEvent>(_signupSubmittedEvent);
     on<OnHobbyChangeEvent>(_onHobbyChangeEvent);
@@ -37,27 +36,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   //signIn
-  void _togglePasswordVisibilityEvent(TogglePasswordVisibilityEvent event,Emitter emit){
+  void _togglePasswordVisibilityEvent(
+      TogglePasswordVisibilityEvent event, Emitter emit) {
     emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible));
   }
 
-  void _onLoginButtonEvent(OnLoginButtonEvent event,Emitter emit)async{
-    emit(state.copyWith(signInStatus: status.loading));
-    Map<String,dynamic> data = {
+  void _onLoginButtonEvent(OnLoginButtonEvent event, Emitter emit) async {
+    emit(state.copyWith(signInstatus: Status.loading));
+    Map<String, dynamic> data = {
       "email": event.email,
-      "password":event.password
+      "password": event.password
     };
 
     final storage = FlutterSecureStorage();
 
     final result = await authRepository.userLogin(data);
-    if(result.status){
+    if (result.status) {
       await storage.write(key: "deviceToken", value: result.token);
       sharedPreferencesService.storeUserIsLogin(true);
-      emit(state.copyWith(signInStatus: status.success));
+      emit(state.copyWith(signInstatus: Status.success));
       NavigatorService.pushNamedAndRemoveUntil(AppRoutes.homeScreen);
-    }else{
-      emit(state.copyWith(signInStatus: status.failure));
+    } else {
+      emit(state.copyWith(signInstatus: Status.failure));
       // AppToast.show(message: result.message,type: ToastificationType.error);
     }
   }
@@ -69,15 +69,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         isConfirmPasswordVisible: !state.isConfirmPasswordVisible));
   }
 
-  void _imagePickedEvent(ImagePickedEvent event, Emitter emit) async{
-    XFile? file = await imagePickerUtils.PickImageFromGallary();
+  void _imagePickedEvent(ImagePickedEvent event, Emitter emit) async {
+    XFile? file = await imagePickerUtils.pickImageFromGallary();
     emit(state.copyWith(file: File(file!.path)));
   }
 
-  void _signupSubmittedEvent(SignupSubmittedEvent event, Emitter emit)async{
-    emit(state.copyWith(signUpStatus: status.loading));
+  void _signupSubmittedEvent(SignupSubmittedEvent event, Emitter emit) async {
+    emit(state.copyWith(signUpstatus: Status.loading));
 
-    Map<String,dynamic> data = {
+    Map<String, dynamic> data = {
       'image': [event.formData.image!.path],
       'firstName': event.formData.firstName,
       'lastName': event.formData.lastName,
@@ -89,12 +89,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     };
 
     final result = await authRepository.userSignup(data);
-    if(result.status == true){
-      emit(state.copyWith(signUpStatus: status.success));
+    if (result.status == true) {
+      emit(state.copyWith(signUpstatus: Status.success));
       NavigatorService.pushNamedAndRemoveUntil(AppRoutes.signInScreen);
-    }else{
+    } else {
       // AppToast.show(message: result.message,type: ToastificationType.error);
-       emit(state.copyWith(signUpStatus: status.failure));
+      emit(state.copyWith(signUpstatus: Status.failure));
     }
   }
 
@@ -111,5 +111,4 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   void _onGenderChangeEvent(OnGenderChangeEvent event, Emitter emit) {
     emit(state.copyWith(gender: event.gender));
   }
-
 }

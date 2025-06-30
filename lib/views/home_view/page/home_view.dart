@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:dreamvila/core/api_config/endpoints/api_endpoint.dart';
 import 'package:dreamvila/core/utils/exports.dart';
 import 'package:dreamvila/views/home_view/widget/home_shimmer.dart';
@@ -8,7 +6,6 @@ import 'package:flutter/material.dart';
 import '../widget/custompopup_menu.dart';
 
 class HomeView extends StatelessWidget {
-
   static Widget builder(BuildContext context) {
     return const HomeView();
   }
@@ -23,26 +20,26 @@ class HomeView extends StatelessWidget {
       child: Scaffold(
         body: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
-            if(state.homeStatus == status.loading){
+            if (state.homestatus == Status.loading) {
               return HomeShimmer.buildHomePageSimmer(context);
-            }else if(state.homeStatus == status.success){
+            } else if (state.homestatus == Status.success) {
               return SafeArea(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Column(
                     children: [
                       SizedBox(height: 20.h),
-                      _buildUserInfo(context,state.user!),
+                      _buildUserInfo(context, state.user!),
                       _buildTabView(context),
                       SizedBox(
                         height: 10.h,
                       ),
-                      _buildPropertyList(context,state)
+                      _buildPropertyList(context, state)
                     ],
                   ),
                 ),
               );
-            }else{
+            } else {
               return Center(child: Text(state.errorMessage));
             }
           },
@@ -52,8 +49,7 @@ class HomeView extends StatelessWidget {
   }
 }
 
-Widget _buildUserInfo(BuildContext context,UserProfileResponse user) {
-
+Widget _buildUserInfo(BuildContext context, UserProfileResponse user) {
   return SizedBox(
     height: 150.h,
     child: Column(
@@ -62,23 +58,30 @@ Widget _buildUserInfo(BuildContext context,UserProfileResponse user) {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             //user Image
-            Container(
-              height: 75.h,
-              width: 75.h,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.r),
-                  border: Border.all (
-                      color: Theme.of(context).customColors.secondaryColor,
-                      width: 3.w
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Theme.of(context).customColors.borderColor,
-                        offset: Offset(2, 2),
-                        blurRadius: 10.r
-                    )
-                  ]),
-              child: CustomImageView(imagePath: '${ApiEndPoint.userImageUrl}/${user.data?.image}',fit: BoxFit.cover,radius: BorderRadius.circular(10.r),),
+            GestureDetector(
+              onTap: () {
+                NavigatorService.pushNamed(AppRoutes.userProfileScreen);
+              },
+              child: Container(
+                height: 75.h,
+                width: 75.h,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.r),
+                    border: Border.all(
+                        color: Theme.of(context).customColors.secondaryColor,
+                        width: 3.w),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Theme.of(context).customColors.borderColor,
+                          offset: Offset(2, 2),
+                          blurRadius: 10.r)
+                    ]),
+                child: CustomImageView(
+                  imagePath: '${ApiEndPoint.userImageUrl}/${user.data?.image}',
+                  fit: BoxFit.cover,
+                  radius: BorderRadius.circular(10.r),
+                ),
+              ),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -114,14 +117,14 @@ Widget _buildUserInfo(BuildContext context,UserProfileResponse user) {
                         .customColors
                         .primaryColor
                         .withOpacity(0.25),
-                    width: 1.w
-                ),
+                    width: 1.w),
               ),
               alignment: Alignment.center,
               child: GestureDetector(
-                onTap: (){
-                  Navigator.of(context).pushNamed(AppRoutes.addProductScreen,arguments: {
-                    'isUpdate':false,
+                onTap: () {
+                  Navigator.of(context)
+                      .pushNamed(AppRoutes.addProductScreen, arguments: {
+                    'isUpdate': false,
                     // 'data': null
                   });
                 },
@@ -143,12 +146,11 @@ Widget _buildTabView(BuildContext context) {
     onTap: (int value) {
       context.read<HomeBloc>().add(OnTabIndexChangeEvent(value));
     },
-
     labelColor: Theme.of(context).customColors.primaryColor,
     unselectedLabelColor: Theme.of(context).customColors.iconColor,
     indicatorSize: TabBarIndicatorSize.tab,
     dividerColor: Colors.transparent,
-    overlayColor: MaterialStateProperty.all(Colors.transparent),
+    overlayColor: WidgetStateProperty.all(Colors.transparent),
     labelPadding: EdgeInsets.all(0.r),
     indicator: ShapeDecoration(
         color: Theme.of(context).customColors.secondaryColor,
@@ -161,7 +163,6 @@ Widget _buildTabView(BuildContext context) {
               offset: Offset(-1, 1),
               blurRadius: 5.r)
         ]),
-
     tabs: [
       Tab(text: Lang.of(context).lbl_house),
       Tab(text: Lang.of(context).lbl_apartment),
@@ -170,18 +171,22 @@ Widget _buildTabView(BuildContext context) {
     ],
   );
 }
+
 Widget _buildPropertyList(BuildContext context, HomeState state) {
   final categoryFilter = ['house', 'apartment', 'office', 'land'];
-  final filteredData = state.data!.data.where((e) => e.type == categoryFilter[state.index]).toList();
+  final filteredData = state.data!.data
+      .where((e) => e.type == categoryFilter[state.index])
+      .toList();
 
   return BlocBuilder<HomeBloc, HomeState>(
     buildWhen: (previous, current) =>
-    previous.productStatus != current.productStatus ||
+        previous.productstatus != current.productstatus ||
         previous.index != current.index,
     builder: (context, state) {
-      if (state.productStatus == status.loading) {
-        return const Expanded(child: Center(child: CircularProgressIndicator()));
-      } else if (state.productStatus == status.success) {
+      if (state.productstatus == Status.loading) {
+        return const Expanded(
+            child: Center(child: CircularProgressIndicator()));
+      } else if (state.productstatus == Status.success) {
         if (filteredData.isEmpty) {
           return Expanded(
             child: Center(
@@ -198,10 +203,12 @@ Widget _buildPropertyList(BuildContext context, HomeState state) {
               final property = filteredData[index];
               return GestureDetector(
                 onTap: () {
-                  NavigatorService.pushNamed(AppRoutes.propertyDetailScreen, arguments: property.id);
+                  NavigatorService.pushNamed(AppRoutes.propertyDetailScreen,
+                      arguments: property.id);
                 },
                 onLongPressStart: (details) {
-                  showContextMenu(context, details.globalPosition, property.id, property);
+                  showContextMenu(
+                      context, details.globalPosition, property.id, property);
                 },
                 child: Card(
                   color: Theme.of(context).customColors.secondaryColor,
@@ -223,18 +230,23 @@ Widget _buildPropertyList(BuildContext context, HomeState state) {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     child: Text(property.title,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyLarge
-                                            ?.copyWith(overflow: TextOverflow.ellipsis)),
+                                            ?.copyWith(
+                                                overflow:
+                                                    TextOverflow.ellipsis)),
                                   ),
                                   Text(
                                     "\$ ${property.price.toString()}",
-                                    style: Theme.of(context).textTheme.displayMedium,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium,
                                   ),
                                 ],
                               ),
@@ -242,11 +254,16 @@ Widget _buildPropertyList(BuildContext context, HomeState state) {
                               Row(
                                 children: [
                                   Icon(Icons.location_pin,
-                                      color: Theme.of(context).customColors.iconColor, size: 18.sp),
+                                      color: Theme.of(context)
+                                          .customColors
+                                          .iconColor,
+                                      size: 18.sp),
                                   Expanded(
                                     child: Text(property.address,
                                         style: TextStyle(
-                                          color: Theme.of(context).customColors.iconColor,
+                                          color: Theme.of(context)
+                                              .customColors
+                                              .iconColor,
                                           fontSize: 12,
                                           overflow: TextOverflow.ellipsis,
                                         )),
@@ -266,7 +283,11 @@ Widget _buildPropertyList(BuildContext context, HomeState state) {
                                         fontSize: 10),
                                   ),
                                   const SizedBox(width: 5),
-                                  Text("|", style: TextStyle(color: Theme.of(context).customColors.primaryColor)),
+                                  Text("|",
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .customColors
+                                              .primaryColor)),
                                   const SizedBox(width: 5),
                                   Text(
                                     "${property.discountPercentage} ${Lang.of(context).lbl_discount}",
@@ -277,12 +298,19 @@ Widget _buildPropertyList(BuildContext context, HomeState state) {
                                         fontSize: 10),
                                   ),
                                   const SizedBox(width: 5),
-                                  Text("|", style: TextStyle(color: Theme.of(context).customColors.primaryColor)),
+                                  Text("|",
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .customColors
+                                              .primaryColor)),
                                   const SizedBox(width: 5),
                                   Row(
                                     children: [
                                       Icon(Icons.star,
-                                          color: Theme.of(context).customColors.primaryColor, size: 15),
+                                          color: Theme.of(context)
+                                              .customColors
+                                              .primaryColor,
+                                          size: 15),
                                       Text(property.rating.toString(),
                                           style: TextStyle(
                                               color: Theme.of(context)
@@ -311,4 +339,3 @@ Widget _buildPropertyList(BuildContext context, HomeState state) {
     },
   );
 }
-

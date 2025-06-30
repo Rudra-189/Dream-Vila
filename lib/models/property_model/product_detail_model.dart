@@ -18,10 +18,10 @@ class ProductResponse {
   }
 
   Map<String, dynamic> toJson() => {
-    'status': status,
-    'message': message,
-    'data': data?.toJson(),
-  };
+        'status': status,
+        'message': message,
+        'data': data?.toJson(),
+      };
 }
 
 class ProductData {
@@ -79,29 +79,29 @@ class ProductData {
       kitchen: json['kitchen'] ?? '',
       washroom: json['washroom'] ?? '',
       thumbnail: json['thumbnail'] ?? '',
-      images: json['images'] != null ? List<String>.from(json['images']): [] ,
+      images: json['images'] != null ? List<String>.from(json['images']) : [],
       userId: json['userId'] ?? '',
       v: json['__v'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() => {
-    '_id': id,
-    'title': title,
-    'description': description,
-    'address': address,
-    'price': price,
-    'discountPercentage': discountPercentage,
-    'rating': rating,
-    'plot': plot,
-    'type': type,
-    'bedroom': bedroom,
-    'hall': hall,
-    'kitchen': kitchen,
-    'washroom': washroom,
-    'thumbnail': thumbnail,
-    'images': images,
-    'userId': userId,
-    '__v': v,
-  };
+        '_id': id,
+        'title': title,
+        'description': description,
+        'address': address,
+        'price': price,
+        'discountPercentage': discountPercentage,
+        'rating': rating,
+        'plot': plot,
+        'type': type,
+        'bedroom': bedroom,
+        'hall': hall,
+        'kitchen': kitchen,
+        'washroom': washroom,
+        'thumbnail': thumbnail,
+        'images': images,
+        'userId': userId,
+        '__v': v,
+      };
 }

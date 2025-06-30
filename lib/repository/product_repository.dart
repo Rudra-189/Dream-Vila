@@ -1,5 +1,5 @@
-import 'dart:developer';
 import 'package:dreamvila/core/api_config/endpoints/api_endpoint.dart';
+import 'package:dreamvila/core/utils/logger.dart';
 import 'package:dreamvila/models/property_model/add_product_response_data_model.dart';
 import 'package:dreamvila/models/property_model/delete_product_data_model.dart';
 import 'package:dreamvila/models/property_model/product_data_model.dart';
@@ -18,7 +18,8 @@ class ProductRepository{
       final response = await apiClint.request(RequestType.GET, ApiEndPoint.productUrl,);
       return PropertyModel.fromJson(response);
     }catch(e){
-      log(e.toString());
+      Logger.lOG(e.toString());
+      // log(e.toString());
       rethrow;
     }
 
@@ -29,7 +30,8 @@ class ProductRepository{
       final response = await apiClint.request(RequestType.GET, '${ApiEndPoint.productDetailUrl}/$id');
       return ProductResponse.fromJson(response);
     }catch(e){
-      log(e.toString());
+      Logger.lOG(e.toString());
+      // log(e.toString());
       rethrow;
     }
   }
@@ -40,7 +42,8 @@ class ProductRepository{
           .request(RequestType.POST, ApiEndPoint.addProductUrl, data: product);
       return AddProductResponseModel.fromJson(response);
     }catch(e){
-      log(e.toString());
+      Logger.lOG(e.toString());
+      // log(e.toString());
       rethrow;
     }
   }
@@ -52,7 +55,8 @@ class ProductRepository{
           data: product);
       return AddProductResponseModel.fromJson(response);
     }catch(e){
-      log(e.toString());
+      Logger.lOG(e.toString());
+      // log(e.toString());
       rethrow;
     }
   }
@@ -63,7 +67,8 @@ class ProductRepository{
           RequestType.DELETE, '${ApiEndPoint.deleteProductUrl}/$id');
       return DeleteProductResponseModel.fromJson(response);
     }catch(e){
-      log(e.toString());
+      Logger.lOG(e.toString());
+      // log(e.toString());
       rethrow;
     }
   }

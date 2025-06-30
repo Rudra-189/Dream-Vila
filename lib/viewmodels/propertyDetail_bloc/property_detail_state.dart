@@ -1,32 +1,34 @@
-
 import 'package:dreamvila/models/property_model/product_detail_model.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../core/utils/status.dart';
 
-class PropertyDetailState extends Equatable{
-  final status detailPageStatus;
+class PropertyDetailState extends Equatable {
+  final Status detailPagestatus;
   final String errorMessage;
   final ProductResponse? data;
   final int currentIndex;
 
-  const PropertyDetailState({this.detailPageStatus = status.init,  this.errorMessage = '',  this.data,required this.currentIndex});
+  const PropertyDetailState(
+      {this.detailPagestatus = Status.init,
+      this.errorMessage = '',
+      this.data,
+      required this.currentIndex});
 
   PropertyDetailState copyWith({
-    status? detailPageStatus,
+    Status? detailPagestatus,
     String? errorMessage,
     ProductResponse? data,
     int? currentIndex,
-  }){
+  }) {
     return PropertyDetailState(
-        detailPageStatus: detailPageStatus ?? this.detailPageStatus,
+        detailPagestatus: detailPagestatus ?? this.detailPagestatus,
         errorMessage: errorMessage ?? this.errorMessage,
         data: data ?? this.data,
-        currentIndex: currentIndex ?? this.currentIndex
-    );
+        currentIndex: currentIndex ?? this.currentIndex);
   }
 
   @override
-  List<Object?>get props => [detailPageStatus,errorMessage,data,currentIndex];
+  List<Object?> get props =>
+      [detailPagestatus, errorMessage, data, currentIndex];
 }
-
